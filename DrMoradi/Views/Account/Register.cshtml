@@ -1,0 +1,41 @@
+﻿@model Core.Dto.ViewModel.User.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="col-10 col-md-7 col-lg-5 signup-login-box"><!-- start signup & login box -->
+    <img src="assets/images/logo.png">
+    <form asp-action="Register" method="post">
+
+        <div class="input-group signup-login-form mobile-number"><!-- start mobile number input -->
+            <input type="email" asp-for="UserName" class="form-control form-control-lg signup-login-input" placeholder="ایمیل">
+            <span class="alert alert-danger" asp-validation-for="UserName"></span>
+        </div><!-- end mobile number input -->
+
+        <div class="input-group signup-login-form password"><!-- start password input -->
+            <input type="password" asp-for="PassWord" class="form-control form-control-lg signup-login-input" placeholder="رمز عبور ">
+            <span class="alert alert-danger" asp-validation-for="PassWord"></span>
+        </div><!-- end password input -->
+        <div class="input-group signup-login-form password">
+            <!-- start password input -->
+            <input type="password" asp-for="RePassword" class="form-control form-control-lg signup-login-input" placeholder="تکرار رمز عبور ">
+            <span class="alert alert-danger" asp-validation-for="RePassword"></span>
+        </div>
+        <div class="signup-login-form">
+            <div class="form-check text-center"><!-- start input check -->
+                <input class="form-check-input form-check-input-custom" type="checkbox" id="customCheck" checked>
+                <label class="form-check-label line-height" for="customCheck">
+                    <a href="#" class="underline">حریم خصوصی</a> و <a href="#" class="underline">شرایط و قوانین</a> استفاده از سرویس های سایت  نیک کالا را مطالعه نموده و با کلیه موارد آن موافقم.
+                </label>
+            </div><!-- end input check -->
+        </div>
+
+        <button type="submit" class="btn btn-danger d-block font-12 mx-auto signup-btn mb-4"><!-- signup btn -->
+            ثبت نام
+        </button>
+
+        <p>قبلا در نیک کالا ثبت‌ نام کرده‌اید؟ <a asp-action="Login" class="underline">وارد شویــد</a></p>
+
+    </form>
+</div>
+

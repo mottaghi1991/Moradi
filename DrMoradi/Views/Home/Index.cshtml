@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewData["Title"] = "خانه";
+}
+
+<!-- بخش هرو -->
+<!-- بخش دوم: اسلایدر با سه تصویر -->
+@await Component.InvokeAsync("SliderComponent")
+
+<div class="container">
+
+    <!-- معرفی دکتر -->
+    <section class="pt-5">
+
+        <div class="row ">
+            <!-- ستون تصویر (سمت راست) -->
+            <div class="col-12 col-md-6 ">
+                <img src="/FileUpload/doctor/DoctorImage.jpg"
+                     alt="عکس دکتر"
+                     class="img-fluid rounded doctor-img">
+            </div>
+            <!-- ستون متن (سمت چپ) -->
+            <div class="col-12 col-md-6 align-content-start">
+                <h2 class="doctor-name">دکتر معصومه مرادی</h2>
+                <h3 class="doctor-title">دکترای تخصصی تغذیه و رژیم درمانی از دانشگاه تهران</h3>
+
+                <ul class="custom-list mb-4">
+                    <li>نظام پزشکی ت-2542</li>
+                    <li>مدرس دانشگاه در رشته های تغذیه و رژیم درمانی و تغذیه ورزشی</li>
+                    <li>فعالیت در زمینه مشاوره تغذیه و رژیم درمانی از سال 1385</li>
+                    <li>فعالیتهای آموزشی و پژوهشی در حیطه تغذیه</li>
+                    <li>انتشار مقالات علمی بین المللی در حوزه تغذیه و رژیم شناسی</li>
+                    <li>عضو انجمن تغذیه ایران (اتا)</li>
+                    <li>عضو پیوسته انجمن علمی تغذیه ایران (اعتا)</li>
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+  
+    <!-- رژیم‌ها -->
+    @await Component.InvokeAsync("DietComponent")
+
+
+    <!-- محصولات -->
+    <section class="pt-5">
+        @await Component.InvokeAsync("CategoryComponent")
+    </section>
+  
+
+    <!-- فرم مشاوره -->
+    <section class="pt-5">
+        <!-- اگر کل صفحه RTL است، می‌توانید این را بردارید -->
+
+        <div class="py-5">
+            <div class="row g-4 align-items-stretch">
+                <div class="col-lg-6 d-flex" @* id="commentComponentWrapper" *@>
+                <!-- ستون راست: فرم و اسلایدر -->
+            @*     @await Component.InvokeAsync("CommentComponent") *@
+                    <!-- باکس BMI -->
+             
+                        <div class="card bmi-bg text-white border-0 position-relative overflow-hidden" >
+                            <!-- لایه رنگی روی عکس برای خوانایی متن -->
+                            <div class="bmi-overlay position-absolute top-0 start-0 w-100 h-100"></div>
+                            <div class="card-body position-relative">
+                                <h5 class="card-title" style="color:black">محاسبه وزن ایده‌‌آل</h5>
+                                <p class="card-text small" style="color:black">
+                                    BMI راهی برای آگاهی از سطح چربی بدن به روشی آسان و ارزان است. با محاسبه شاخص توده بدنی،
+                                    وزن سالم‌تان را دقیق‌تر بشناسید.
+                                </p>
+                                <a class="btn btn-primary" href="\BMI">محاسبه کنید!</a>
+                            </div>
+                        </div>
+               
+                </div>
+                <!-- ستون چپ: باکس‌های BMI و بنر -->
+                <div class="col-lg-6 d-flex">
+                    <div class="card shadow-sm w-100 d-flex flex-column equal-card">
+                        <div class="card-body p-3 d-flex flex-column justify-content-between">
+                        
+
+                            <!-- باکس بنر لاغری -->
+                            <div>
+                                <div class="card service-card text-white h-100 shadow-sm position-relative overflow-hidden border-0">
+                                    <img src="/FileUpload/Slider/297b48dab4e0f159911593c8ae73c5506303cbe5b31ba.jpg"
+                                         class="card-img"
+                                         alt="لاغری موضعی با دستگاه">
+                                    <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+ 
+
+
+    <!-- مقالات -->
+
+
+    <section class="pt-5">
+        <div class="card" style="border:none;background-color:#F9F9F9">
+            <div class="card-header" style="border:none;background-color:#F9F9F9">
+                <h3 class="fw-bold text-start">
+                    جدیدترین مقالات
+                </h3>
+            </div>
+            @await Component.InvokeAsync("PostComponent")
+        </div>
+    </section>
+
+</div>
+

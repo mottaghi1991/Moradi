@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Domain.Main.PopUp>
+@{
+    ViewData["Title"] = "اعلان ها";
+}
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> لیست اعلان ها</h3>
+        </div>
+        <div class="card-body">
+            <p>
+                <a class="btn btn-success" asp-action="Add">جدید</a>
+            </p>
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsActive)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsActive)
+                            </td>
+                            <td>
+                                <a class="btn btn-info" asp-action="Edit" asp-route-PopId="@item.Id">ویرایش</a>
+                                <a asp-action="Delete" asp-route-PopId="@item.Id" onclick="return confirm('ایا از حذف اطمینان دارید؟')" class="btn btn-danger"> حذف</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

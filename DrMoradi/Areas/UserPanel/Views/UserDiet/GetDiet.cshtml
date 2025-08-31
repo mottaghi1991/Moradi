@@ -1,0 +1,54 @@
+﻿@using Core.Dto.ViewModel.Dr
+@model ShowUserDietVm
+@{
+    ViewData["Title"] = "ردیافت رژیم";
+}
+
+
+@section style {
+    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
+}
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> توضیحات رژیم</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label asp-for="@Model.SendDiet.Descript" class="control-label"></label>
+                <textarea asp-for="@Model.SendDiet.Descript" class="form-control" cols="5" rows="5" readonly></textarea>
+                <span asp-validation-for="@Model.SendDiet.Descript" class="text-danger"></span>
+
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام فایل</th>
+
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model.fileLists.Any())
+                    {
+                        @foreach (var item in Model.fileLists)
+                        {
+                            <tr>
+                                <td>@item.File.Replace("/FileUpload/Attachment/", "")</td>
+
+                                <td>
+                                    <a href="@item.File" download class="btn btn-primary">دانلود</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

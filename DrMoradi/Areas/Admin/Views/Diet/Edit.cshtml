@@ -1,0 +1,79 @@
+﻿@model Core.Dto.ViewModel.Dr.DietVM.EditDietVm
+
+@{
+    ViewData["Title"] = "ویرایش رژیم";
+}
+<div class="col-md-12">
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title">رژیم جدید</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="ImageFile" class="control-label"></label>
+                                    <input type="file" asp-for="ImageFile" class="form-control" />
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Price" class="control-label"></label>
+                                    <input asp-for="Price" class="form-control" />
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Status" class="control-label"></label>
+                                    <input asp-for="Status" class="form-control" />
+                                    <span asp-validation-for="Status" class="text-danger"></span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Descript" class="control-label"></label>
+                            <textarea asp-for="Descript" class="form-control" cols="5" rows="5"></textarea>
+                            <span asp-validation-for="Descript" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SpecialDescript" class="control-label"></label>
+                            <textarea asp-for="SpecialDescript" class="form-control" cols="5" rows="5"></textarea>
+                            <span asp-validation-for="SpecialDescript" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Video" class="control-label"></label>
+                            <input asp-for="Video" class="form-control" />
+                            <span asp-validation-for="Video" class="text-danger"></span>
+
+                        </div>
+                        <div class="row">
+                            <input type="submit" value="ثبت" class="btn btn-success" />
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

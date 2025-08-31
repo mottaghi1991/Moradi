@@ -1,0 +1,32 @@
+﻿@using Domain.Main
+@model PopUp
+
+<!-- پاپ‌آپ -->
+<div id="popup" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-info text-dark text-white">
+                <h5 class="modal-title  w-100 text-center mb-0 ">@Model.Title</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="بستن"></button>
+            </div>
+            <div class="modal-body text-center">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img src="@Model.Image" class="img-fluid rounded mb-3" alt="@Model.Title" />
+                }
+                <p class="fs-6 text-muted">@Model.Descript</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">باشه</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- اسکریپت Bootstrap 5 -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var popupModal = new bootstrap.Modal(document.getElementById('popup'));
+        popupModal.show();
+    });
+</script>

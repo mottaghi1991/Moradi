@@ -1,0 +1,34 @@
+﻿@model Domain.ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="card">
+
+    <div class="card-header card-danger">
+        <h1 class="text-danger text-center">خطا</h1>
+
+    </div>
+    <div class="card-body">
+
+        <h2 class="text-danger text-center">متاسفانه خطای در سیستم رخ داده است.</h2>
+
+        @if (Model.ShowRequestId)
+        {
+            <p>
+                <strong>کد خطا:</strong> <code>@Model.RequestId</code>
+            </p>
+        }
+
+        <h3>با سلام و خسته نباشید</h3>
+
+        <p>
+            ما پس از مشاهده خطا به رفع آن خواهیم پرداخت  .
+        </p>
+        <p>لطفا در صورت نیاز با مدیر سیستم تماس حاصل فرمایید</p>
+        <p>داخلی :1006</p>
+
+
+    </div>
+</div>
+

@@ -1,0 +1,126 @@
+﻿@model IEnumerable<Domain.User.Permission.Role>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> لیست گروه ها</h3>
+        </div>
+        <div class="card-body">
+            <p>
+                <a class="btn btn-success" onclick="View()">جدید</a>
+            </p>
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RoleTitle)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RoleTitle)
+                            </td>
+                            <td>
+                                <a class="btn btn-info" onclick="Edit(@item.RoleId)">ویرایش</a>
+                                <a class="btn btn-dark" asp-action="RolePermission" asp-route-RoleId="@item.RoleId">دسترسی های گروه</a>
+                                <a class="btn btn-primary" asp-action="RoleMenu" asp-route-RoleId="@item.RoleId">منو های گروه</a>
+                                <a class="btn btn-warning" asp-action="UserRole" asp-route-RoleId="@item.RoleId">کاربران گروه</a>
+
+                                <a asp-action="Delete" asp-route-id="@item.RoleId" onclick="return confirm('ایا از حذف اطمینان دارید؟')" class="btn btn-danger"> حذف</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+
+            <div class="modal-body">
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@section Scripts
+    {
+        1    <script>
+                 function View() {
+
+                     $.ajax({
+                         type: "Get",
+                         url: '../../Admin/Role/Create',
+                         contentType: "application/text; charset=utf-8",
+                         dataType: "text",
+                         async: false,
+                         success: function (data) {
+                             console.log(data);
+                             $('.modal-body').html(data);
+                             $('#myform').data('validator', null);
+                             $.validator.unobtrusive.parse('#myform');
+                             $("#myModal").modal("show");
+
+                         },
+                         error: function (response1) {
+                             console.log(response1);
+                         }
+
+                     })
+
+                 }
+
+                 function Edit(Id) {
+
+                     $.ajax({
+                         type: "Get",
+                         url: '../../Admin/Role/Edit?id=' + Id,
+                         contentType: "application/text; charset=utf-8",
+                         dataType: "text",
+                         async: false,
+                         success: function (data) {
+                             console.log(data);
+                             $('.modal-body').html(data);
+                             $('#myform').data('validator', null);
+                             $.validator.unobtrusive.parse('#myform');
+                             $("#myModal").modal("show");
+
+                         },
+                         error: function (response1) {
+                             console.log(response1);
+                         }
+
+                     })
+
+                 }
+
+    </script>
+        }

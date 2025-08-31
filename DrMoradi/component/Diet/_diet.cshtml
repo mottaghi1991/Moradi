@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Domain.Dr.Diet>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<section class="pt-5">
+
+    <div class="card" style="border:none;background-color:white;">
+        <div class="card-header" style="background-color:white;border:none">
+            <h3 class="fw-bold text-center plan-price">رژیم های آنلاین دکتر مرادی</h3>
+            <h6 class="fw-bold text-center plan-price">با انتخاب هر رژیم غذایی، توضیحات مربوط به آن رژیم را مطالعه کنید.</h6>
+
+        </div>
+        <div class="card-body">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @foreach (var item in Model)
+                    {
+                        <div class="swiper-slide">
+
+                            <div class="card" style="background-color:#F9F9F9;border:none">
+                                <div class="card-header" style="border:none;background-color:#F9F9F9">
+                                    <img src="@item.Image" class="img-fluid" style="border-radius:50px;width:250px;max-width:100%;height:auto" alt="@item.Name">
+                                </div>
+                                <!-- بخش متن و دکمه -->
+                                <div class="card-body">
+                                    <h5 class="text-center card-title-fixed">@item.Name</h5>
+                                    <p class="plan-price text-center">
+                                        <span>@(item.Price/10)</span> تومان
+                                    </p>
+                                    <a asp-action="DietDetail" asp-area="" asp-controller="Home" asp-route-DietId="@item.Id" class="plan-btn" style="background-color:#506180">ثبت سفارش</a>
+                                    @* <a asp-action="NotFound" asp-area="" asp-controller="Home" asp-route-DietId="@item.Id" class="plan-btn" style="background-color:#506180">ثبت سفارش</a> *@
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+
+                </div>
+                <!-- دکمه‌های ناوبری -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- نقاط -->
+                <div class="swiper-pagination"></div>
+            </div>
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-1 d-flex justify-content-center">
+                    <a href="\Diets" class="plan-btn w-100">مشاهده همه</a>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</section>

@@ -1,0 +1,82 @@
+﻿@using Core.Dto.ViewModel.Dr
+@model BlogPageVm
+@{
+    ViewData["Title"] = "Index";
+}
+<section class="position-relative py-5 " style="background-color: #f8f9fa;">
+    <div class="container">
+        <div class="row my-4 justify-content-center">
+            <div class="col-12">
+                <div class="section-title text-center">
+                    <h3 class="sub-title mb-4">
+                        بلاگ و اخبار
+
+                    </h3>
+                    <ul class="list-unstyled mt-4">
+                        <li class="list-inline-item user text-muted ms-3">
+                            <i class="mdi mdi-eye"></i>
+                             <span>صفحه اصلی</span>
+                        </li>
+                        <li class="list-inline-item date text-muted">
+                            <i class="mdi mdi-calendar-check"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+<div class="container my-5">
+    <div class="row g-4">
+        @foreach(var item in Model.Post)
+        {
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <img src="@item.Image" class="card-img-top" alt="عنوان مقاله">
+                    <div class="card-body">
+                        <small class="text-muted d-block mb-2">
+                            یکشنبه، 08 تیر 1404 📅
+                        </small>
+                        <h5 class="card-title fw-bold">
+                            @item.Title
+                        </h5>
+                        <p class="card-text text-secondary">@item.Summry</p>
+                        <a asp-action="blogDetails" asp-route-id="@item.Id" class="text-primary fw-bold">بیشتر بخوانید »</a>
+                    </div>
+                </div>
+            </div>
+        }
+        <!-- کارت ۱ -->
+        @if (Model.TotalPage > 1)
+        {
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <!-- دکمه قبلی -->
+                    <li class="page-item @( Model.Page == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Page - 1 })" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- شماره صفحات -->
+                    @for (var i = 1; i <= Model.TotalPage; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                        </li>
+                    }
+
+                    <!-- دکمه بعدی -->
+                    <li class="page-item @( Model.Page == Model.TotalPage? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Page + 1 })" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+
+    
+  
+    </div>
+</div>

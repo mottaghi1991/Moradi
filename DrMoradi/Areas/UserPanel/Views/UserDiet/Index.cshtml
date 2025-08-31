@@ -1,0 +1,218 @@
+﻿@using Core.Dto.ViewModel.Dr
+@using Domain
+@model ShowQuestionToUserVM
+@section style{
+    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
+}
+@{
+    ViewData["Title"] = "FillQuestion";
+}
+@if( TempData["Double"]!=null)
+{
+    <div class="col-md-12 alert alert-danger">
+    @Html.Raw(TempData["Double"])    </div>
+}
+
+
+@if (TempData["UploadError"] != null)
+{
+    <div class="col-md-4 alert alert-danger">
+        @TempData["UploadError"]
+    </div>
+}
+<div class="card card-dark m-4">
+    <div class="card-header">
+        <h3 class="card-title"> @Model.DietName</h3>
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("InsertAnswer", "UserDiet", FormMethod.Post, 
+                                new { enctype = "multipart/form-data", novalidate = "novalidate" }))
+        {
+        
+            @Html.AntiForgeryToken();
+            @Html.HiddenFor(m => m.DietId)
+            @Html.HiddenFor(m => m.parentId)
+            @Html.HiddenFor(m => m.DietName)
+
+            <div class="row">
+          
+ @if(Model.parentId==0)
+                {
+                    <div id="nationalCodeGroup" class="col-md-6">
+    <label for="Questions_0__Answer">رژیم گیرنده</label>
+    <label class="badge badge-danger"> اگر رژیم برای شخص دیگری می باشد نام آن را وارد فرمائید .</label>
+    <input class="form-control" data-val="true" data-val-required
+           id="Questions_0__Answer" 
+           name="Username" 
+           type="text" 
+           required="required"
+           value="@User.Identity?.Name">
+            </div>
+                }
+
+
+                @for (int i = 0; i < Model.Questions.Count; i++)
+                {
+                    var q = Model.Questions[i];
+
+                    // 1) بررسی خطا
+                    var key = $"Questions[{i}].Answer";
+                    bool hasError = ViewData.ModelState.ContainsKey(key)
+                                    && ViewData.ModelState[key].Errors.Count > 0;
+
+                    // 2) کلاس CSS نهایی
+                    var cssClass = "form-control" + (hasError ? " is-invalid" : "");
+
+                    // 3) تعداد ردیف برای textarea
+                    var rowCount = (q.FieldType == FieldType.textarea ? 4 : 2);
+
+                    // 4) کلاس ستون
+                    var colClass = q.FieldType switch
+                    {
+                        FieldType.textarea  => "col-md-12",
+                        FieldType.number    => "col-md-4",
+                        FieldType.textarea2 => "col-md-6",
+                        FieldType.file      => "col-md-6",
+                        FieldType.label     => "col-md-12",
+                        _                   => "col-md-6",
+                    };
+
+                    <div class="@colClass mb-3">
+                        <div class="form-group">
+                            @* لیبل فقط اگر فیلد label نباشد *@
+                            @if (q.FieldType != FieldType.label)
+                            {
+                                @Html.LabelFor(m => m.Questions[i].Answer, q.QuestionText, 
+                                              htmlAttributes: new { @class = "control-label" })
+                            }
+
+                            @* رندر کنترل بر اساس نوع *@
+                            @switch (q.FieldType)
+                            {
+                                case FieldType.text:
+                                    @Html.TextBoxFor(m => m.Questions[i].Answer,
+                                        new {
+                                            @class = cssClass,
+                                            type = "text",
+                                            // در صورت نیاز اعتبارسنجی سمت کلاینت
+                                            required = q.IsRequired ? "required" : null,
+                                            data_val = q.IsRequired ? "true" : null,
+                                            data_val_required = q.IsRequired
+                                                ? "وارد کردن پاسخ این فیلد اجباری می باشد"
+                                                : null
+                                        })
+                                    break;
+
+                                case FieldType.number:
+                                    @Html.TextBoxFor(m => m.Questions[i].Answer,
+                                        new {
+                                            @class = cssClass,
+                                            type = "number",
+                                            required = q.IsRequired ? "required" : null,
+                                            data_val = q.IsRequired ? "true" : null,
+                                            data_val_required = q.IsRequired
+                                                ? "وارد کردن پاسخ این فیلد اجباری می باشد"
+                                                : null
+                                        })
+                                    break;
+
+                                case FieldType.file:
+                                    @Html.TextBoxFor(m => m.Questions[i].Attachments,
+                                        new {
+                                            @class = cssClass,
+                                            type = "file",
+                                        multiple="multiple",
+                                            accept=".jpg,.jpeg,.png,.pdf",
+                                           
+                                               
+                                        })
+                                    break;
+
+                                case FieldType.textarea:
+                                case FieldType.textarea2:
+                                @Html.TextAreaFor(
+                                m => m.Questions[i].Answer,
+                                htmlAttributes: new {
+                                    @class             = cssClass,
+                                    rows               = rowCount,
+                                    required           = q.IsRequired ? "required" : null,
+                                    data_val           = q.IsRequired ? "true" : null,
+                                    data_val_required  = q.IsRequired 
+                                                          ? "وارد کردن پاسخ این فیلد اجباری می باشد" 
+                                                          : null
+                                })
+                                    break;
+                                case FieldType.select:
+                            @Html.DropDownListFor(
+                                m => m.Questions[i].Answer,
+                                new SelectList(Model.Questions[i].Options, "Value", "Text"),
+                                "انتخاب کنید...",
+                                new {
+                                    @class = cssClass,
+                                    required = q.IsRequired ? "required" : null,
+                                    data_val = q.IsRequired ? "true" : null,
+                                    data_val_required = q.IsRequired ? "وارد کردن پاسخ این فیلد اجباری می باشد" : null
+                                }
+                            )
+                            break;
+                                case FieldType.label:
+                                    <span class="form-label fw-bold">@q.QuestionText</span>
+                                    break;
+                            }
+
+                            @* پیام خطای سمت سرور/کلاینت *@
+                            @Html.ValidationMessageFor(m => m.Questions[i].Answer,
+                                                       "", 
+                                                       new { @class = "invalid-feedback" })
+
+                            @* مخفی نگه داشتن QuestionId *@
+                            @Html.HiddenFor(m => m.Questions[i].QuestionId)
+                               @Html.HiddenFor(m => m.Questions[i].IsRequired)
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <button type="submit" class="btn btn-success">ثبت</button>
+        }
+    </div>
+</div>
+
+@section Scripts {
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // ۴) Override کلاس‌های jQuery Validate برای Bootstrap
+        $.validator.setDefaults({
+            errorClass: 'invalid-feedback',
+            validClass: 'is-valid',
+            highlight: function (element) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+            },
+            unhighlight: function (element) {
+                $(element).removeClass('is-invalid').addClass('is-valid');
+            },
+            errorPlacement: function (error, element) {
+                // خطا را بلافاصله بعد از عنصر قرار بده
+                error.insertAfter(element);
+            }
+        });
+    </script>
+
+    <script>
+    document.getElementById("showNationalCode").addEventListener("change", function () {
+        let group = document.getElementById("nationalCodeGroup");
+        let input = document.getElementById("Questions_0__Answer");
+
+        if (this.checked) {
+            group.style.display = "block";
+            input.value = "@(User.Identity.Name)"; // مقدار پیش‌فرض
+        } else {
+            group.style.display = "none";
+            input.value = "";
+        }
+    });
+</script>
+}

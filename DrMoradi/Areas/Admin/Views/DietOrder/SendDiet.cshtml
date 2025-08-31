@@ -1,0 +1,133 @@
+﻿@using Domain.Dr
+@model Domain.Dr.SendDiet
+@{
+    ViewData["Title"] = "ارسال رژیم";
+    var files = ViewBag.File as IEnumerable<FileList>;
+}
+@section style {
+    <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
+}
+<div class="col-md-12">
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title">ارسال رژیم</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="SendDiet" method="post">
+                        <input asp-for="UserDietId" type="hidden" />
+                        <div class="form-group">
+                            <label asp-for="Descript" class="control-label"></label>
+                            <textarea asp-for="Descript" class="form-control" cols="5" rows="5"></textarea>
+                            <span asp-validation-for="Descript" class="text-danger"></span>
+
+                        </div>
+
+                        <input type="submit" value="ثبت" class="btn btn-success" />
+                    </form>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>نام فایل</th>
+                                <th>تاریخ</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                      <tbody>
+                          
+                          @if(files.Any())
+                            {
+                                @foreach (var item in files)
+                                {
+                                    <tr>
+                                        <td>@item.File.Replace("/FileUpload/Attachment/", "")</td>
+                                        <td></td>
+                                        <td>
+                                            <div class="d-inline-flex gap-2">
+                                                <a href="@item.File" target="_blank" class="btn btn-primary">نمایش</a>
+
+                                                <button type="button" class="btn btn-danger"
+                                                        onclick="deleteRowAndFile('@item.File', this)">
+                                                    حذف
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        
+                        </tbody>
+                    </table>
+                    <form action="/FileUpload/Attachment" class="dropzone" id="my-dropzone"></form>
+                    @* <ul id="uploadedFilesList" style="margin-top:20px"></ul> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+    <script>
+        Dropzone.autoDiscover = false;
+        let fileList = [];
+
+        var dz = new Dropzone("#my-dropzone", {
+            url: "/admin/DietOrder/Upload",
+            maxFiles: 10,
+            maxFilesize: 5, // MB
+            acceptedFiles: "image/*,.pdf,audio/*", // فقط تصاویر و PDF
+            addRemoveLinks: true,
+            dictDefaultMessage: "فایل را بکشید یا کلیک کنید",
+            dictRemoveFile: "حذف فایل",
+            dictFileTooBig: "فایل خیلی بزرگ است",
+            dictInvalidFileType: "فرمت مجاز نیست",
+
+            init: function() {
+                   this.on("sending", function(file, xhr, formData) {
+            var userDietId = $("#UserDietId").val();
+            formData.append("UserDietId", userDietId);
+        });
+                this.on("success", function(file, response) {
+                    // فرض برمی‌گردونه fileName ذخیره شده
+
+                    file.uploadedName = response.fileName;
+                    addFileToList(file, response.fileName);
+                });
+                this.on("removedfile", function(file) {
+                    if (file.uploadedName)
+                        removeFileFromServer(file.uploadedName);
+                });
+            }
+        });
+
+        // اضافه کردن اسم فایل به لیست پایین
+        function addFileToList(file, serverFileName) {
+            fileList.push(serverFileName);
+            $("#uploadedFilesList").append(
+                `<li data-fname='${serverFileName}' style="margin-bottom:7px;">
+                    ${serverFileName}
+                    <a href="#" onclick="removeFileFromServer('${serverFileName}', this)" style="color:#3a46a6;margin-right:6px;">حذف فایل</a>
+                </li>`
+            );
+        }
+
+        // حذف آژاکسی فایل از سرور و لیست نمایش
+        function removeFileFromServer(fileName, el=null) {
+            $.post("/admin/DietOrder/Delete", { fileName: fileName }, function(res) {
+                if(res.success && el){
+                    $(el).closest("li").remove();
+                }
+            });
+        }
+                function deleteRowAndFile(fileName, el) {
+            $.post("/admin/DietOrder/Delete", { fileName: fileName }, function (res) {
+                if (res.success) {
+                    // پاک کردن ردیف جدول
+                    $(el).closest("tr").remove();
+                }
+            });
+        }
+    </script>
+
+}

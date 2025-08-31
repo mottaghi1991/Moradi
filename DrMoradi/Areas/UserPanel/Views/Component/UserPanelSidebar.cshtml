@@ -1,0 +1,35 @@
+﻿
+@model Core.Dto.ViewModel.User.UserPanelViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+<!-- end sidebar menu -->
+<div class="profile-card pb-0">
+    <!-- start avatar box -->
+    <img src="~/assets/images/avatar.jpg" class="profile-avatar img-thumbnail">
+    <p class="font-13 text-center">@Model.Name</p>
+    <div class="row border-top">
+        <div class="col-6 border-end text-center">
+            <i class="fa fa-lock font-13 text-muted my-2"></i>
+            <a href="change-password.html" class="text-dark d-block font-12 mb-2">تغییر رمز عبور</a>
+        </div>
+        <div class="col-6 text-center">
+            <i class="fas fa-sign-out-alt font-13 text-muted my-2"></i>
+            <a href="/Logout" class="text-dark d-block font-12 mb-2">خروج از حساب</a>
+        </div>
+    </div>
+</div><!-- end avatar box -->
+
+<div class="profile-card">
+    <!-- start sidebar menu -->
+    <ul class="profile-sidebar">
+        <li><a href="profile.html" class="text-info"><i class="far fa-user-circle align-middle me-2"></i>پروفایل</a></li>
+        <li><a href="profile-order.html"><i class="fas fa-shopping-cart align-middle me-2"></i>همه سفارش ها</a></li>
+        <li><a href="profile-order-return.html"><i class="fa  fa-retweet align-middle me-2"></i>درخواست مرجوعی</a></li>
+        <li><a href="profile-fav-list.html"><i class="far fa-heart align-middle me-2"></i>لیست علاقمندی ها</a></li>
+        <li><a href="profile-comment.html"><i class="far fa-comment align-middle me-2"></i>نظرات</a></li>
+        <li><a href="profile-address.html"><i class="fas fa-map-marker-alt align-middle me-2"></i>آدرس ها</a></li>
+        <li><a href="profile-info.html"><i class="far fa-address-card align-middle me-2"></i>اطلاعات حساب</a></li>
+    </ul>
+</div>

@@ -1,0 +1,329 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Core.Extention
+@model Core.Dto.ViewModel.Admin.EditSettingViewModel
+@{
+    ViewData["Title"] = " تنظیمات سایت";
+}
+@section style
+{
+    <link href="~/assets/vendor/ckeditor5.css" rel="stylesheet" />
+}
+
+
+<div class="col-md-12">
+    <div class="card card-info">
+        <div class="card-header">
+            <h3 class="card-title">ویرایش تنظیمات</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="Index" asp-controller="Setting" id="myform" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Phone" class="control-label"></label>
+                                    <input asp-for="Phone" class="form-control" />
+                                    <span asp-validation-for="Phone" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Email" class="control-label"></label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Location" class="control-label"></label>
+                                    <input asp-for="Location" class="form-control" />
+                                    <span asp-validation-for="Location" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="jobs" class="control-label"></label>
+                                    <input asp-for="jobs" class="form-control" />
+                                    <span asp-validation-for="jobs" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="BackgroundImage" class="control-label"></label>
+                                    <input asp-for="BackgroundImage" class="form-control" />
+                                    <span asp-validation-for="BackgroundImage" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Birthday" class="control-label"></label>
+                                    <input name="Birthday" value="@(Convert.ToDateTime(Model.Birthday).ToPersian())" class="form-control MyDateTime" id="Birthday" />
+                                    <span asp-validation-for="Birthday" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="ProfileImage" class="control-label"></label>
+                                    <input asp-for="Profile" class="form-control" />
+                                    <span asp-validation-for="BackgroundImage" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Instagram" class="control-label"></label>
+                                    <input asp-for="Instagram" class="form-control" />
+                                    <span asp-validation-for="Instagram" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Linkedin" class="control-label"></label>
+                                    <input asp-for="Linkedin" class="form-control" />
+                                    <span asp-validation-for="Linkedin" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="Tweeter" class="control-label"></label>
+                                    <input asp-for="Tweeter" class="form-control" />
+                                    <span asp-validation-for="Tweeter" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <textarea asp-for="Aboute" class="form-control" id="editor" rows="6"></textarea>
+                            </div>
+                            <div class="col-md-3"></div>
+                        </div>
+
+<input type="submit"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts
+{
+    <style>
+        /* استایل‌های مربوط به عکس‌ها برای نمایش درست در صفحه نهایی */
+        .image-style-align-left {
+            float: left;
+            margin-right: 1em;
+        }
+
+        .image-style-align-center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .image-style-align-right {
+            float: right;
+            margin-left: 1em;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        figure.image {
+            display: inline-block;
+            text-align: center;
+            margin: 1em auto;
+        }
+
+        figcaption {
+            font-size: 0.875em;
+            color: #555;
+        }
+    </style>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "../../assets/vendor/ckeditor5.js",
+                "ckeditor5/": "../../assets/vendor/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font,
+            Heading,
+            Image,
+            ImageToolbar,
+            ImageCaption,
+            ImageStyle,
+            ImageUpload,
+            ImageResize,
+            Alignment,
+            Link,
+            List
+        } from 'ckeditor5';
+
+        ClassicEditor.create(document.querySelector('#editor'), {
+            extraPlugins: [MyCustomUploadAdapterPlugin],
+            licenseKey: '',
+            plugins: [
+                Essentials,
+                Paragraph,
+                Bold,
+                Italic,
+                Font,
+                Heading,
+                Image,
+                ImageToolbar,
+                ImageCaption,
+                ImageStyle,
+                ImageUpload,
+                ImageResize,
+                Alignment,
+                Link,
+                List
+            ],
+            toolbar: [
+                'heading', '|', 'bold', 'italic', 'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                'link', 'bulletedList', 'numberedList', '|',
+                'imageUpload', '|',
+                'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
+                'resizeImage', 'imageTextAlternative', 'toggleImageCaption', '|',
+                'alignment:left', 'alignment:center', 'alignment:right', 'alignment:justify'
+            ],
+            language: 'fa',
+            ui: {
+                language: 'fa'
+            },
+            contentLanguage: 'fa',
+            alignment: {
+                options: ['left', 'right', 'center', 'justify']
+            },
+            image: {
+                resizeOptions: [
+                    {
+                        name: 'resizeImage:original',
+                        label: 'اندازه اصلی',
+                        value: null
+                    },
+                    {
+                        name: 'resizeImage:75',
+                        label: '۷۵٪',
+                        value: '75'
+                    },
+                    {
+                        name: 'resizeImage:50',
+                        label: '۵۰٪',
+                        value: '50'
+                    }
+                ],
+                styles: ['alignLeft', 'alignCenter', 'alignRight'],
+                toolbar: [
+                    'imageStyle:alignLeft',
+                    'imageStyle:alignCenter',
+                    'imageStyle:alignRight',
+                    '|',
+                    'resizeImage',
+                    '|',
+                    'imageTextAlternative',
+                    'toggleImageCaption'
+                ]
+            }
+        })
+        .then(editor => {
+            editor.model.document.on('change:data', () => {
+                const htmlContent = editor.getData();
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = htmlContent;
+                const images = tempDiv.querySelectorAll('img');
+                images.forEach(image => {
+                    const altText = image.alt;
+                    const imageSrc = image.src;
+                    if (altText) {
+                        sendAltToServer(imageSrc, altText);
+                    }
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error initializing the editor:', error);
+        });
+
+        function sendAltToServer(imageSrc, altText) {
+            console.log('Sending alt text and image to server:', altText, imageSrc);
+            $.ajax({
+                url: '@Url.Action("SaveImageInfo", "Setting", new { area = "Admin" })',
+                method: 'POST',
+                data: {
+                    imageSrc: imageSrc,
+                    alt: altText
+                },
+                success: function (response) {
+                    console.log('Alt text and image successfully saved on the server.');
+                },
+                error: function (error) {
+                    console.error('Error saving alt text and image:', error);
+                }
+            });
+        }
+
+        class MyUploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
+                        const data = new FormData();
+                        data.append('upload', file);
+                        fetch('@Url.Action("UploadImage", "Setting", new { area = "Admin" })', {
+                            method: 'POST',
+                            body: data
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.uploaded) {
+                                resolve({
+                                    default: data.url
+                                });
+                            } else {
+                                reject('Image upload failed');
+                            }
+                        })
+                        .catch(error => reject(error.message || 'Upload failed.'));
+                    }));
+            }
+
+            abort() {
+                // عملیات لغو در صورت نیاز
+            }
+        }
+
+        function MyCustomUploadAdapterPlugin(editor) {
+            editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                return new MyUploadAdapter(loader);
+            };
+        }
+    </script>
+}
+
+
+

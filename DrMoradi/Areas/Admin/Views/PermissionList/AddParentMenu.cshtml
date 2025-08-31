@@ -1,0 +1,48 @@
+﻿@model Domain.User.Permission.PermissionList
+@{
+    ViewData["Title"] = "AddParentMenu";
+    Layout = null;
+}
+
+<div class="col-md-12">
+    <div class="card card-success  text-center">
+        <div class="card-header">
+            <h3 class="card-title">افزودن منو والد</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="AddParentMenu" id="myform">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                        <div class="form-group">
+                            <label asp-for="Descript" class="control-label"></label>
+                            <input asp-for="Descript" class="form-control" />
+                            <span asp-validation-for="Descript" class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Radif" class="control-label"></label>
+                            <input asp-for="Radif" class="form-control" />
+                            <span asp-validation-for="Radif" class="text-danger"></span>
+
+                        </div>
+
+
+
+
+
+
+
+
+                        <div class="form-group">
+                            <input type="submit" value="ثبت" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,53 @@
+﻿@model Core.Dto.ViewModel.main.UsualComentVM
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+    <div class="card shadow-sm w-100 d-flex flex-column equal-card">
+        <div class="card-body">
+            <h5 class="card-title">ثبت نظرات و پرسش‌های شما</h5>
+            <form asp-action="UsualComment" asp-controller="Home" method="post" id="mobileForm">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <label asp-for="Name" class="form-label"></label>
+                        <input asp-for="Name" class="form-control"  >
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Mobile" class="form-label"></label>
+                        <input asp-for="Mobile" class="form-control">
+                        <span asp-validation-for="Mobile" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label asp-for="Text" class="form-label"></label>
+                    <textarea asp-for="Text" class="form-control" cols="3" rows="3"></textarea>
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                 
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">ارسال پیام</button>
+                    </div>
+                    <div class="col-md-6">
+                    @if (Model.status == "true")
+                    {
+                        <div class="alert alert-success" id="successMessage">
+                            پیام شما با موفقیت ثبت شد.
+                        </div>
+                    }
+                    @if (Model.status == "false")
+                    {
+                        <div class="alert alert-danger" id="errorMessage">
+                            ثبت پیام با خطا مواجه شد. لطفاً اطلاعات را بررسی کنید.
+                        </div>
+                    }
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+

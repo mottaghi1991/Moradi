@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Domain.Dr.Slider>
+@{
+    var index = 0;
+}
+<section id="sliderSection">
+    <div id="carouselSlider" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <!-- Indicators -->
+        <div class="carousel-indicators">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <button type="button"
+                        data-bs-target="#carouselSlider"
+                        data-bs-slide-to="@i"
+                        class="@(i == 0 ? "active" : "")"
+                        aria-current="@(i == 0 ? "true" : "false")"
+                        aria-label="اسلاید @(i + 1)">
+                </button>
+            }
+        </div>
+
+        <!-- Slides -->
+        <div class="carousel-inner">
+            @foreach (var item in Model)
+            {
+                <div class="carousel-item @(index == 0 ? "active" : "")">
+                    <picture>
+                     
+                        <a href="@item.Link">  <img src="@item.DesktopFile" class="d-block w-100" alt="@item.DesktopDescript"></a>
+                    </picture>
+                    <div class="carousel-caption d-none d-md-block">
+                        <!-- کاپشن دلخواه -->
+                    </div>
+                </div>
+                index++;
+            }
+        </div>
+
+        <!-- Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselSlider" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">قبلی</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselSlider" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">بعدی</span>
+        </button>
+    </div>
+</section>

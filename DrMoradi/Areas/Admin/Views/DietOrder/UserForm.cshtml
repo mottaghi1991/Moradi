@@ -1,0 +1,79 @@
+﻿@using Core.Dto.ViewModel.Dr
+@model ShowUserFormVM
+@{
+    ViewData["Title"] = "UserForm";
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        <h3 class="card-title"> لیست سفارشات</h3>
+    </div>
+    <div class="card-body">
+        @{
+            var index = 0;
+        }
+        @foreach (var item in Model.userDiets)
+        {
+
+            @if (index == 0)
+            {
+                <a asp-action="UserForm" asp-controller="DietOrder" class="btn btn-primary" asp-route-UserId="@Model.UserId" asp-route-UserDietId="@item.Id" asp-route-DietId="@item.DietId">فرم اولیه</a>
+            }
+            else
+            {
+                <a asp-action="UserForm" asp-controller="DietOrder" class="btn btn-info" asp-route-UserId="@Model.UserId" asp-route-UserDietId="@item.Id" asp-route-DietId="@item.DietId">فرم ثانویه</a>
+            }
+
+            index++;
+        }
+
+        <table class="table table-responsive table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.showUserAnswerVMs.FirstOrDefault().QuestionText)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.showUserAnswerVMs.FirstOrDefault().Answer)
+                    </th>
+               
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.showUserAnswerVMs)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QuestionText)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Answer)
+                        </td>
+
+                    </tr>
+                }
+                <tr><td>فایلها</td>
+                    <td>
+                        @if (Model.UserFile.Any())
+                        {
+                            int a = 1;
+
+                            foreach (var item in Model.UserFile)
+                            {
+                                <a href="@item.File" target="_blank">ضمیمه  @a</a>
+                                <br />
+                                a++;
+                            }
+                        }
+
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-info" asp-action="Index" asp-controller="DietOrder">بازگشت به لیست</a>
+    </div>
+</div>
+
+

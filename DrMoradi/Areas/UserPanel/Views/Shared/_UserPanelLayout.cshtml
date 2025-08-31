@@ -1,0 +1,117 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+      <meta name="viewport" content="width=device-width">
+    <title>رژیم آنلاین دکتر مرادی</title>
+    <link rel="icon" type="image/png" href="~/FileUpload/Slider/logo-m.png">
+    @* <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" /> *@
+    <link rel="stylesheet" href="~/MyFile/dist/css/adminlte.min.css">
+
+    <link href="~/css/swiper.css" rel="stylesheet" />
+    <link href="~/myfile/dist/css/custom-style.css" rel="stylesheet" />
+
+    <link href="~/css/userpanelstyle.css" rel="stylesheet" />
+
+    <link href="~/common/sweetalert/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/css/maincss.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/MyFile/dist/css/bootstrap-rtl.min.css">
+    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
+
+    @await RenderSectionAsync("style", false)
+</head>
+<body>
+
+    <partial name="_SiteHeader" />
+
+    @await Component.InvokeAsync("NavbarComponent")
+    <main class="container-fluid py-4" style="direction: rtl;">
+        <div class="row mt-5">
+
+            <!-- دکمه باز کردن منوی موبایل -->
+            <div class="col-12 d-md-none mb-3 text-end">
+                <button class="menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
+                    ☰ <span>منوی کاربری</span>
+                </button>
+            </div>
+
+            <!-- سایدبار دسکتاپ -->
+            <aside class="d-none d-md-block col-md-3 col-lg-2">
+                <div class="card shadow-sm p-3 mb-4">
+                    <div class="text-center mb-3">
+                        <img src="/FileUpload/Doctor/images.png" class="rounded-circle mb-2" width="80" alt="پروفایل" />
+                        <div class="fw-bold">@User.Identity?.Name</div>
+                        <small class="text-muted">کاربر</small>
+                    </div>
+                    <ul class="list-unstyled menu-list">
+                        <li><span class="icon">👤</span><a href="/userPanel/userDiet/mydiet"> رژیم های من</a></li>
+                        <li><span class="icon">⚙️</span> تنظیمات</li>
+                        <li><span class="icon">🚪</span><a href="/Logout"> خروج</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- محتوای اصلی -->
+            <section class="col-12 col-md-9 col-lg-10">
+                @RenderBody()
+            </section>
+
+            <!-- Offcanvas موبایل -->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+                <div class="offcanvas-header">
+                    <h5 id="mobileSidebarLabel" class="mb-0">منوی کاربری</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="بستن"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="text-center mb-3">
+                        <img src="/FileUpload/Doctor/images.png" class="rounded-circle mb-2" width="80" alt="پروفایل" />
+                        <div class="fw-bold">علی محمدی</div>
+                        <small class="text-muted">کاربر ویژه</small>
+                    </div>
+                    <ul class="list-unstyled menu-list">
+                        <li><span class="icon">👤</span><a href="/userPanel/userDiet/mydiet"> رژیم های من</a></li>
+                        <li><span class="icon">⚙️</span> تنظیمات</li>
+                        <li><span class="icon">🚪</span><a href="/Logout"> خروج</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script src="~/MyFile/dist/js/JQuery.js"></script>
+    <script src="~/js/bootstrap5.3.0.js"></script>
+    <script src="~/js/swipper.js"></script>
+    <script src="~/Common/SweetAlert/sweetalert2.min.js"></script>
+    <partial name="_Message" />
+    <partial name="_SiteFooter" />
+
+
+
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/mainjs.js"></script>
+    <script>
+        // Toggle Offcanvas Sidebar
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const offcanvas     = document.getElementById('mobileSidebar');
+        const backdrop      = document.getElementById('sidebar-backdrop');
+        sidebarToggle && sidebarToggle.addEventListener('click', function() {
+          offcanvas.classList.add('show');
+          backdrop.classList.add('active');
+        });
+        backdrop && backdrop.addEventListener('click', function(){
+          offcanvas.classList.remove('show');
+          backdrop.classList.remove('active');
+        });
+    </script>
+
+
+
+</body>
+</html>

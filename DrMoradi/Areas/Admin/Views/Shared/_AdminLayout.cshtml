@@ -1,0 +1,90 @@
+﻿
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>سیستم مدیریت محتوا</title>
+    <link rel="icon" type="image/png" href="~/FileUpload/Slider/logo-m.png">
+    <partial name="_HeaderLink" />
+    @await RenderSectionAsync("style", false)
+    <script type="importmap">
+        {
+          "imports": {
+                  "ckeditor5": "/assets/vendor/ckeditor5.js",
+                   "ckeditor5/": "/assets/vendor/"
+          }
+        }
+    </script>
+    
+</head>
+<body class="hold-transition sidebar-mini">
+
+
+    <div class="wrapper">
+        <nav class="main-header navbar navbar-expand bg-white navbar-light border-bottom">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><img src="/Img/menu-hamburger-svgrepo-com.svg" width="20" height="20" /></a>
+                </li>
+                <li class="nav-item ">
+                    <a href="\" class="nav-link">خانه</a>
+                </li>
+                <li class="nav-item d-sm-inline-block">
+
+                    <a href="#" class="nav-link">ویرایش اطلاعات کاربری</a>
+                </li>
+            </ul>
+            <!-- Right navbar links -->
+        </nav>
+
+
+
+
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="index3.html" class="brand-link">
+                <img src="/MyFile/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                     style="opacity: .8">
+                <span class="brand-text font-weight-light"></span>
+            </a>
+            <div class="">
+                <div>
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex text-end" style="color: white">
+                        <div class="image text-center">
+                        </div>
+                        <div class="info ">
+                            <a href="#" class="d-block"></a>
+                            @User.Identity?.Name
+                        </div>
+                    </div>
+                    <nav class="mt-2">
+                        @await Component.InvokeAsync("FillMenu")
+                    </nav>
+                </div>
+            </div>
+        </aside>
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="container-fluid">
+
+                    @RenderBody()
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+
+    <partial name="_FooterLink" />
+    <partial name="_Message" />
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

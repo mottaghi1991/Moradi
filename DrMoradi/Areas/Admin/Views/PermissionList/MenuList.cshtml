@@ -1,0 +1,131 @@
+﻿@model IEnumerable<Domain.User.Permission.PermissionList>
+@{
+    ViewData["Title"] = "منوها";
+
+}
+
+
+
+<div class="card card-primary  text-center">
+    <div class="card-header">
+        دسترسی ها
+
+    </div>
+
+    <div class="card-body">
+
+        <form asp-action="MenuList" method="get">
+            <div class="row">
+
+
+                <div class="col-md-3 ">
+
+                    <select name="ParentMenuId" class="form-control" asp-items=" ViewBag.MenuList">
+                        <option>لطفا یک گزینه را انتخاب فرمائید .</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-1">
+                    <input class="btn btn-primary" type="submit" value="جستجو" />
+                </div>
+
+
+
+                <div class="col-md-1">
+                    <a class="btn btn-warning" onclick="AddParentMenu()">منو والد</a>
+                </div>
+
+            </div>
+        </form>
+        <hr />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ردیف</th>
+                    <th>ترتیب</th>
+                    <th>محدوده</th>
+                    <th>کنترلر</th>
+                    <th>اکشن</th>
+                    <th>توضیحات</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@i </td>
+                        <td>@item.Radif </td>
+                        <td>@item.Area </td>
+                        <td>@item.ControllerName </td>
+                        <td>@item.ActionName </td>
+                        <td>@item.Descript </td>
+
+                        <td>
+                            @switch (item.Status)
+                            {
+                                case 0:
+                                    <label> دسترسی</label>
+                                    break;
+                                case 1:
+                                    <label> منو</label>
+                                    break;
+                                case 2:
+                                    <label> سیستمی</label>
+                                    break;
+                                case -1:
+                                    <label style="color: red"> نامعلوم</label>
+                                    break;
+                            }
+                        </td>
+
+                        @* <td> <a data-toggle="modal" data-target="#exampleModal" class="btn btn-info" onclick="View(@item.SystemMenuID)">ویرایش</a></td> *@
+
+
+                        <td><a asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-info">ویرایش</a></td>
+                        <td><a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('ایا از حذف اطمینان دارید؟')" class="btn btn-danger">حذف</a></td>
+
+
+                    </tr>
+                    i = i + 1;
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+
+            <div class="modal-body">
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+@section Scripts
+{
+    <script src="~/js/Amin/PermissionList.js"></script>
+}

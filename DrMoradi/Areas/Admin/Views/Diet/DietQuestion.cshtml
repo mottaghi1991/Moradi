@@ -1,0 +1,49 @@
+﻿@using Domain.Dr
+@model Core.Dto.ViewModel.Dr.QuestionFolder.DietQuestionVm
+@{
+    ViewData["Title"] = "سوالات رژیم";
+
+}
+@section style{
+        #questionsList {
+        columns: 2; /* یا 3 بر اساس تعداد سوال */
+    }
+}
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title">لیست سوالات  @Model.DietName  </h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="DietQuestion">
+                @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="@Model.DietId" />
+            <input type="hidden" asp-for="@Model.FirstForm" />
+            <input type="text" id="questionSearch" class="form-control mb-3" placeholder="جستجوی سوال..." />
+            <input type="submit" class="btn btn-success justify-content-center" value="ثبت" />
+            <div id="questionsList">
+                @foreach (var item in ViewBag.Questions as IEnumerable<Question>)
+                {
+                    <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" name="QuestionList" id="chk-@item.Id" value="@item.Id"
+                               @((Model.DietQuestion.Any(r => r.QuestionId == item.Id) ? "checked" : "")) />
+                        <label class="form-check-label" for="chk-@item.Id">@item.Name ( @(item.FirstForm?"مخصوص فرم اولیه":"مخصوص فرم ثانویه"))</label>
+                    </div>
+                }
+            </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("questionSearch").addEventListener("keyup", function () {
+        var val = this.value.toLowerCase();
+        document.querySelectorAll("#questionsList .form-check-label").forEach(function(label) {
+            if(label.textContent.toLowerCase().indexOf(val) > -1)
+                label.parentElement.style.display = '';
+            else
+                label.parentElement.style.display = 'none';
+        });
+    });
+</script>

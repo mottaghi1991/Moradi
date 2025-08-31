@@ -1,0 +1,118 @@
+﻿@using Core.Dto.ViewModel.main
+@using Core.Extention
+@using Domain
+@model CommentPageVm
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> لیست نظرات</h3>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+نام کاربری                        </th>
+                        <th>
+دسته بندی                        </th>
+                       
+                        <th>
+وضعیت                        </th>
+                        <th>
+تاریخ ایجاد                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Comments)
+                    {
+                        <tr>
+                            <td>@(item.Name)</td>
+                            <td>
+                                @switch (item.EntityType)
+                                {
+                                    case EntityType.Diet:
+                                        @:<label>رژیم</label>
+                                        break;
+
+                                    case EntityType.Home:
+                                        @:<label>خانه</label>
+                                        break;
+                                    case EntityType.Product:
+                                        @:<label>محصولات</label>
+                                        break;
+                                    default:
+                                        @:<label>نامشخص</label>
+                                        break;
+                                }
+                                
+                                
+                                
+                            </td>
+
+                            <td>
+                                @if (item.IsApproved)
+                                {
+                                    <label class="label label-success">تایید شده</label>
+
+                                }
+                                else
+                                {
+                                    <label class="label label-danger">تایید نشده</label>
+
+                                }
+                             
+                            </td>
+                            <td>
+                                @item.CreateDate.ToPersian()
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-action="ReplyComment" asp-route-commentId="@item.Id">پاسخ</a>
+@*                                 <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('ایا از تایید اطمینان دارید؟')" class="btn btn-danger"> تایید</a>
+ *@                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            @if (Model.TotalPage > 1)
+            {
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+
+                        <!-- دکمه قبلی -->
+                        <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = (Model.Page > 1 ? Model.Page - 1 : 1) })" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        <!-- شماره صفحات -->
+                        @for (var i = 1; i <= Model.TotalPage; i++)
+                        {
+                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+                        }
+
+                        <!-- دکمه بعدی -->
+                        <li class="page-item @(Model.Page >= Model.TotalPage ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = (Model.Page < Model.TotalPage ? Model.Page + 1 : Model.TotalPage) })" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+
+        </div>
+    </div>
+</div>
+
+

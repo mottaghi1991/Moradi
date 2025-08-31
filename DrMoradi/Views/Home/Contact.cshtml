@@ -1,0 +1,150 @@
+﻿
+@{
+    ViewData["Title"] = "Contact";
+}
+@section style {
+    <style>
+        /* کارت‌های آدرس و شماره تماس ارتفاع بیشتری داشته باشن */
+        .contact-card-tall {
+            min-height: 120px; /* یا هر مقدار دلخواه */
+            display: flex;
+    
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+            /* تغییر رنگ در هاور */
+            .contact-card-tall:hover {
+                background-color: #0d6efd; /* آبی بوت‌استرپ */
+                color: #fff; /* متن سفید برای خوانایی */
+            }
+
+                /* مطمئن بشیم متن و لینک هم سفید میشه */
+                .contact-card-tall:hover h6,
+                .contact-card-tall:hover p,
+                .contact-card-tall:hover a,
+                .contact-card-tall:hover i {
+                    color: #fff !important;
+                }
+    </style>
+}
+<section class="position-relative py-5 " style="background-color: #f8f9fa;">
+    <div class="container">
+        <div class="row my-4 justify-content-center">
+            <div class="col-12">
+                <div class="section-title text-center">
+                    <h3 class="sub-title mb-4">
+                        ارتباط با ما
+
+                    </h3>
+                    <ul class="list-unstyled mt-4">
+                        <li class="list-inline-item user text-muted ms-3">
+                            <i class="mdi mdi-eye"></i>
+                            <span>صفحه اصلی</span>
+                        </li>
+                        <li class="list-inline-item date text-muted">
+                            <i class="mdi mdi-calendar-check"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="pt-5">
+    <!-- اگر کل صفحه RTL است، می‌توانید این را بردارید -->
+
+    <div class="container py-5">
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-6 d-flex" id="commentComponentWrapper">
+                <!-- ستون راست: فرم و اسلایدر -->
+                    @await Component.InvokeAsync("CommentComponent")
+                <!-- باکس BMI -->
+
+
+            </div>
+            <div class="col-lg-6">
+                <!-- آدرس مطب -->
+                <div class="card mb-3 shadow-sm border-0 contact-card-tall">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="ms-3 text-primary fs-3">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">آدرس مطب</h6>
+                            <p class="mb-0 text-muted">
+                                تهران، گیشا، بین خیابان 12 و 14، ساختمان خاتم، طبقه دوم، واحد 2.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- شماره تماس -->
+                <div class="card mb-3 shadow-sm border-0 contact-card-tall">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="ms-3 text-primary fs-3">
+                            <i class="bi bi-telephone-fill"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-1">شماره تماس</h6>
+                            <p class="mb-0">
+                                <a href="tel:02188231136" class="text-decoration-none text-dark">021-88231136</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- نقشه گوگل -->
+                <div class="card shadow-sm border-0">
+                    <div class="ratio ratio-16x9">
+                    
+
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d624.3594308115614!2d51.37789755897238!3d35.73173473218402!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e073b3bac15f5%3A0x94ebcba82094394c!2z2K_aqdiq2LEg2YXYudi12YjZhdmHINmF2LHYp9iv24w!5e0!3m2!1sfa!2s!4v1755409212138!5m2!1sfa!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+
+
+@section Scripts {
+    <script>
+        $(document).on("submit", "#mobileForm", function(e) {
+
+            e.preventDefault(); // جلوگیری از سابمیت عادی
+            var $form = $(this);
+            $.ajax({
+                url: $form.attr("action"),
+                method: "POST",
+                data: $form.serialize(),
+                success: function (result) {
+
+                      $("#commentComponentWrapper").html(result);
+        if ($.validator && $.validator.unobtrusive)
+            $.validator.unobtrusive.parse("#mobileForm");
+
+        if ($("#successMessage").length) {
+            setTimeout(function () {
+                $("#successMessage").fadeOut(600);
+            }, 4000);
+        }
+        if ($("#errorMessage").length) {
+            setTimeout(function () {
+                $("#errorMessage").fadeOut(600);
+            }, 4000);
+        }
+        if ($('#testimonialsCarousel').length)
+            $('#testimonialsCarousel').carousel();
+                },
+                error: function () {
+                    alert("مشکل در ارتباط با سرور. لطفا بعدا تلاش کنید.");
+                }
+            });
+        });
+    </script>
+}

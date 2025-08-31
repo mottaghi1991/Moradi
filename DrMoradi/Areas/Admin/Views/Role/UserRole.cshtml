@@ -1,0 +1,27 @@
+﻿@using Core.Dto.ViewModel.User
+@using System.Collections
+@model Core.Dto.ViewModel.Admin.Role.EditUserRoleVm
+@{
+    ViewData["Title"] = "UserRole";
+
+}
+
+<div class="card card-primary">
+    <div class="card-header">
+        کاربران گروه @Model.RoleName
+    </div>
+
+    <div class="card-body">
+    
+        <form asp-action="UserRole">
+            <input type="hidden" asp-for="RoleId"/>
+            @foreach (var item in ViewBag.AdminUser as IEnumerable<ShowUserBrifViewModel>)
+            {
+
+                <input type="checkbox" class="btn-check" name="UserList" value="@item.UserId" @((Model.UserRoles.Any(r => r.UserId == item.UserId) ? "checked" : ""))/>@item.UserName
+                <br>
+            }
+            <input type="submit" class="btn btn-success" value="ثبت"/>
+        </form>
+    </div>
+</div>

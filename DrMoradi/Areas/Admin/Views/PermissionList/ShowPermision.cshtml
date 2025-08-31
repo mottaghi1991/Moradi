@@ -1,0 +1,189 @@
+﻿
+
+
+@model IEnumerable<Domain.User.Permission.PermissionList>
+
+@{
+    ViewBag.Title = "ShowPermission";
+}
+
+
+
+
+<div class="card card-primary ">
+    <div class="card-header">
+        دسترسی ها
+
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card-body m-4">
+
+                <form asp-action="ShowPermision" method="get">
+                    <div class="row">
+
+
+                        <div class="col-md-3 ">
+
+                            <select name="MyArea" class="form-control" asp-items="ViewBag.Area" onchange="LoadController(this.value)">
+                                <option>لطفا یک گزینه را انتخاب فرمائید .</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="SearchController" class="form-control" asp-items="ViewBag.Controller" id="SearchController">
+                                <option>لطفا یک گزینه را انتخاب فرمائید .</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-1">
+                            <input class="btn btn-primary" type="submit" value="جستجو" />
+                        </div>
+
+
+                        <div class="col-md-1">
+                            <a class="btn btn-success" onclick="insertArea()">بروزرسانی</a>
+                        </div>
+                        <div class="col-md-1">
+                            <a class="btn btn-info" asp-action="ShowPermision" asp-route-MyArea="-1">دسترسی های والد</a>
+                        </div>
+
+                    </div>
+                </form>
+                <hr />
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>ردیف</th>
+                            <th>ترتیب</th>
+                            <th>ناحیه</th>
+                            <th>کنترلر</th>
+                            <th>اکشن</th>
+                            <th>نوع</th>
+                            <th>توضیحات</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@i </td>
+                                <td>@item.Radif </td>
+                                <td>@item.Area </td>
+                                <td>@item.ControllerName </td>
+                                <td>@item.ActionName </td>
+                                <td>@item.Descript </td>
+
+                                <td>
+                                    @switch (item.Status)
+                                    {
+                                        case 0:
+                                            <label> دسترسی</label>
+                                            break;
+                                        case 1:
+                                            <label> منو</label>
+                                            break;
+                                        case 2:
+                                            <label> سیستمی</label>
+                                            break;
+                                        case null:
+                                            <label style="color: red"> نامعلوم</label>
+                                            break;
+                                    }
+                                </td>
+
+                                @* <td> <a data-toggle="modal" data-target="#exampleModal" class="btn btn-info" onclick="View(@item.SystemMenuID)">ویرایش</a></td> *@
+
+
+                                <td><a asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-info">ویرایش</a></td>
+                                <td><a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('ایا از حذف اطمینان دارید؟')" class="btn btn-danger">حذف</a></td>
+
+
+                            </tr>
+                            i = i + 1;
+                        }
+
+                    </tbody>
+                </table>
+              
+            </div>
+        </div>
+
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <ul>
+                <li>parentid=0>>>>>دسترسی ریشه(area)</li>
+                <li>parentid=null>>>>>منو ریشه(در menulist)خودت درست میکنی</li>
+             
+            </ul>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="modal fade" id="myModal" role="dialog" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <!-- Modal content-->
+
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+
+            <div class="modal-body">
+            </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">بستن</button>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script src="~/js/Amin/PermissionList.js"></script>
+
+
+
+        01    <script>
+                  function View(Id) {
+
+                      $.ajax({
+                          type: "Get",
+                          url: '../../Admin/SystemMenu/Editpermission?Id=' + Id,
+                          contentType: "application/text; charset=utf-8",
+                          dataType: "text",
+                          async: false,
+                          success: function (data) {
+                              console.log(data);
+                              $('.modal-body').html(data);
+
+                              $("#myModal").modal("show");
+
+                          },
+                          error: function (response1) {
+                              console.log(response1);
+                          }
+
+                      })
+
+                  }
+
+    </script>
+}
+

@@ -1,0 +1,228 @@
+﻿@model Domain.Dr.BMI
+
+@{
+    ViewData["Title"] = "BMI";
+}
+@section style {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+}
+<section class="pt-5">
+    <!-- اگر کل صفحه RTL است، می‌توانید این را بردارید -->
+    <div class="d-flex  align-items-center justify-content-center">
+        <div class="container m-5">
+            <div class="row g-4 align-items-stretch">
+
+                <!-- ستون راست: فرم و اسلایدر -->
+                <div class="col-lg-6 d-flex">
+                    <div class="card shadow-sm w-100 d-flex flex-column equal-card">
+                        <div class="card-body">
+                            <h5 class="card-title">اطلاعات خود را وارد کنید.</h5>
+                            <form id="bmiForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label asp-for="Weight" class="form-label"></label>
+                                        <input asp-for="Weight" class="form-control">
+                                        <span class="text-danger" asp-validation-for="Weight"></span>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Height" class="form-label"></label>
+                                        <input asp-for="Height" class="form-control">
+                                        <span class="text-danger" asp-validation-for="Height"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label asp-for="Age" class="form-label"></label>
+                                        <input asp-for="Age" class="form-control">
+                                        <span class="text-danger" asp-validation-for="Age"></span>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label asp-for="Stone" class="form-label"></label>
+                                        <select asp-for="Stone" class="form-control">
+                                            <option value="">انتخاب کنید</option>
+                                            <option value="@(Domain.Stone.dorosht)">بزرگ</option>
+                                            <option value="@(Domain.Stone.motevaset)">متوسط</option>
+                                            <option value="@(Domain.Stone.riz)">کوچک</option>
+                                        </select>
+                                        <span class="text-danger" asp-validation-for="Stone"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label asp-for="Gender" class="form-label"></label>
+                                        <select asp-for="Gender" class="form-control">
+                                            <option value="">انتخاب کنید</option>
+                                            <option value="@(Domain.Gender.man)">مرد</option>
+                                            <option value="@(Domain.Gender.woman)">زن</option>
+
+                                        </select>
+                                        <span class="text-danger" asp-validation-for="Gender"></span>
+
+                                    </div>
+
+
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-3">
+                                        <button type="submit" class="btn btn-primary w-100">محاسبه BMI</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <label id="BMIAlert" class="alert alert-info text-center d-none">جهت مشاهده محدوده BMI به تصویر صفحه مراجعه فرمائید</label>
+                    </div>
+                </div>
+
+                <!-- ستون چپ: باکس‌های BMI و بنر -->
+                <div class="col-lg-6 d-flex">
+                    <div class="card shadow-sm w-100 d-flex justify-content-center align-items-center" style="min-height: 300px;">
+                        <img src="\fileupload\doctor\bmi.jpg" class="img-fluid" alt="BMI" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="container m-5">
+            <div class="row g-4 align-items-stretch">
+
+
+                <div class="col-lg-6 d-flex">
+                    <div id="bmiResultContainer" class="container shadow-sm my-4 d-none" style="max-width: 500px;">
+                        <div class="text-center mb-3">
+                            <h3 class="fw-bold">نتیجه محاسبه BMI</h3>
+                        </div>
+
+                        <div class="mb-3">
+                            <div id="alert" class="alert text-center mb-0" style="color:#fff; font-weight:600;">
+                                <i class="bi bi-info-circle me-2"></i>
+
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <!-- وزن سلامت -->
+                            <div class="col-4">
+                                <div class="bg-white border shadow-sm rounded-3 py-3 text-center h-100">
+                                    <div style="color:#ff7676; font-size:22px;">
+                                        <i class="bi bi-heart-pulse"></i>
+                                    </div>
+                                    <div class="fw-semibold" style="color:#666;">وزن سلامت</div>
+                                    <div class="fw-bold" style="font-size:20px;" id="healthyWeight">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- وزن ایده‌آل -->
+                            <div class="col-4">
+                                <div class="bg-white border shadow-sm rounded-3 py-3 text-center h-100">
+                                    <div style="color:#09c59d; font-size:22px;">
+                                        <i class="bi bi-clipboard-check"></i>
+                                    </div>
+                                    <div class="fw-semibold" style="color:#666;">وزن ایده آل</div>
+                                    <div class="fw-bold" style="font-size:20px;" id="idealWeight"> </div>
+                                </div>
+                            </div>
+                            <!-- BMI -->
+                            <div class="col-4">
+                                <div class="bg-white border shadow-sm rounded-3 py-3 text-center h-100">
+                                    <div style="color:#4b6aff; font-size:22px;">
+                                        <i class="bi bi-calculator"></i>
+                                    </div>
+                                    <div class="fw-semibold" style="color:#666;">BMI</div>
+                                    <div class="fw-bold" style="font-size:20px;" id="bmivalue"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="btn w-100 btn-status" style="color:#fff; font-weight:600;">
+                            </div>
+                        </div>
+
+                        <div id="adviceBox" class="bg-white border rounded-3 shadow-sm p-4 mb-2">
+                            <div class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-clipboard-check fs-4 ms-2" style="color:#4b6aff;"></i>
+                                <span class="fw-bold fs-5">پیشنهاد ما برای شما</span>
+                            </div>
+                            <div class="text-secondary mb-3" style="line-height:2;">
+                                برای کاهش وزن سالم و اصولی، می‌توانید از رژیم‌های غذایی تخصصی ما استفاده کنید.<br />
+                                رژیم‌های ما با در نظر گرفتن شرایط جسمانی شما به شما کمک می‌کنند تا به وزن ایده‌آل خود برسید.
+                            </div>
+                            <div>
+                                <a href="/Diets" class="btn btn-primary w-100 fw-bold">
+                                    <i class="bi bi-arrow-left-short"></i>
+                                    مشاهده رژیم‌های غذایی
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+</section>
+@section Scripts {
+    <script>
+        $(function () {
+            $('#bmiForm').on('submit', function (e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '/Home/BMI', // آدرس اکشن
+                    type: 'POST',
+                    data: $(this).serialize(), // ارسال به صورت فرم
+                    success: function (res) {
+                        console.log(res);
+
+                        // نمایش نتایج
+                        $('#bmivalue').text(res.bmiValue);
+                        $('#idealWeight').text(res.idealWeight);
+                        $('#healthyWeight').text(res.healthyWeight);
+
+
+        // آپدیت alert بالا
+                       $("#alert ")
+                           .css("background", res.color)
+                           .html('<i class="bi bi-info-circle me-2"></i>' +
+                               (res.DangerText || ( res.weightStatus )));
+
+                       // آپدیت دکمه وضعیت
+                       $(".btn-status")
+                           .css("background", res.color)
+                           .text(res.weightStatus);
+                                   if (!res.showadvice) {
+                           $("#adviceBox").addClass("d-none");
+                       } else {
+                           $("#adviceBox").removeClass("d-none");
+                       }
+                        if (window.innerWidth < 992) {
+                         // انتقال به بعد از فرم
+                         $('#bmiResultContainer').insertAfter('#bmiForm');
+                     } else {
+                         // برگردوندن به مکان اصلی در دسکتاپ
+                         $('.results-column').append($('#bmiResultContainer'));
+                     }
+                        $('#BMIAlert').removeClass('d-none');
+                          $('#bmiResultContainer').removeClass('d-none');
+                    },
+                    error: function (xhr) {
+                        console.error(xhr.responseText);
+                        $('#bmiResultContainer').addClass('d-none');
+                    }
+                });
+            });
+        });
+    </script>
+}
+
+

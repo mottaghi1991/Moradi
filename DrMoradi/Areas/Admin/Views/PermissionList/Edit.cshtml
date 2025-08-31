@@ -1,0 +1,141 @@
+﻿@model Domain.User.Permission.PermissionList
+
+<div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">ویرایش(@Model.Area-@Model.ControllerName-@Model.ActionName) </h3>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-5">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+
+
+
+                <div class="form-group">
+                    <label asp-for="Descript" class="control-label"></label>
+                    <input asp-for="Descript" class="form-control" />
+                    <span asp-validation-for="Descript" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Radif" class="control-label"></label>
+                    <input asp-for="Radif" class="form-control" />
+                    <span asp-validation-for="Radif" class="text-danger"></span>
+                </div>
+
+                @if (Model.ParentId != null & Model.ParentId != 0)
+                {
+                    <div class="form-group">
+                        <label asp-for="Status" class="control-label"></label>
+                        <select id="IsPublicId" class="form-control" name="Status" onchange="FillParent(this.value)">
+
+                            @if (Model.Status == 0)
+                            {
+                                <option value="0" selected="selected">دسترسی</option>
+                            }
+                            else
+                            {
+                                <option value="0">دسترسی</option>
+
+                            }
+                            @if (Model.Status == 1)
+                            {
+                                <option value="1" selected="selected">منو</option>
+                            }
+                            else
+                            {
+                                <option value="1">منو</option>
+
+                            }
+                            @if (Model.Status == 2)
+                            {
+                                <option value="2" selected="selected">سیستمی</option>
+                            }
+                            else
+                            {
+                                <option value="2">سیستمی</option>
+
+                            }
+
+
+                        </select>
+
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ParentId" class="control-label"></label>
+                        <br />
+
+                        <select id="searchParent" asp-for="ParentId" class="form-control" asp-items="ViewBag.Parent" onchange="FillController(this.value)"></select>
+                        <span asp-validation-for="ParentId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ControllerName" id="ControllerText" class="control-label"></label>
+                        <br />
+
+                        <select id="searchController" name="ControllerName" class="form-control" asp-items="ViewBag.Controller">
+                        </select>
+                        <span asp-validation-for="ControllerName" class="text-danger"></span>
+                    </div>
+                }
+
+
+                <div class="form-group">
+                    <input type="submit" value="ثبت" class="btn btn-info" />
+                </div>
+            </form>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <ul>
+                    <li>
+                        دسترسی‌ها به‌صورت سلسله‌مراتبی
+                        <ul style="margin-right: 20px;">
+                            <li>
+                                اگر <strong>ریشه</strong> باشد
+                                <ul style="margin-right: 40px;">
+                                    <li>controller==null/action==null</li>
+                                    <li>یعنی دسترسی در سطح ادمین است.</li>
+                                </ul>
+                            </li>
+                            <li>
+                                اگر <strong>میانه</strong> باشد
+                                <ul style="margin-right: 40px;">
+                                    <li>action==null</li>
+                                    <li>یعنی دسترسی در سطح <strong>کنترلر</strong> است.</li>
+                                      <li><strong> والد</strong> آن، Area مربوطه است.</li>
+                                    <li><strong>کنترلر</strong> گزینه، کنترلر اصلی انتخاب شود .</li>
+                                </ul>
+                            </li>
+                            <li>
+                                اگر <strong>برگ</strong> باشد
+                                <ul style="margin-right: 40px;">
+                                    <li>یعنی دسترسی در سطح <strong>متد</strong> است.</li>
+                                    <li></li>
+                                    <li><strong> والد</strong> آن، Area مربوطه است.</li>
+                                    <li><strong>کنترلر </strong> نیز همان کنترلری است که متد در آن قرار دارد.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{
+        <script src="~/js/Amin/PermissionList.js"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+        }

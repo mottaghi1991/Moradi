@@ -1,0 +1,166 @@
+﻿@using Core.Dto.ViewModel.Dr.DietVM
+@using Core.Extention
+@model IEnumerable<ShowUserDietPanelVm>
+@{
+    ViewData["Title"] = "رژیم های من";
+}
+
+@section style{
+    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
+}
+
+
+<div class="col-12">
+    <div class="card border-success">
+        <div class="card-header bg-success text-white">
+            <h3 class="card-title mb-0">لیست رژیم‌ها</h3>
+        </div>
+        <div class="card-body p-0">
+
+            <!-- Desktop Table -->
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-hover text-center mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>@Html.DisplayNameFor(model => model.DietName)</th>
+                            <th>@Html.DisplayNameFor(model => model.UserPanelName)</th>
+                            <th>@Html.DisplayNameFor(model => model.UserDiteName)</th>
+                            <th>@Html.DisplayNameFor(model => model.CreateAt)</th>
+                            <th>وضعیت</th>
+                            <th>پرداخت</th>
+                            <th>بعدی</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                          @if (!Model.Any())
+                        {
+                            <tr>
+                                <td>
+                                    <label class="badge bg-danger">شما تا کنون رژیمی دریافت نکردیده اید</label>
+
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.DietName</td>
+                                <td>@item.UserPanelName</td>
+                                <td>@item.UserDiteName</td>
+                                <td>@item.CreateAt.ToPersian()</td>
+                                <td>
+                                    @if (item.status == Domain.UserDietstatus.FillForm)
+                                    {
+                                        <span class="badge bg-danger">در انتظار پرداخت</span>
+                                    }
+                                    else if (item.status == Domain.UserDietstatus.Pay)
+                                    {
+                                        <span class="badge bg-warning text-dark">در انتظار دریافت</span>
+                                    }
+                                    else if (item.status == Domain.UserDietstatus.send)
+                                    {
+                                        <span class="badge bg-success">دریافت رژیم</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.status == Domain.UserDietstatus.send)
+                                    {
+                                        <a class="btn btn-success btn-sm" asp-action="GetDiet" asp-route-UserDietId="@item.UserdietId">
+                                            دریافت رژیم
+                                        </a>
+                                    }
+                                    else if (item.status == Domain.UserDietstatus.FillForm)
+                                    {
+                                        <a class="btn btn-danger btn-sm fw-bold" asp-action="StartPayment"
+                                           asp-controller="UserPanel"
+                                           asp-route-UserDietId="@item.UserdietId">
+                                            <i class="fa fa-credit-card"></i> پرداخت
+                                        </a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.ParentId == 0)
+                                    {
+                                        <a class="badge bg-primary text-decoration-none"
+                                           asp-action="Index"
+                                           asp-controller="UserDiet"
+                                           asp-route-DietId="@item.DietId"
+                                           asp-route-ParentId="@item.UserdietId">
+                                            درخواست رژیم بعدی
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                          
+                        }
+                       
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="d-md-none p-2">
+                @if (!Model.Any())
+                {
+          
+                            <label class="badge bg-danger">شما تا کنون رژیمی دریافت نکردیده اید</label>
+
+                    
+                }
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">@item.DietName</h5>
+                            <p class="mb-1">کاربر: @item.UserPanelName</p>
+                            <p class="mb-1">گیرنده: @item.UserDiteName</p>
+                            <p class="text-muted mb-1">@item.CreateAt.ToPersian()</p>
+
+                            @if (item.status == Domain.UserDietstatus.FillForm)
+                            {
+                                <span class="badge bg-danger mb-2">در انتظار پرداخت</span>
+                            }
+                            else if (item.status == Domain.UserDietstatus.Pay)
+                            {
+                                <span class="badge bg-warning text-dark mb-2">در انتظار دریافت</span>
+                            }
+                            else if (item.status == Domain.UserDietstatus.send)
+                            {
+                                <span class="badge bg-success mb-2">دریافت رژیم</span>
+                            }
+
+                            @if (item.status == Domain.UserDietstatus.send)
+                            {
+                                <a class="btn btn-success btn-lg w-100" asp-action="GetDiet" asp-route-UserDietId="@item.UserdietId">
+                                    دریافت رژیم
+                                </a>
+                            }
+                            else if (item.status == Domain.UserDietstatus.FillForm)
+                            {
+                                <a class="btn btn-danger btn-lg w-100 fw-bold" asp-action="StartPayment"
+                                   asp-controller="UserPanel"
+                                   asp-route-UserDietId="@item.UserdietId">
+                                    <i class="fa fa-credit-card"></i> پرداخت
+                                </a>
+                            }
+
+                            @if (item.ParentId == 0)
+                            {
+                                <a class="btn btn-primary btn-sm w-100 mt-2 text-decoration-none"
+                                   asp-action="Index"
+                                   asp-controller="UserDiet"
+                                   asp-route-DietId="@item.DietId"
+                                   asp-route-ParentId="@item.UserdietId">
+                                    درخواست رژیم بعدی
+                                </a>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("DietComponent")
+</div>
+

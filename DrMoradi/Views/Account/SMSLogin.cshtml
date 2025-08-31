@@ -1,0 +1,137 @@
+﻿@model Core.Dto.ViewModel.User.Login.SmsLoginViModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <title>ورود به سیستم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: Vazir, sans-serif;
+        }
+
+        body {
+            background: url('/FileUpload/Doctor/bg-lines-one.png') no-repeat center center / cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            padding: 2rem;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-logo {
+            max-height: 70px;
+            margin-bottom: 1rem;
+        }
+
+        .input-group .form-control,
+        .input-group .form-select {
+            height: 50px;
+        }
+
+        .country-select {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0 10px;
+        }
+
+            .country-select img {
+                width: 20px;
+                height: 14px;
+                border-radius: 2px;
+            }
+
+        .btn-primary, .btn-danger {
+            height: 50px;
+            font-size: 1rem;
+            border-radius: 8px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .timer {
+            font-size: 14px;
+            color: #ff0000;
+            margin-top: 10px;
+        }
+    </style>
+    <partial name="_HeaderLink" />
+</head>
+<body>
+    <div class="login-card">
+        <!-- لوگوی بالای فرم -->
+        <img src="/FileUpload/Slider/logo-m.png" alt="لوگو" class="login-logo">
+
+        <h5>وارد شوید</h5>
+
+        <!-- فرم شماره موبایل -->
+        <form id="phoneForm">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+            <div id="phoneError" class="text-danger mb-3" style="display:none;">شماره نامعتبر است</div>
+
+            <div class="mb-3 text-start">
+                <label for="UserName" class="form-label text-end">کشور</label>
+                <div class="input-group">
+                    <span class="input-group-text country-select">
+                        <img src="/FileUpload/Doctor/IR.jpeg" alt="Iran">
+                        +98
+                    </span>
+                    <input type="tel" class="form-control text-start" id="UserName" name="UserName" placeholder="شماره موبایل">
+                </div>
+            </div>
+     
+            <button type="submit" class="btn btn-primary w-100">
+                ارسال کد
+            </button>
+        </form>
+
+        <!-- فرم کد تایید -->
+        <form id="codeForm" class="hidden">
+            <div class="input-group mb-3">
+                <input type="tel" id="Code" class="form-control text-start" placeholder="کد تایید" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">
+                تایید کد
+            </button>
+            <a href="smslogin">شماره را اشتباه وارد کرده اید؟</a>
+            <!-- تایمر -->
+            <div id="timer" class="timer">زمان باقیمانده: <span id="timeLeft">2:00</span></div>
+            <a href="#" id="Resend">ارسال مجدد</a>
+        </form>
+    </div>
+
+    <!-- اسکریپت‌ها دقیقا مثل نسخه قبلی در انتهای بدنه -->
+    <script src="~/MyFile/dist/js/JQuery.js"></script>
+    <script src="~/Common/SweetAlert/sweetalert2.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_Message" />
+
+    <script src="~/js/ConfirmPhoneNumber.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setupPhoneForm();
+            setupCodeForm();
+        });
+    </script>
+</body>
+</html>

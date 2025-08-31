@@ -1,0 +1,33 @@
+﻿
+
+@{
+
+    ViewData["Title"] = "Index";
+}
+
+
+    <div class="card p-4 shadow-sm mb-4">
+        <h3 class="mb-3">داشبورد کاربر</h3>
+        <p>به پنل کاربری خوش آمدید. این بخش اصلی محتواست.</p>
+    </div>
+
+
+
+
+@section Scripts {
+    <script>
+        // Toggle Offcanvas Sidebar
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const offcanvas     = document.getElementById('mobileSidebar');
+        const backdrop      = document.getElementById('sidebar-backdrop');
+        sidebarToggle && sidebarToggle.addEventListener('click', function() {
+          offcanvas.classList.add('show');
+          backdrop.classList.add('active');
+        });
+        backdrop && backdrop.addEventListener('click', function(){
+          offcanvas.classList.remove('show');
+          backdrop.classList.remove('active');
+        });
+    </script>
+}
+
