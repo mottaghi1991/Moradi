@@ -259,7 +259,33 @@ namespace DrMoradi.Controllers
         {
             return View();
         }
-      
+      public async Task<IActionResult> Replay(string Text,int ParentId,int EntityId,EntityType EntityType)
+        {
+            if(string.IsNullOrWhiteSpace(Text))
+            {
+                TempData[BaseController.Error] = "وارد کردن پاسخ اجباری می باشد";
+                return RedirectToAction("DietDetail", new { DietId = EntityId });
+            }
+            var obj = new Comment()
+            {
+                ParentId = ParentId,
+                UserId = User.GetUserId(),
+                Text = Text,
+                EntityType = EntityType,
+                EntityId = EntityId,
+                CreateDate = DateTime.UtcNow,
+                IsApproved = false
+
+
+            };
+            var result =await _comment.Insert(obj);
+            if(result)
+                TempData[Success] = "نظر شما با موفقیت ثبت گردید";
+            else
+                TempData[BaseController.Error] = "متأسفیم! هنگام ثبت نظر مشکلی پیش آمد. لطفاً بعداً دوباره امتحان کنید. ";
+
+            return RedirectToAction("DietDetail", new { DietId = EntityId });
+        }
 
     }
 }

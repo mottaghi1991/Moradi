@@ -1,6 +1,8 @@
-﻿using Core.Dto.ViewModel.User;
+﻿using Core.Dto.ViewModel.main;
+using Core.Dto.ViewModel.User;
 using Core.Extention;
 using Core.Service.Interface.Dr;
+using Core.Service.Interface.MainPage;
 using Core.Service.Interface.Payment;
 using Core.Service.Interface.Users;
 using Core.Service.Services.Payment;
@@ -26,14 +28,16 @@ namespace WebStore.Areas.UserPanel.Controllers
         private readonly IPayment _payment;
         private readonly IUserDiet _userDiet;
         private readonly IUser _user;
+        private readonly IComment _Comment;
         private readonly ILogger<UserPanelController> _logger;
 
-        public UserPanelController(IPayment payment, IUserDiet userDiet, IUser user, ILogger<UserPanelController> logger)
+        public UserPanelController(IPayment payment, IUserDiet userDiet, IUser user, ILogger<UserPanelController> logger, IComment comment)
         {
             _payment = payment;
             _userDiet = userDiet;
             _user = user;
             _logger = logger;
+            _Comment = comment;
         }
 
         [Route("/UserPanel")]
@@ -165,6 +169,32 @@ namespace WebStore.Areas.UserPanel.Controllers
             _logger.LogInformation("Session cookie: {cookieValue}", sessionCookie ?? "NULL");
             _logger.LogInformation("Auth cookie: {cookieValue}", authCookie ?? "NULL");
             _logger.LogInformation("-------------------------------");
+        }
+        public async Task<IActionResult> Comment()
+        {
+      
+            return View(await _Comment.GetCommentsByUserId(User.GetUserId()));
+        }
+        public async Task<IActionResult> ReplayDetailAsync(int CommentId)
+        {
+            if (CommentId <= 0)
+                return NotFound();
+            var obj = await _Comment.GetCommentbyid(CommentId);
+            if (obj == null)
+                return NotFound();
+            var replay = await _Comment.GetRepolaybyid(CommentId);
+            
+            return View(new ShowCommentVm()
+            {
+                Id = CommentId,
+                IsApproved = obj.IsApproved,
+                CreateDate = obj.CreateDate.ToPersian(),
+                EntityType = obj.EntityType,
+                Mobile = obj.myUser?.UserName ?? obj.Mobile,
+                UserComment = obj.Text,
+                AdminComment = replay != null ? replay.Text : "",
+                DietId = obj.EntityId ?? 0
+            });
         }
     }
       

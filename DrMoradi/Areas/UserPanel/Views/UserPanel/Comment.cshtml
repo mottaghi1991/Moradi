@@ -1,0 +1,93 @@
+﻿@using Core.Extention
+@using Domain
+@model IEnumerable<Domain.Main.Comment>
+@{
+    ViewData["Title"] = "نظرات من";
+}
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> لیست نظرات</h3>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-responsive table-hover text-center">
+                <thead>
+                    <tr>
+                   
+                        <th>
+                            دسته بندی
+                        </th>
+
+                        <th>
+                            وضعیت
+                        </th>
+                        <th>
+                            تاریخ ایجاد
+                        </th>
+                        <th>
+                            پیام شما
+                        </th>
+                        <th>مشاهده پاسخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @switch (item.EntityType)
+                                {
+                                    case EntityType.Diet:
+                                        @:<label>رژیم</label>
+                                        break;
+
+                                    case EntityType.Home:
+                                        @:<label>خانه</label>
+                                        break;
+                                    case EntityType.Product:
+                                        @:<label>محصولات</label>
+                                        break;
+                                    default:
+                                        @:<label>نامشخص</label>
+                                        break;
+                                }
+
+
+
+                            </td>
+
+                            <td>
+                                @if (item.IsApproved)
+                                {
+                                    <label class="label label-success">تایید شده</label>
+
+                                }
+                                else
+                                {
+                                    <label class="label label-danger">تایید نشده</label>
+
+                                }
+
+                            </td>
+                            <td>
+                                @item.CreateDate.ToPersian()
+                            </td>
+                            <td>
+                                @(item.Text.Length<=20?item.Text:item.Text.Substring(0,19))
+                            </td>
+                        <td>
+                            <a asp-action="ReplayDetail" asp-route-CommentId="@item.Id" class="btn btn-success">مشاهده پاسخ</a>
+                        </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        
+        </div>
+    </div>
+</div>
+

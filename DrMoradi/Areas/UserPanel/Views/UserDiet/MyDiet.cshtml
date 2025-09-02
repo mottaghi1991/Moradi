@@ -1,5 +1,6 @@
 ﻿@using Core.Dto.ViewModel.Dr.DietVM
 @using Core.Extention
+@using Domain
 @model IEnumerable<ShowUserDietPanelVm>
 @{
     ViewData["Title"] = "رژیم های من";
@@ -69,7 +70,7 @@
                                             دریافت رژیم
                                         </a>
                                     }
-                                    else if (item.status == Domain.UserDietstatus.FillForm)
+                                    else if (item.status == UserDietstatus.FillForm)
                                     {
                                         <a class="btn btn-danger btn-sm fw-bold" asp-action="StartPayment"
                                            asp-controller="UserPanel"
@@ -79,7 +80,7 @@
                                     }
                                 </td>
                                 <td>
-                                    @if (item.ParentId == 0)
+                                    @if (item.ParentId == 0&&item.status==UserDietstatus.send)
                                     {
                                         <a class="badge bg-primary text-decoration-none"
                                            asp-action="Index"

@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width" />
 
     <title>رژیم آنلاین دکتر مرادی</title>
+    <link rel="icon" type="image/png" href="~/FileUpload/Slider/logo-m.png">
     <link rel="stylesheet" href="~/MyFile/dist/css/adminlte.min.css">
     <!-- لینک به CSS بوت‌استرپ -->
 
     <link href="~/css/swiper.css" rel="stylesheet" />
     <link href="~/myfile/dist/css/custom-style.css" rel="stylesheet" />
-  
-    <link rel="icon" type="image/png" href="~/FileUpload/Slider/logo-m.png">
+    <link href="~/common/sweetalert/sweetalert2.min.css" rel="stylesheet" />
+
     <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
     <link href="~/css/maincss.css" rel="stylesheet" />
     @await RenderSectionAsync("style", false)
@@ -39,9 +40,11 @@
     <partial name="_footerlink" />
     <partial name="_Message" />
     <!-- اسکریپت‌های مورد نیاز بوت‌استرپ -->
+    <script src="~/MyFile/dist/js/JQuery.js"></script>
     <script src="~/js/bootstrap5.3.0.js"></script>
     <script src="~/js/swipper.js"></script>
-
+    <script src="~/Common/SweetAlert/sweetalert2.min.js"></script>
+    <partial name="_Message" />
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/mainjs.js"></script>
     <script>

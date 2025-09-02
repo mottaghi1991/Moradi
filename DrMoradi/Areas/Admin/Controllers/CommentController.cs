@@ -28,7 +28,7 @@ namespace DrMoradi.Areas.Admin.Controllers
 
             int pagesize = 10;
             var total = await _comment.PostCount();
-            var Comments = await _comment.GetAllCommentPaging(page, pagesize);
+            var Comments = await _comment.GetAllCommentPaging(page, pagesize,User.GetUserId());
 
             return View(new CommentPageVm()
             {

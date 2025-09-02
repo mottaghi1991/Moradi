@@ -19,11 +19,12 @@ namespace Core.Service.Interface.MainPage
         Task<Comment> GetRepolaybyid(int CommentId);
         Task<bool> ReplyToCommentAsync(ShowCommentVm comment, int AdminUserId);
         Task<IEnumerable<Comment>> GetCommentsByDietId(int DietId);
+        Task<IEnumerable<Comment>> GetCommentsByUserId(int UserId);
         Task<IEnumerable<Comment>> GetCommentsByEntityId(int entitytId,EntityType type);
 
 
 
-        Task<IEnumerable<Comment>> GetAllCommentPaging(int pageid, int number);
+        Task<IEnumerable<Comment>> GetAllCommentPaging(int pageid, int number,int UserId);
         Task<IEnumerable<Comment>> GetTopComment(int number);
         Task<int> PostCount();
     }

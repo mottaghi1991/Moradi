@@ -1,8 +1,7 @@
 ﻿@model Core.Dto.ViewModel.main.ShowCommentVm
 @{
-    ViewData["Title"] = "ReplyComment";
+    ViewData["Title"] = "مشاهده پاسخ";
 }
-
 <div class="col-md-12">
     <div class="card card-success">
         <div class="card-header">
@@ -11,20 +10,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
-                    <form asp-action="ReplyComment" id="myform">
-                        @Html.AntiForgeryToken()
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <input asp-for="Id" type="hidden" />
-                        <input asp-for="DietId" type="hidden" />
+                 
                         <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label  class="control-label">شماره موبایل</label>
-                                    <input asp-for="Mobile" class="form-control" readonly />
-                                    <span asp-validation-for="Mobile" class="text-danger"></span>
-
-                                </div>
-                            </div>
+                        
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">دسته بندی</label>
@@ -44,11 +32,11 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label class="control-label">وضعیت</label>
-                                    <select asp-for="IsApproved" class="form-control" >
+                                <select asp-for="IsApproved" class="form-control" readonly>
                                         <option value="">لطفا یک گزینه را انتخاب کنید</option>
                                         <option value="true">تایید</option>
                                         <option value="false">عدم تایید</option>
-                                        </select>
+                                    </select>
                                     <span asp-validation-for="IsApproved" class="text-danger"></span>
 
                                 </div>
@@ -63,16 +51,13 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="AdminComment" class="control-label"></label>
-                            <textarea asp-for="AdminComment" class="form-control" rows="5"></textarea>
+                        <textarea asp-for="AdminComment" class="form-control" rows="5" readonly></textarea>
                             <span asp-validation-for="AdminComment" class="text-danger"></span>
 
                         </div>
                         <div class="row">
-                            <input type="submit" value="ثبت" class="btn btn-success" />
-                            <a asp-action="index"  class="btn btn-primary mr-2">بازگشت به لیست</a>
+                        <a asp-action="Comment" class="btn btn-primary mr-2">بازگشت به لیست</a>
                         </div>
-                    </form>
-                </div>
             </div>
         </div>
     </div>

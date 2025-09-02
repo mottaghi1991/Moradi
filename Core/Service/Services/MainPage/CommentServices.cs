@@ -1,9 +1,11 @@
-﻿using Core.Dto.ViewModel.main;
+﻿using Azure;
+using Core.Dto.ViewModel.main;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
 using Data.MasterInterface;
 using Domain;
 using Domain.Main;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
@@ -12,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Core.Service.Services.MainPage
 {
@@ -43,13 +46,13 @@ namespace Core.Service.Services.MainPage
             return await _master.GetAllAsQueryable().Include(a => a.myUser).ToListAsync();
         }
 
-        public async Task<IEnumerable<Comment>> GetAllCommentPaging(int pageid, int number)
+        public async Task<IEnumerable<Comment>> GetAllCommentPaging(int pageid, int number, int UserId)
         {
 
             var obj = await _master
      .GetAllAsQueryable()
      .Include(a => a.myUser)
-     .Where(a => a.ParentId == null) // فقط سؤال‌ها
+     .Where(a => a.UserId!=UserId) // فقط سؤال‌ها
      .OrderByDescending(a => a.Id)
      .Select(a => new Comment
      {
@@ -139,6 +142,8 @@ namespace Core.Service.Services.MainPage
                         IsApproved = true,
                         UserId = AdminUserId,
                         EntityId=vm.DietId,
+                        EntityType=vm.EntityType
+                        
                     };
 
                     fiResult = await Insert(reply);
@@ -161,10 +166,43 @@ namespace Core.Service.Services.MainPage
 
         public async Task<IEnumerable<Comment>> GetCommentsByEntityId(int entitytId,Domain.EntityType type)
         {
-            return await _master.GetAllAsQueryable().Include(a=>a.myUser).Where(c => c.EntityId == entitytId
+
+            var obj = await _master.GetAllAsQueryable().Include(a => a.myUser).Where(c => c.EntityId == entitytId
                      && c.EntityType == type
                      && c.IsApproved)
-            .OrderByDescending(c => c.CreateDate).ToListAsync();
+            .OrderBy(c => c.CreateDate).Select(a => new Comment
+            {
+                Id = a.Id,
+                EntityId = a.EntityId,
+                Text = a.Text, // فرضی
+                Name = string.IsNullOrEmpty(a.Name) ? a.myUser.FullName : a.Name,
+                CreateDate = a.CreateDate,
+                IsApproved = a.IsApproved,
+                EntityType = a.EntityType,
+                ParentId=a.ParentId
+            }).ToListAsync();
+
+
+
+            return obj;
+        }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByUserId(int UserId)
+        {
+            return await _master.GetAllAsQueryable().Include(a => a.myUser)
+     .Where(a => a.UserId == UserId) // فقط سؤال‌ها
+     .OrderByDescending(a => a.Id)
+     .Select(a => new Comment
+     {
+         Id = a.Id,
+         EntityId = a.EntityId,
+         Text = a.Text, // فرضی
+         Name =  a.myUser.FullName ,
+         CreateDate = a.CreateDate,
+         IsApproved = a.IsApproved,
+         EntityType = a.EntityType
+     }).ToListAsync();
+  
         }
     }
 }

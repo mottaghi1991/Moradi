@@ -1,83 +1,92 @@
 ﻿@using Core.Dto.ViewModel.main
 @using Domain.Main
 @model CommentsViewModel
-@functions {
-    void RenderComments(IEnumerable<Comment> comments, int? parentId = null, int level = 0)
-    {
-        var children = comments
-            .Where(c => c.ParentId == parentId)
-            .OrderByDescending(c => c.CreateDate)
-            .ToList();
 
+<div class="comment-thread">
+    @{
+        RenderComments(Model.Comments, null, 0);
+    }
+</div>
+
+@functions {
+    void RenderComments(IEnumerable<Comment> comments, int? parentId, int level)
+    {
+        var children = comments.Where(c => c.ParentId == parentId).ToList();
         if (!children.Any()) return;
 
-        <div class="comment-level pe-@(level * 3)">
-            @* تو رفتگی برای RTL *@
+        <div class="ps-@(level * 3) border-start border-2" style="border-color:#dce1e6 !important;">
             @foreach (var comment in children)
             {
-                <div class="card mb-3 shadow-sm">
-                    <div class="card-body p-3">
+                var levelClass = $"level-{level}";
 
-                        <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-                            <strong class="text-dark">@comment.Name</strong>
-                            <small class="text-muted">@comment.CreateDate.ToString("yyyy/MM/dd HH:mm")</small>
-                        </div>
+                <div class="@levelClass p-3 mb-3 rounded shadow-sm">
 
-                        <p class="mb-2 text-body text-start">@comment.Text</p>
-                        @if(User.Identity.IsAuthenticated)
-                        {
-                            <a href="javascript:void(0)"
-                               class="text-primary small fw-bold text-start"
-                            onclick="showReplyForm(@comment.Id, this)">پاسخ</a>
-                        }
-                        else
-                      {
-                        <label class="alert alert-danger">
-                            برای ثبت نظر وارد پنل کاربری شوید
-                            <a href="/SmsLogin" class="btn btn-success">ورود</a>
-                        </label>
-                    }
-
-
-                        <!-- محل فرم پاسخ -->
-                        <div class="reply-form-container mt-2"></div>
-
-                        <!-- جواب‌ها -->
-                        @{
-                            RenderComments(comments, comment.Id, level + 1);
-                        }
+                    <!-- هدر -->
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                        <strong>👤 @comment.Name</strong>
+                        <small class="text-muted">
+                            @comment.CreateDate.ToString("yyyy/MM/dd HH:mm")
+                        </small>
                     </div>
+
+                    <!-- متن -->
+                    <p class="mb-2">@comment.Text</p>
+
+                    <!-- دکمه باز کردن مودال -->
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <div>
+                            <button type="button"
+                                    class="btn btn-sm btn-link p-0 text-primary fw-bold"
+                                    onclick="openReplyModal(@comment.Id)">
+                                🗨️ پاسخ
+                            </button>
+                        </div>
+                    }
+               
+
+                    <!-- پاسخ‌ها -->
+                    @{
+                        RenderComments(comments, comment.Id, level + 1);
+                    }
                 </div>
             }
         </div>
     }
 }
 
-@{
-    RenderComments(Model.Comments);
-}
-
-
-
-
-
-
-
-
-    <script>
-        function showReplyForm(parentId, link) {
-            const existingForm = link.nextElementSibling.querySelector('form');
-            if (existingForm) { existingForm.remove(); return; }
-
-            const formHtml = `
-                <form method="post" action="//Comments/Add" class="mt-2">
-                    <input type="hidden" name="ParentId" value="${parentId}" />
+<!-- مودال بوت‌استرپ -->
+<div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="/Home/Replay">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="replyModalLabel">ارسال پاسخ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="ParentId" id="modalParentId" value="" />
                     <input type="hidden" name="EntityId" value="@Model.EntityId" />
                     <input type="hidden" name="EntityType" value="@Model.EntityType" />
-                    <textarea name="Text" class="form-control mb-2" rows="2" placeholder="پاسخ خود را بنویسید..."></textarea>
-                    <button type="submit" class="btn btn-sm btn-primary">ارسال پاسخ</button>
-                </form>
-            `;
-            link.nextElementSibling.innerHTML = formHtml;
-        }
-    </script>
+                    <textarea name="Text" class="form-control" rows="3"  placeholder="پاسخ خود را بنویسید..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    <button type="submit" class="btn btn-primary">ارسال پاسخ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- استایل -->
+
+
+<!-- اسکریپت برای باز کردن مودال -->
+<script>
+    function openReplyModal(parentId) {
+        document.getElementById('modalParentId').value = parentId;
+        var replyModal = new bootstrap.Modal(document.getElementById('replyModal'));
+        replyModal.show();
+    }
+</script>
