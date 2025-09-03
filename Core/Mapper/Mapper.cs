@@ -9,7 +9,10 @@ using Core.Dto.ViewModel.Admin;
 using Core.Dto.ViewModel.Dr.DietVm;
 using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Dto.ViewModel.main;
+using Core.Dto.ViewModel.Shop.Category;
+using Data.Migrations;
 using Domain.Dr;
+using Domain.DrShop;
 using Domain.Main;
 using Domain.PersonalData;
 
@@ -24,7 +27,8 @@ namespace Core.Mapper
             CreateMap<Diet, AddDietVm>().ReverseMap();
             CreateMap<Diet, EditDietVm>().ReverseMap();
 
-
+            CreateMap<Category,CategoryAddVM>().ReverseMap();
+            CreateMap<Category,CategoryEditVM>().ReverseMap();
 
 
             CreateMap<PopUp, PopUpVm>().ReverseMap();

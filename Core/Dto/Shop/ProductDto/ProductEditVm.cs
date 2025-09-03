@@ -45,6 +45,6 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         public bool IsActive { get; set; }
         [DisplayName("دسته بندی")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
-        public int SubCategoryId { get; set; }
+        public int CategoryId { get; set; }
     }
 }
