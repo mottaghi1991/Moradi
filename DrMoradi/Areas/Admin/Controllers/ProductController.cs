@@ -246,9 +246,9 @@ namespace DrMoradi.Areas.Admin.Controllers
 
         }
 
-        public IActionResult DeleteImage(int ProductImageId)
+        public async Task<IActionResult> DeleteImage(int ProductImageId)
         {
-            var product = _Product.GetProductImageById(ProductImageId);
+            var product =await _Product.GetProductImageById(ProductImageId);
             if (product == null)
             {
                 return NotFound();
@@ -256,7 +256,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             try
             {
                 FileTools.DeleteFile(product.ImageUrl);
-                _Product.DeleteImage(ProductImageId);
+               await _Product.DeleteImage(ProductImageId);
                 TempData[Success] = SuccessMessage;
                 return RedirectToAction("ProductImageList", new { ProductId = product.ProductId });
             }
@@ -269,17 +269,6 @@ namespace DrMoradi.Areas.Admin.Controllers
           
       
         }
-        public IActionResult AddGroupToPrduct(int ProductId)
-        {
-            var product=_Product.GetProductById(ProductId);
-            if (product == null)
-            {
-                return NotFound();
-            }
-           
-            ViewBag.Featurevalue = _featureValue.GetFeatureValueBySubcategoryId(product.SubCategoryId);
-            ViewBag.ProductTag = _productTag.GetAll();
-            return View();
-        }
+    
     }
 }

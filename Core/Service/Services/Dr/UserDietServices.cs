@@ -1,5 +1,6 @@
 ﻿using Core.Dto.ViewModel.Dr;
 using Core.Dto.ViewModel.Dr.DietVM;
+using Core.Dto.ViewModel.main;
 using Core.Enums;
 using Core.Extention;
 using Core.Service.Interface.Dr;
@@ -15,6 +16,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -48,7 +50,38 @@ namespace Core.Service.Services.Dr
             return obj;
         }
 
-     public async Task<IEnumerable<ShowUserDietPanelVm>> GetAllDietsByUserId(int userId)
+        public async Task<Paging<ShowUserDietPanelVm>> GetAllDietsByFilter(
+       int? userId, string paymentStatus, string fullName, string mobile,
+       int pageNumber, int pageSize)
+        {
+
+            
+            var parameters = new DynamicParameters();
+            parameters.Add("@userId", userId);
+            parameters.Add("@paymentStatus", string.IsNullOrEmpty(paymentStatus) ? null : paymentStatus);
+            parameters.Add("@fullName", string.IsNullOrEmpty(fullName) ? null : fullName);
+            parameters.Add("@mobile", string.IsNullOrEmpty(mobile) ? null : mobile);
+            parameters.Add("@PageNumber", pageNumber);
+            parameters.Add("@PageSize", pageSize);
+            parameters.Add("@TotalCount", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            var items = await _Vm.GetAllAsync("GetAllDietsByFilter", parameters);
+
+            return new Paging<ShowUserDietPanelVm>
+            {
+                bjects= items.ToList(),
+                TotalCount = parameters.Get<int>("@TotalCount"),
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+                fullName = fullName,
+                mobile = mobile,
+                paymentStatus = paymentStatus,
+                userId = userId 
+            
+            };
+        }
+
+        public async Task<IEnumerable<ShowUserDietPanelVm>> GetAllDietsByUserId(int userId)
 {
 
             DynamicParameters p=new DynamicParameters();

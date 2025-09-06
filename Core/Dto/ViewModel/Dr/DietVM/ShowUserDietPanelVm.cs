@@ -27,5 +27,9 @@ namespace Core.Dto.ViewModel.Dr.DietVM
         public string DietName { get; set; }
         public int DietId { get; set; }
         public int ParentId { get; set; }
+        [DisplayName("مبلغ")]
+        public int Price { get; set; }
+        [DisplayName("موبایل")]
+        public string Mobile { get; set; }
     }
 }

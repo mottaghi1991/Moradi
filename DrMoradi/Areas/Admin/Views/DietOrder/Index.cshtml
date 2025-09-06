@@ -1,93 +1,101 @@
 ﻿@using Core.Dto.ViewModel.Dr.DietVM
+@using Core.Dto.ViewModel.main
 @using Core.Extention
-@model IEnumerable<ShowUserDietPanelVm>
+@model Paging<ShowUserDietPanelVm> 
+
 @{
     ViewData["Title"] = "Index";
 }
 
-
-
 <div class="col-md-12">
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title"> لیست سفارشات</h3>
+            <h3 class="card-title">لیست سفارشات</h3>
         </div>
         <div class="card-body">
+
+            <form method="get">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" name="fullName" value="@Model.fullName" class="form-control" placeholder="نام کاربر" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="mobile" value="@Model.mobile" class="form-control" placeholder="شماره موبایل" />
+                    </div>
+                    <div class="col-md-3">
+               @Html.DropDownListFor(m => m.paymentStatus, new List<SelectListItem>
+{
+    new SelectListItem { Value = "all", Text = "همه وضعیت‌ها" },
+    new SelectListItem { Value = "FillForm", Text = "پرداخت نشده" },
+    new SelectListItem { Value = "Pay", Text = "پرداخت شده" },
+    new SelectListItem { Value = "send", Text = "ارسال شده" }
+}, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary" type="submit">جستجو</button>
+                    </div>
+                </div>
+            </form>
+
             <table class="table table-responsive table-hover">
                 <thead>
                     <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DietName)
-                        
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UserPanelName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.UserDiteName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CreateAt)
-                        </th>
-                        <th>
-                            نوع فرم
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.status)
-                        </th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().DietName)</th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().UserPanelName)</th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().UserDiteName)</th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().CreateAt)</th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().Price)</th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().Mobile)</th>
+                        <th>نوع فرم</th>
+                        <th>@Html.DisplayNameFor(m => m.bjects.First().status)</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.bjects)
                     {
                         <tr>
+                            <td>@item.DietName</td>
+                            <td>@item.UserPanelName</td>
+                            <td>@item.UserDiteName</td>
+                            <td>@item.CreateAt.ToPersian()</td>
+                            <td>@item.Price.ToString("N")</td>
+                            <td>@item.Mobile</td>
                             <td>
-                               @item.DietName
+                                @if (item.ParentId == 0) { <label>فرم اولیه</label> }
+                                else { <label>فرم ثانویه</label> }
                             </td>
                             <td>
-                                @item.UserPanelName
+                                @if (item.status == Domain.UserDietstatus.FillForm) { <label class="label label-danger">در انتظار پرداخت</label> }
+                                else if (item.status == Domain.UserDietstatus.Pay) { <label class="label label-success">پرداخت شده</label> }
+                                else if (item.status == Domain.UserDietstatus.send) { <label class="label label-primary">رژیم ارسال شد</label> }
                             </td>
                             <td>
-                                @item.UserDiteName
-                            </td>
-                            <td>
-                                @item.CreateAt.ToPersian()
-                            </td>
-                            <td>
-                             @if(item.ParentId==0)
-                                {
-                                    <label>فرم اولیه</label>
-
-                                }
-                                else
-                                {
-                                    <label>فرم ثانویه</label>
-                                }
-                            </td>
-                            <td>
-                                @if (item.status == Domain.UserDietstatus.FillForm)
-                                {
-                                    <label class="label label-danger">در انتظار پرداخت</label>
-                                }
-                                @if (item.status == Domain.UserDietstatus.Pay)
-                                {
-                                    <label class="label label-success">پرداخت شده</label>
-                                }
-                                @if (item.status == Domain.UserDietstatus.send)
-                                {
-                                    <label class="label label-primary">دریافت رژیم</label>
-                                }
-                            </td>
-                            <td>
-                                <a class="btn btn-info" asp-action="UserForm" asp-route-UserId="" asp-route-DietId="@item.DietId" asp-route-UserDietId="@item.UserdietId">فرم های کاربر</a>
+                                <a class="btn btn-info" asp-action="UserForm"  asp-route-UserDietId="@item.UserdietId">فرم های کاربر</a>
                                 <a class="btn btn-dark" asp-action="SendDiet" asp-route-UserDietId="@item.UserdietId">ارسال رژیم</a>
-                                @* <a asp-action="Delete" asp-route-id="@item.UserdietId" onclick="return confirm('ایا از حذف اطمینان دارید؟')" class="btn btn-danger"> حذف</a> *@
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+        </div>
+    </div>
 </div>
-</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    @{
+        int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.pageSize);
+        for (int i = 1; i <= totalPages; i++)
+        {
+            <a href="@Url.Action("Index", new {
+                pageNumber = i,
+                pageSize = Model.pageSize,
+                userId = Model.userId,
+                fullName = Model.fullName,
+                mobile = Model.mobile,
+                paymentStatus = Model.paymentStatus
+            })" class="@(i == Model.pageNumber ? "active" : "")">@i</a>
+        }
+    }
 </div>

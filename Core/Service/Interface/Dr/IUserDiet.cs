@@ -1,5 +1,6 @@
 ﻿using Core.Dto.ViewModel.Dr;
 using Core.Dto.ViewModel.Dr.DietVM;
+using Core.Dto.ViewModel.main;
 using Domain.Dr;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Core.Service.Interface.Dr
         Task<IEnumerable<UserDiet>> GetAllUserDiets();
         Task<IEnumerable<UserDiet>> GetAllDietsByUserIdAndDietId(int UserId, int DietId);
         Task<IEnumerable<ShowUserDietPanelVm>> GetAllDietsByUserId(int UserId);
+        Task<Paging<ShowUserDietPanelVm>> GetAllDietsByFilter(int? userId, string paymentStatus, string fullName, string mobile,int pageNumber, int pageSize);
         Task<IEnumerable<UserDiet>> GetAllDietsByUserIdAnother(int UserId);
         Task<bool> DeleteUserDiet(UserDiet userDiet);
         Task<bool> UpdateToSend(int UserDietId);

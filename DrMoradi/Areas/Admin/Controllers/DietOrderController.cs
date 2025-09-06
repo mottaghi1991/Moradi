@@ -1,5 +1,7 @@
 ﻿using Core.Dto.ViewModel.Dr;
 using Core.Dto.ViewModel.Dr.DietVm;
+using Core.Dto.ViewModel.Dr.DietVM;
+using Core.Dto.ViewModel.main;
 using Core.Extention;
 using Core.Service.Interface.Dr;
 using Domain;
@@ -29,12 +31,27 @@ namespace DrMoradi.Areas.Admin.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? userId, string fullName, string mobile, string paymentStatus = "Pay",int pageNumber = 1,int pageSize = 10)
         {
+            
+            
+            
             _logger.LogInformation(EventIdList.Read, "Admin درخواست لیست همه سفارش‌ها");
-            //return View(await _userDiet.GetAllUserDiets());
-            var diets = await _userDiet.GetAllDietsByUserId(0);
-            return View(diets);
+            if (string.Equals(paymentStatus, "all", StringComparison.OrdinalIgnoreCase))
+            {
+                paymentStatus = null;
+            }
+
+            var result = await _userDiet.GetAllDietsByFilter(
+            userId,           // همون ورودی کاربر
+            paymentStatus,    // بعد از تبدیل "all" به null
+            fullName,         // همون ورودی
+            mobile,           // همون ورودی
+            pageNumber,
+            pageSize
+        );
+
+            return View(result);
         }
 
 

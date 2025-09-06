@@ -33,7 +33,7 @@ namespace Data.MasterServices
             _ctx = ctx;
             cnn = ctx.Database.GetConnectionString();
             cnnsql = new SqlConnection(cnn);
-            _logger = factory.CreateLogger("NoorMehr");
+            _logger = factory.CreateLogger("DrMoradi");
             _accessor = accessor;
             //cnnsql = new MySql.Data.MySqlClient.MySqlConnection(cnn);mysql
         }

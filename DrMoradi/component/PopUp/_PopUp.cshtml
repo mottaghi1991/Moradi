@@ -26,7 +26,10 @@
 <!-- اسکریپت Bootstrap 5 -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        var popupModal = new bootstrap.Modal(document.getElementById('popup'));
-        popupModal.show();
+        if (!localStorage.getItem("popupShown")) {
+            var popupModal = new bootstrap.Modal(document.getElementById('popup'));
+            popupModal.show();
+            localStorage.setItem("popupShown", "true");
+        }
     });
 </script>

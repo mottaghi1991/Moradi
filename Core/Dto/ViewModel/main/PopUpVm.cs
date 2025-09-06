@@ -21,5 +21,6 @@ namespace Core.Dto.ViewModel.main
         [DisplayName("وضعیت")]
         public bool IsActive { get; set; }=false;
         public IFormFile ImageFile{ get; set; }
+ 
     }
 }
