@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Store
+namespace Domain.Shop
 {
     public class ProductImage:Base
     {

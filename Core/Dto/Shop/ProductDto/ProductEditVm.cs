@@ -17,9 +17,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
 
-        [DisplayName("توضیحات")]
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
-        public string Description { get; set; }
+      
 
         [DisplayName("قیمت")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
@@ -35,8 +33,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
 
         [DisplayName("ویژگی ها")]
         public string Attrib { get; set; }
-        [DisplayName("مشخصات")]
-        public string Proper { get; set; }
+
         [DisplayName("تصویر محصول")]
         public string ImageUrl { get; set; }
 

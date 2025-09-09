@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Core.Dto.ViewModel;
+﻿using AutoMapper;
 using Core.Dto.ViewModel.Admin;
 using Core.Dto.ViewModel.Dr.DietVm;
 using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Dto.ViewModel.main;
 using Core.Dto.ViewModel.Shop.Category;
-using Data.Migrations;
+using Core.Dto.ViewModel.Store.ProductDto;
 using Domain.Dr;
-using Domain.DrShop;
 using Domain.Main;
 using Domain.PersonalData;
+using Domain.Shop;
 
 
 namespace Core.Mapper
@@ -33,7 +27,10 @@ namespace Core.Mapper
 
             CreateMap<PopUp, PopUpVm>().ReverseMap();
             CreateMap<PopUp, PopUpEditVm>().ReverseMap();
-       
+
+            CreateMap<Product, ProductAddVM>().ReverseMap();
+            CreateMap<Product, ProductEditVm>().ReverseMap();
+
         }
     }
 }

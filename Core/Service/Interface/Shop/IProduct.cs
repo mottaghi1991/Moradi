@@ -1,6 +1,6 @@
 ﻿
 using Core.Dto.ViewModel.Store.ProductDto;
-using Domain.Store;
+using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;

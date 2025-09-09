@@ -4,9 +4,10 @@ using Core.Dto.ViewModel.Store.ProductImageDto;
 using Core.Extention;
 using Core.Interface.Store;
 using Core.Service.Interface.Shop;
-using Domain.Store;
+using Domain.Shop;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WebStore.Base;
 
@@ -29,9 +30,9 @@ namespace DrMoradi.Areas.Admin.Controllers
             _category = category;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_Product.GetAll());
+            return View(await _Product.GetAll());
         }
         public async Task<IActionResult> Create()
         {
@@ -43,12 +44,12 @@ namespace DrMoradi.Areas.Admin.Controllers
         {
             if(!ModelState.IsValid)
             {
-                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "SubCategoryName",addVM.CategoryId);
+                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName",addVM.CategoryId);
                 return View(addVM);
             }
             if (addVM.ImageFile == null || addVM.ImageFile.Length == 0)
             {
-                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "SubCategoryName", addVM.CategoryId);
+                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName", addVM.CategoryId);
 
                 ModelState.AddModelError("ImageFile", "انتخاب تصویر الزامی است");
                 return View(addVM);
@@ -57,7 +58,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             var ext = Path.GetExtension(addVM.ImageFile.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(ext))
             {
-                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "SubCategoryName", addVM.CategoryId);
+                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName", addVM.CategoryId);
 
                 ModelState.AddModelError("ImageFile", "فرمت فایل تصویر مجاز نیست.");
                 return View(addVM);
@@ -69,22 +70,23 @@ namespace DrMoradi.Areas.Admin.Controllers
             }
             catch
             {
-                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "SubCategoryName", addVM.CategoryId);
+                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName", addVM.CategoryId);
                 ModelState.AddModelError("ImageFile", "حجم فایل نمیتواند بیشتر از 1M باشد");
                 return View(addVM);
             }
-            string FIleName, FilePAth = null;
+            string FIleName;
             FIleName = FileTools.GetFileName(addVM.ImageFile);
 
             var FileResult = FileTools.UploadFile(addVM.ImageFile, FIleName, "Product");
             if (!FileResult.Success)
             {
-                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "SubCategoryName", addVM.CategoryId);
+                ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName", addVM.CategoryId);
 
                 ModelState.AddModelError("ImageFile", "بارگذازی فایل با مشکل مواجه گردید");
                 return View(addVM);
             }
-            var result = _Product.Insert(_mapper.Map<Product>(addVM));
+            addVM.ImageUrl = FileResult.FilePath;
+            var result =await _Product.Insert(_mapper.Map<Product>(addVM));
             if (result != null)
             {
                 TempData[Success] = SuccessMessage;
@@ -93,7 +95,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             else
             {
                 TempData[Error] = ErrorMessage;
-                FileTools.DeleteFile(FilePAth);
+                FileTools.DeleteFile(FileResult.FilePath);
                 return RedirectToAction("Index");
             }
         }
@@ -213,11 +215,11 @@ namespace DrMoradi.Areas.Admin.Controllers
                 return RedirectToAction("ProductImageList", new { ProductId = ProductId });
             }
             var product = _Product.GetProductById(ProductId);
-            if(product==null)
+            if(product==null)   
             {
                 return NotFound();
             }
-            string FIleName, FilePAth = null;
+            string FIleName;
             FIleName = FileTools.GetFileName(ProductImage);
             var FileResult = FileTools.UploadFile(ProductImage, FIleName, "Product/ProductImage");
             if (!FileResult.Success)
@@ -225,11 +227,11 @@ namespace DrMoradi.Areas.Admin.Controllers
                 TempData[Error] = "بارگذازی فایل با مشکل مواجه گردید";
                 return RedirectToAction("ProductImageList", new { ProductId = ProductId });
             }
-
+            
             var result =await _Product.InsertImage(new ProductImage()
             {
                 ProductId = ProductId,
-                ImageUrl = FilePAth
+                ImageUrl = FileResult.FilePath
             });
             if (result != null)
             {
@@ -239,7 +241,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             }
             else
             {
-                FileTools.DeleteFile(FilePAth);
+                FileTools.DeleteFile(FileResult.FilePath);
                 TempData[Error] = ErrorMessage;
                 return RedirectToAction("ProductImageList", new { ProductId = ProductId });
             }

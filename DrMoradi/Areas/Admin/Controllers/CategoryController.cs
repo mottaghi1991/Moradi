@@ -79,7 +79,7 @@ namespace Personal.Areas.Admin.Controllers
                 }
                 FilePAth = FileResult.FilePath;
                 Category.Image = FilePAth;
-                var result =await _Category.Insert(new Domain.DrShop.Category()
+                var result =await _Category.Insert(new Domain.Shop.Category()
                 {
                     CategoryName = Category.CategoryName,
                     Image = FilePAth,

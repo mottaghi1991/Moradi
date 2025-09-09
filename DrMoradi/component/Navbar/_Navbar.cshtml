@@ -1,10 +1,28 @@
 ﻿@model IEnumerable<Domain.Dr.Diet>
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 <header>
     <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light bg-transparent fixed-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/"><img src="/FileUpload/Slider/logo-m.png" style="width:45px" /></a>
-            <button class="navbar-toggler"
+
+            <!-- لوگو -->
+            <a class="navbar-brand fw-bold" href="/">
+                <img src="/FileUpload/Slider/logo-m.png" style="width:45px" />
+            </a>
+
+            <!-- دکمه سبد خرید همیشه قابل دیدن -->
+            <a class="btn btn-outline-primary position-relative me-2 order-lg-2"
+               data-bs-toggle="offcanvas"
+               href="#cartSidebar"
+               role="button"
+               aria-controls="cartSidebar">
+                <img src="/Img/shopping-cart-outline-svgrepo-com.svg" height="20" />
+                <span id="cart-count"
+                      class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </a>
+
+            <!-- دکمه باز کردن منو در موبایل -->
+            <button class="navbar-toggler order-lg-3"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarContent"
@@ -14,56 +32,108 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- آیتم‌های منو -->
+            <div class="collapse navbar-collapse order-lg-1" id="navbarContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"
                     data-bs-spy="scroll"
                     data-bs-target="#mainNavbar"
                     data-bs-offset="70">
                     <li class="nav-item">
-                        <a class="nav-link active" href="\">خانه</a>
+                        <a class="nav-link active" href="/">خانه</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="\Diets" id="navbarDietDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle"
+                           href="/Diets"
+                           id="navbarDietDropdown"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
                             رژیم آنلاین دکتر مرادی
                         </a>
                         <ul class="dropdown-menu text-end" aria-labelledby="navbarDietDropdown">
                             @foreach (var item in Model)
                             {
-                                @* <li><a class="dropdown-item" asp-action="" asp-controller="">@item.Name</a></li> *@
-                                <li><a class="dropdown-item text-start" asp-action="DietDetail" asp-controller="Home" asp-area="" asp-route-DietId="@item.Id">@item.Name</a></li>
-
+                                <li>
+                                    <a class="dropdown-item text-start"
+                                       asp-action="DietDetail"
+                                       asp-controller="Home"
+                                       asp-route-DietId="@item.Id">
+                                        @item.Name
+                                    </a>
+                                </li>
                             }
-
-
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#diets">فروشگاه</a>
+                        <a class="nav-link" href="/Shop">فروشگاه</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="\blogs">بلاگ</a>
+                        <a class="nav-link" href="/blogs">بلاگ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="\contact">ارتباط با ما</a>
+                        <a class="nav-link" href="/contact">ارتباط با ما</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="\Rules">قوانین و مقررات</a>
+                        <a class="nav-link" href="/Rules">قوانین و مقررات</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#shop">پرسش های متداول</a>
                     </li>
                 </ul>
+
                 @if (User.Identity.IsAuthenticated)
                 {
                     <a href="/UserPanel" class="btn btn-outline-success">پنل کاربری</a>
                 }
                 else
                 {
-                    <a href="SMSLogin" class="btn btn-outline-success">ورود / ثبت نام</a>
-
+                    <a href="/SMSLogin" class="btn btn-outline-success">ورود / ثبت نام</a>
                 }
             </div>
         </div>
     </nav>
+
+    <!-- سایدبار سبد خرید -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartSidebar" aria-labelledby="cartSidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="cartSidebarLabel">سبد خرید</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="بستن"></button>
+        </div>
+        <div class="offcanvas-body">
+
+            <!-- حالت خالی -->
+            <div id="emptyCart" class="text-center">
+                <p class="text-muted">سبد خرید شما خالی است</p>
+                <a href="/Shop" class="btn btn-primary">مشاهده محصولات</a>
+            </div>
+
+            <!-- حالت پر -->
+            <div id="filledCart" class="d-none">
+                <ul class="list-group mb-3">
+                    <!-- نمونه آیتم -->
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        محصول شماره ۱
+                        <span class="badge bg-primary rounded-pill">قیمت</span>
+                    </li>
+                </ul>
+                <div class="d-flex justify-content-between">
+                    <strong>جمع کل:</strong>
+                    <span id="totalPrice">0 تومان</span>
+                </div>
+                <a href="/checkout" class="btn btn-success w-100 mt-3">ادامه خرید</a>
+            </div>
+
+        </div>
+    </div>
 </header>
+
+<!-- CSS اضافی -->
+<style>
+    .offcanvas-body {
+        max-height: calc(100vh - 56px);
+        overflow-y: auto;
+    }
+</style>
+
+<!-- جاوااسکریپت مدیریت حالت -->
+

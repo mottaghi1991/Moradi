@@ -1,4 +1,4 @@
-﻿using Domain.Store;
+﻿using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;

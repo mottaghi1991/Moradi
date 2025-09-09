@@ -4,13 +4,11 @@ using Core.Dto.ViewModel.Store.ProductDto;
 using Core.Interface.Store;
 
 using Data.MasterInterface;
-using Domain.Store;
+using Domain.Shop;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Services.Store

@@ -59,5 +59,12 @@ namespace Domain
         firstform=1,
         secondform=0
     }
-
+    public enum OrderStatus
+    {
+        Pending,      // در انتظار پرداخت
+        Paid,         // پرداخت شده
+        Shipped,      // ارسال شده
+        Delivered,    // تحویل داده شده
+        Cancelled     // لغو شده
+    }
 }

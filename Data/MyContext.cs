@@ -1,9 +1,11 @@
 ﻿using Domain;
 using Domain.Dr;
-using Domain.DrShop;
+
 using Domain.Main;
 using Domain.PersonalData;
+using Domain.Shop;
 using Domain.SMS;
+
 using Domain.User;
 using Domain.User.Permission;
 using Domain.Users;
@@ -43,6 +45,9 @@ namespace Data
 
         #region Shop
         public virtual DbSet<Category> Categories{ get; set; }
+        public virtual DbSet<Product> Products{ get; set; }
+        public virtual DbSet<Cart> Carts{ get; set; }
+        public virtual DbSet<CartItem> CartItems{ get; set; }
 
         #endregion
         public virtual DbSet<Setting> Settings{ get; set; }
@@ -85,6 +90,15 @@ namespace Data
        .WithMany(ud => ud.Children)      // یک پدر می‌تونه چند فرزند داشته باشه
        .HasForeignKey(ud => ud.ParentId) // کلید خارجی برای Parent
        .OnDelete(DeleteBehavior.Restrict); // حذف پدر، بچه‌ها رو حذف نکن
+
+            modelBuilder.Entity<Order>()
+        .HasOne(o => o.ShippingAddress)
+        .WithOne(sa => sa.Order)
+        .HasForeignKey<ShippingAddress>(sa => sa.Id);
+
+
+
         }
+
     }
 }

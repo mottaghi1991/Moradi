@@ -60,30 +60,43 @@ namespace DrMoradi.Controllers
         {
 
             var phoneNumber = HttpContext.Session.GetString("PhoneNumber");
-
+            _logger.LogInformation(EventIdList.Login, "SMS login attempt for phone: {PhoneNumber}", phoneNumber);
             if (!await _userOtp.CanTryAsync(phoneNumber))
+            {
+                _logger.LogWarning(EventIdList.Login, "Too many attempts for {PhoneNumber}. Account locked for 10 min", phoneNumber);
                 return Json(JsonFailure("تعداد تلاش‌های شما بیش از حد مجاز است.کاربری شما 10 دقیقه غیرفعال گردید."));
+
+            }
 
             if (!await _userOtp.UseCodeAsync(phoneNumber, acceptCode.SendCode))
             {
                 await _userOtp.IncreaseTryAsync(phoneNumber);
+                _logger.LogWarning(EventIdList.Login, "Invalid OTP code entered for {PhoneNumber}", phoneNumber);
                 return BadRequest(JsonFailure("کد وارد شده صحیح نیست"));
             }
 
             var user = await _user.GetOrCreateUser(phoneNumber);
             await _user.SignIn(HttpContext, user);
             await _userOtp.UseCodeAsync(phoneNumber, acceptCode.SendCode);
-            _logger.LogWarning(EventIdList.Login, "User with {PhoneNumber} login", phoneNumber);
-            var obj=await _user.GetUserByUserNameAsync(user.UserName);
+            _logger.LogInformation(EventIdList.Login, "User {UserId} with phone {PhoneNumber} signed in via SMS", user.ItUserId, phoneNumber); var obj=await _user.GetUserByUserNameAsync(user.UserName);
             var redirectUrl = !string.IsNullOrEmpty(acceptCode.ReturnUrl) && Url.IsLocalUrl(acceptCode.ReturnUrl)
      ? acceptCode.ReturnUrl
      : Url.Content("~/");
             string Fullname = (obj?.FullName);
             if(Fullname==null)
+            {
+                _logger.LogInformation(EventIdList.Login, "Redirecting user {UserId} to fill profile form", user.ItUserId);
                 return Json(JsonSuccess("ورود موفق", redirectUrl: "UserPanel/UserPanel/Fillform"));
 
+            }
+
             else
+            {
+                _logger.LogInformation(EventIdList.Login, "User {UserId} redirected to {RedirectUrl}", user.ItUserId, redirectUrl);
                 return Json(JsonSuccess("ورود موفق", redirectUrl: redirectUrl));
+
+
+            }
 
         }
 
@@ -91,9 +104,11 @@ namespace DrMoradi.Controllers
         [Route("SendCode")]
         public async Task<IActionResult> SendCode([FromBody] SmsLoginViModel loginViewModel)
         {
+            _logger.LogInformation(EventIdList.Login, "User requested SendCode for phone: {PhoneNumber}", loginViewModel.PhoneNumber);
             loginViewModel.PhoneNumber = loginViewModel.PhoneNumber;
             if (!ModelState.IsValid)
             {
+                _logger.LogWarning(EventIdList.Login, "Invalid model state in SendCode. Phone: {PhoneNumber}", loginViewModel.PhoneNumber);
                 return View(loginViewModel);
             }
             try
@@ -106,6 +121,7 @@ namespace DrMoradi.Controllers
                     var SecondPassed = (DateTime.UtcNow - LastSentTime).TotalSeconds;
                     if (SecondPassed < 60)
                     {
+                        _logger.LogWarning(EventIdList.Login, "SendCode too soon for {PhoneNumber}. Wait {Seconds} more seconds", loginViewModel.PhoneNumber, 60 - (int)SecondPassed);
                         return BadRequest(new { success = false, message = $"لطفاً {60 - (int)SecondPassed} ثانیه دیگر تلاش کنید." });
 
                     }
@@ -117,6 +133,7 @@ namespace DrMoradi.Controllers
                 var response = await _sms.SendSms(loginViewModel.PhoneNumber, 553170, Code);
                 if (response == null)
                 {
+                    _logger.LogError(EventIdList.Login, "SMS sending failed for {PhoneNumber}", loginViewModel.PhoneNumber);
                     return BadRequest(new { success = false, message = "ورود ناموفق. لطفاً دوباره تلاش کنید." });
 
                 }
@@ -130,12 +147,15 @@ namespace DrMoradi.Controllers
                 });
                 if (!result)
                 {
+                    _logger.LogError(EventIdList.Login, "Failed to insert OTP for {PhoneNumber}", loginViewModel.PhoneNumber);
                     return BadRequest(new { success = false, message = "ارسال پیامک با مشکل مواجه شده است." });
                 }
+                _logger.LogInformation(EventIdList.Login, "OTP code sent successfully to {PhoneNumber}", loginViewModel.PhoneNumber);
                 return Ok(new { success = true, message = "کد با موفقیت ارسال گردید" });
             }
             catch (Exception e)
             {
+                _logger.LogError(EventIdList.Login, e, "Exception in SendCode for {PhoneNumber}", loginViewModel.PhoneNumber);
                 return BadRequest(new { success = false, message = "ارسال پیامک با مشکل مواجه شده است." });
 
             }
@@ -147,10 +167,12 @@ namespace DrMoradi.Controllers
         public async Task<IActionResult> ReSendCode()
         {
             var phoneNumber = HttpContext.Session.GetString("PhoneNumber");
+            _logger.LogInformation(EventIdList.Login, "Resend OTP requested for {PhoneNumber}", phoneNumber);
             var Code = Core.Extention.CodeGenerator.Generate();
             var response = _sms.SendSms(phoneNumber, 553170, Code);
             if (response == null)
             {
+                _logger.LogError(EventIdList.Login, "Resend OTP failed for {PhoneNumber}", phoneNumber);
                 return BadRequest(new { success = false, message = "ورود ناموفق. لطفاً دوباره تلاش کنید." });
 
             }
@@ -164,8 +186,10 @@ namespace DrMoradi.Controllers
             });
             if (!result)
             {
+                _logger.LogError(EventIdList.Login, "Failed to insert OTP in ReSendCode for {PhoneNumber}", phoneNumber);
                 return BadRequest(new { success = false, message = "ارسال پیامک با مشکل مواجه شده است." });
             }
+            _logger.LogInformation(EventIdList.Login, "OTP resent successfully to {PhoneNumber}", phoneNumber);
             return Ok(new { success = true, message = "کد با موفقیت ارسال گردید" });
 
         }
@@ -175,6 +199,7 @@ namespace DrMoradi.Controllers
         [Route("Logout")]
         public IActionResult LogOut()
         {
+            _logger.LogInformation(EventIdList.Login, "User logged out. Session cleared");
             HttpContext.Session.Clear();
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -184,7 +209,7 @@ namespace DrMoradi.Controllers
         [RediretAuthenticate("/Admin")]
         public IActionResult Login()
         {
-            return View();
+            _logger.LogInformation(EventIdList.Login, "Admin login page requested"); return View();
 
         }
 
@@ -194,7 +219,7 @@ namespace DrMoradi.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(loginViewModel);
+                _logger.LogWarning(EventIdList.Login, "Invalid model state in admin login"); return View(loginViewModel);
             }
 
             var user = await _user.LoginCheckAsync(loginViewModel);
@@ -217,7 +242,7 @@ namespace DrMoradi.Controllers
                     IsPersistent = loginViewModel.IsRemember
                 };
                 HttpContext.SignInAsync(principal, Properties);
-
+                _logger.LogInformation(EventIdList.Login, "Admin user {UserId} logged in successfully", user.ItUserId);
                 return RedirectToAction("Index", "AdminHome", new { area = "Admin" });
             }
 

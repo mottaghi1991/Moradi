@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.DrShop
+namespace Domain.Shop
 {
     public class Category:Base
     {

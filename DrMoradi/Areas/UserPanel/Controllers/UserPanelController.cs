@@ -175,7 +175,7 @@ namespace WebStore.Areas.UserPanel.Controllers
       
             return View(await _Comment.GetCommentsByUserId(User.GetUserId()));
         }
-        public async Task<IActionResult> ReplayDetailAsync(int CommentId)
+        public async Task<IActionResult> ReplayDetail(int CommentId)
         {
             if (CommentId <= 0)
                 return NotFound();

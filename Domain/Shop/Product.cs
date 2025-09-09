@@ -6,9 +6,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain.DrShop;
 
-namespace Domain.Store
+
+namespace Domain.Shop
 {
     public class Product : Base
     {
@@ -17,8 +17,6 @@ namespace Domain.Store
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
 
-        [DisplayName("توضیحات")]
-        public string Description { get; set; }
 
         [DisplayName("قیمت")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
@@ -31,8 +29,7 @@ namespace Domain.Store
      
         [DisplayName("ویژگی ها")]
         public string Attrib { get; set; }
-        [DisplayName("مشخصات")]
-        public string Proper { get; set; }
+     
         [DisplayName("تصویر محصول")]
         public string ImageUrl { get; set; }
         [DisplayName("وضعیت")]
@@ -43,6 +40,7 @@ namespace Domain.Store
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
         public virtual ICollection<ProductImage> ProductImages{ get; set; }
+        public virtual ICollection<CartItem> CartItems{ get; set; }
 
 
     }

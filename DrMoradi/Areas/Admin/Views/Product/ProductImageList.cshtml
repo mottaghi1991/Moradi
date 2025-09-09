@@ -1,0 +1,61 @@
+﻿@model Core.Dto.ViewModel.Store.ProductImageDto.ProductImageListVM
+@{
+    ViewData["Title"] = "ProductImageList";
+}
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> تصاویر @Model.ProductName</h3>
+        </div>
+        <div class="card-body">
+            
+            
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                     
+                            @Html.DisplayNameFor(model => model.productImages.FirstOrDefault().ImageUrl)
+                        </th>
+                     
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.productImages)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@item.ImageUrl" style="width:50px" />
+                            </td>
+                         
+                            <td>
+                                <a class="btn btn-danger" asp-action="DeleteImage" onclick="return confirm('ایا از حذف اطمینان دارید؟')" asp-route-ProductImageId="@item.Id">حذف تصویر</a>
+
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="card">
+              
+                <div class="card-body">
+                    تصویر جدید
+                    <form action="CreateImage" id="myform" class="m-3" method="post" enctype="multipart/form-data">
+                        <input type="file" name="ProductImage" />
+                        <input type="hidden" name="ProductId" value="@Model.ProductId" />
+                        <input type="submit" value="ثبت تصویر" class="btn btn-success" />
+
+                    </form>
+                </div>
+            </div>
+            <a asp-action="Index" asp-controller="Product" asp-area="Admin" class="btn badge-primary">بازگشت به لیست</a>
+
+        </div>
+    </div>
+</div>
+
+

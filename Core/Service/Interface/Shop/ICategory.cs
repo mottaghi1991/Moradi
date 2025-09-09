@@ -1,5 +1,6 @@
 ﻿
-using Domain.DrShop;
+
+using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;

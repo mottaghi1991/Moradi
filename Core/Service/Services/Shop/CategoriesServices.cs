@@ -1,10 +1,9 @@
 ﻿using Core.Service.Interface.Shop;
 using Data.MasterInterface;
-using Domain.DrShop;
+using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Service.Services.Shop

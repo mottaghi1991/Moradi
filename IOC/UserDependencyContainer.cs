@@ -1,6 +1,7 @@
 ﻿using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Interface.Admin;
 using Core.Interface.Sms;
+using Core.Interface.Store;
 using Core.Service.Interface.Admin;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
@@ -15,19 +16,18 @@ using Core.Service.Services.Shop;
 using Core.Service.Services.Sms;
 using Core.Service.Services.Users;
 using Core.Services.Sms;
+using Core.Services.Store;
 using Core.Services.Users;
 using Data.MasterInterface;
 using Data.MasterServices;
 using Domain.Dr;
-using Domain.DrShop;
 using Domain.Main;
 using Domain.PersonalData;
+using Domain.Shop;
 using Domain.SMS;
 using Domain.User;
 using Domain.User.Permission;
-using Domain.Users;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace IOC
 {
@@ -97,8 +97,15 @@ namespace IOC
             #endregion
             #region Shop
             Services.AddScoped<IMaster<Category>, MasterServices<Category>>();
+            Services.AddScoped<IMaster<Product>, MasterServices<Product>>();
+            Services.AddScoped<IMaster<ProductImage>, MasterServices<ProductImage>>();
+            Services.AddScoped<IMaster<Cart>, MasterServices<Cart>>();
+            Services.AddScoped<IMaster<CartItem>, MasterServices<CartItem>>();
 
             Services.AddScoped<ICategory, CategoriesServices>();
+            Services.AddScoped<IProduct, ProductServies>();
+            Services.AddScoped<ICart, CartServices>();
+            Services.AddScoped<ICartItem, CartItemServices>();
 
             #endregion
             #region Sms

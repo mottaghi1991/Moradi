@@ -1,0 +1,160 @@
+﻿@model Core.Dto.ViewModel.Store.ProductDto.ProductEditVm
+
+@section style {
+    <link href="~/Common/ckeditor5/ckeditor5.css" rel="stylesheet" />
+}
+@{
+    ViewData["Title"] = "ویرایش";
+}
+
+
+
+<div class="col-md-12">
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title">دسته بندی </h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" id="myform" class="m-3" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-row">
+                    <!-- فیلدهای کوچکتر در ردیف اول -->
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="ProductName" class="control-label"></label>
+                        <input asp-for="ProductName" class="form-control" />
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+
+                 
+                    <!-- فیلدهای تصویر و فعال بودن -->
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="ImageUrl" class="control-label"></label>
+                        <input type="file" asp-for="ImageFile" class="form-control" />
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="CategoryId" class="control-label"></label>
+                        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.subcategory"></select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="OffPricePercent" class="control-label"></label>
+                        <input asp-for="OffPricePercent" class="form-control" />
+                        <span asp-validation-for="OffPricePercent" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-md-2 col-12 form-group">
+                        <label asp-for="Stock" class="control-label"></label>
+                        <input asp-for="Stock" class="form-control" />
+                        <span asp-validation-for="Stock" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2 col-12 form-group">
+                        <label asp-for="IsActive" class="control-label"></label>
+                        <input asp-for="IsActive" class="form-control" />
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- textarea ها که فضای بیشتری نیاز دارند -->
+                    <div class="col-md-12 col-12 form-group">
+                        <label asp-for="Attrib" class="control-label"></label>
+                        <textarea asp-for="Attrib" class="form-control" rows="7"></textarea>
+                        <span asp-validation-for="Attrib" class="text-danger"></span>
+                    </div>
+
+                 
+                </div>
+
+
+
+                <!-- دکمه ارسال -->
+                <div class="form-group">
+                    <input type="submit" value="ثبت" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script type="importmap">
+        {
+            "imports": {
+                "ckeditor5": "../../common/ckeditor5/ckeditor5.js",
+                "ckeditor5/": "../../common/ckeditor5/"
+            }
+        }
+    </script>
+    <script type="module">
+        import {
+            ClassicEditor,
+            Essentials,
+            Paragraph,
+            Bold,
+            Italic,
+            Font,
+            Heading,
+            Link,
+            List,
+            Alignment // جهت‌دهی
+        } from 'ckeditor5';
+
+        // پیدا کردن تمام المنت‌ها با id #FinalResult و #mytest
+        document.addEventListener('DOMContentLoaded', () => {
+            const editorElements = document.querySelectorAll('#Attrib, #Proper');
+
+            editorElements.forEach(editorElement => {
+                ClassicEditor.create(editorElement, {
+                    licenseKey: '',
+                    plugins: [
+                        Essentials,
+                        Paragraph,
+                        Bold,
+                        Italic,
+                        Font,
+                        Heading,
+                        Link,
+                        List,
+                        Alignment
+                    ],
+                    toolbar: [
+                        'heading', '|', 'bold', 'italic', 'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+                        'link', 'bulletedList', 'numberedList', '|',
+                        'alignment:left', 'alignment:center', 'alignment:right', 'alignment:justify'
+                    ],
+                    language: 'fa',
+                    ui: { language: 'fa' },
+                    contentLanguage: 'fa',
+                    alignment: {
+                        options: ['left', 'right', 'center', 'justify']
+                    }
+                })
+                .then(editor => {
+                    editor.model.document.on('change:data', () => {
+                        const htmlContent = editor.getData();
+                        // می‌توانید اینجا پردازش‌های دلخواه روی htmlContent انجام دهید
+                    });
+                })
+                .catch(error => {
+                    console.error('Error initializing the editor:', error);
+                });
+            });
+        });
+    </script>
+}
+

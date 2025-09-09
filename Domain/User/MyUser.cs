@@ -1,5 +1,6 @@
 ﻿using Domain.Dr;
 using Domain.Main;
+using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,6 +40,8 @@ namespace Domain.User
         public ICollection<UserDiet> UserDiets{ get; set; }
         public ICollection<UserAnswer> userAnswers{ get; set; }
         public ICollection<Comment> Comments{ get; set; }
+        public ICollection<Cart> carts{ get; set; }
+        public ICollection<Order> orders{ get; set; }
 
     }
 

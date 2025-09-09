@@ -6,19 +6,19 @@
 
     <title>رژیم آنلاین دکتر مرادی</title>
     <link rel="icon" type="image/png" href="~/FileUpload/Slider/logo-m.png">
-    <link rel="stylesheet" href="~/MyFile/dist/css/adminlte.min.css">
+  
     <!-- لینک به CSS بوت‌استرپ -->
 
     <link href="~/css/swiper.css" rel="stylesheet" />
     <link href="~/myfile/dist/css/custom-style.css" rel="stylesheet" />
     <link href="~/common/sweetalert/sweetalert2.min.css" rel="stylesheet" />
-
-    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
     <link href="~/css/maincss.css" rel="stylesheet" />
+    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
+
     @await RenderSectionAsync("style", false)
 
 </head>
-<body>
+<body data-isloggin="@User.Identity.IsAuthenticated.ToString().ToLower()">
 
     @await Component.InvokeAsync("PopUpComponent")
     <!-- هدر و ناوبار -->
@@ -47,19 +47,24 @@
     <partial name="_Message" />
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/mainjs.js"></script>
-    <script>
-                function openPopup() {
-          document.getElementById('popup').style.display = 'block';
-        }
 
-        function closePopup() {
-          document.getElementById('popup').style.display = 'none';
-        }
+          <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (!sessionStorage.getItem("popupShown")) {
+                var popupElement = document.getElementById('popup');
+                var popupModal = new bootstrap.Modal(popupElement);
 
-        // اگر بخوای پاپ‌آپ بلافاصله با ورود کاربر نمایش داده بشه:
-        window.onload = function () {
-          openPopup();
-        }
+                popupModal.show();
+                sessionStorage.setItem("popupShown", "true");
+
+                popupElement.addEventListener('hidden.bs.modal', function () {
+                    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('padding-right');
+                    popupElement.remove();
+                });
+            }
+        });
     </script>
 </body>
 </html>
