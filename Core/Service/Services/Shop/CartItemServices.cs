@@ -43,8 +43,9 @@ namespace Core.Service.Services.Shop
             if (cartItem == null)
                 return false;
 
-           await _master.DeleteAsync(cartItem);
-            return true;
+        var result=   await _master.DeleteAsync(cartItem);
+            
+            return result;
         }
 
         public async Task<bool> UpdateAsync(CartItem cartItem)

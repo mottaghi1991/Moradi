@@ -24,9 +24,10 @@ namespace Core.Service.Interface.Dr
         Task<bool> UpdateToFirstPay(int UserdietId, string Authority);
         Task<bool> UpdateToFinaltPay(UserDiet userDiet);
         Task<UserDiet> GetUserDietById(int UserDietId);
-        Task<bool> InsertAnswerAsync(ShowQuestionToUserVM vm,int UserId);
+        Task<UserDiet> InsertAnswerAsync(ShowQuestionToUserVM vm,int UserId);
        
         Task<UserDiet> GetUserDietByAuthority(string Authority);
         Task<IEnumerable<UserDiet>> GetAllParentAndChild(int userDietId);
+        Task<UserInfoVm> GetUserInfoByuserDietId(int UserDietId);
     }
 }

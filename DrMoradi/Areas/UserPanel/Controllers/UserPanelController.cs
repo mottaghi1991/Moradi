@@ -1,6 +1,7 @@
 ﻿using Core.Dto.ViewModel.main;
 using Core.Dto.ViewModel.User;
 using Core.Extention;
+using Core.Interface.Sms;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
 using Core.Service.Interface.Payment;
@@ -30,14 +31,16 @@ namespace WebStore.Areas.UserPanel.Controllers
         private readonly IUser _user;
         private readonly IComment _Comment;
         private readonly ILogger<UserPanelController> _logger;
+        private readonly ISms _sms;
 
-        public UserPanelController(IPayment payment, IUserDiet userDiet, IUser user, ILogger<UserPanelController> logger, IComment comment)
+        public UserPanelController(IPayment payment, IUserDiet userDiet, IUser user, ILogger<UserPanelController> logger, IComment comment, ISms sms)
         {
             _payment = payment;
             _userDiet = userDiet;
             _user = user;
             _logger = logger;
             _Comment = comment;
+            _sms = sms;
         }
 
         [Route("/UserPanel")]
@@ -92,12 +95,14 @@ namespace WebStore.Areas.UserPanel.Controllers
                     return RedirectToAction("Index");
                 }
                 var payevent = await _payment.VerifyPayment(authority: Authority, (int)userdiet.Amount);
-
-                if (payevent)
+                var myuser =await _user.GetUserByUserId(User.GetUserId());
+                if (payevent.Error==null)
                 {
                     _logger.LogInformation("پرداخت موفق. UserId={UserId}, Amount={Amount}, userdiet={userdiet}, Authority={Authority}",
                  User.GetUserId(), userdiet.Amount, userdiet, Authority);
-                    TempData[Success] = " از پرداخت شما متشکریم";
+                   await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
+                    await _sms.AdminAlarm("09124790243", 502847, userdiet.Id.ToString(), myuser.FullName);
+                    TempData[Success] = " درخواست رژیم شما در سایت دکتر مرادی ثبت شد و حداکثر تا ۴۸ ساعت کاری آینده رژیم برای شما ارسال می گردد شناسه پرداخت :"+ payevent.data.ref_id;
                     // نمایش خطا
                     return RedirectToAction("Index", "UserPanel", "UserPanel");
                 }

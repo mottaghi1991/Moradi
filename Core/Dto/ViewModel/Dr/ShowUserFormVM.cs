@@ -1,4 +1,5 @@
 ﻿using Domain.Dr;
+using Domain.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,6 @@ namespace Core.Dto.ViewModel.Dr
         public IEnumerable<UserDiet> userDiets { get; set; }
         public IEnumerable<ShowUserAnswerVM> showUserAnswerVMs { get; set; }
         public IEnumerable<FileList> UserFile { get; set; }
+        public UserInfoVm UserIfo { get; set; }
     }
 }

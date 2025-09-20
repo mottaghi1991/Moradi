@@ -38,7 +38,12 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             _logger = logger;
             _User = user;
         }
+        public async Task<IActionResult> MyDiet()
+        {
 
+            var obj = await _userDiet.GetAllDietsByUserId(User.GetUserId());
+            return View(obj);
+        }
         public async Task<IActionResult> Index(int DietId, int ParentId = 0)
         {
             _logger.LogInformation(EventIdList.Read,
@@ -163,7 +168,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
                 var result = await _userDiet.InsertAnswerAsync(vm, User.GetUserId());
 
-                if (!result)
+                if (result==null)
                 {
                     _logger.LogError("ثبت پاسخ رژیم برای کاربر {UserId} ناموفق بود. DietId={DietId}", User.GetUserId(), vm.DietId);
                     TempData[Error] = ErrorMessage;
@@ -171,7 +176,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 }
                 _logger.LogInformation("ثبت پاسخ رژیم برای کاربر {UserId} موفقیت‌آمیز بود. DietId={DietId}", User.GetUserId(), vm.DietId);
                 TempData[Success] = SuccessMessage;
-                return RedirectToAction("Index", "UserPanel");
+                return RedirectToAction("StartPayment", "UserPanel", new { UserDietId =result.Id});
             }
             catch (Exception ex)
             {
@@ -182,12 +187,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
        
         }
 
-        public async Task<IActionResult> MyDiet()
-        {
-
-            var obj = await _userDiet.GetAllDietsByUserId(User.GetUserId());
-            return View(obj);
-        }
+   
         public async Task<IActionResult> GetDiet(int UserDietId)
         {
             ShowUserDietVm obj = new ShowUserDietVm()

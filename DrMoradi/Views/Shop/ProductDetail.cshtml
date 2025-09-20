@@ -93,10 +93,11 @@
 
             <!-- انتخاب تعداد -->
             <div class="d-flex align-items-center mb-3">
-                <label class="me-2 mb-0">تعداد موجودی (@Model.Stock عدد):</label>
+                <label class="me-2 mb-0" id="max">تعداد موجودی (@Model.Stock عدد):</label>
                 <div class="input-group w-auto">
                     <button class="btn btn-danger" type="button" id="decrease">-</button>
-                    <input type="number" class="form-control text-center" id="quantity" value="1" style="width:70px;">
+                    <input type="number" class="form-control text-center" id="quantity" value="1" min="1"
+                           max="@Model.Stock" style="width:70px;">
                     <button class="btn btn-success" type="button" id="increase">+</button>
                 </div>
             </div>
@@ -114,7 +115,5 @@
     </div>
 </div>
 
-@section Scripts {
-    <script src="/js/shop/shoporder.js"></script>
-}
+
 

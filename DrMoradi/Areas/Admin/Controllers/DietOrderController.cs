@@ -3,6 +3,7 @@ using Core.Dto.ViewModel.Dr.DietVm;
 using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Dto.ViewModel.main;
 using Core.Extention;
+using Core.Interface.Sms;
 using Core.Service.Interface.Dr;
 using Domain;
 using Domain.Dr;
@@ -21,7 +22,8 @@ namespace DrMoradi.Areas.Admin.Controllers
         private readonly ISendDiet _sendDiet;
         private readonly IFileList _fileList;
         private readonly ILogger<DietOrderController> _logger;
-        public DietOrderController(IUserDiet userDiet, IQuestion question, IUserAnswer userAnswer, ISendDiet sendDiet, IFileList fileList, ILogger<DietOrderController> logger)
+        private readonly ISms _sms;
+        public DietOrderController(IUserDiet userDiet, IQuestion question, IUserAnswer userAnswer, ISendDiet sendDiet, IFileList fileList, ILogger<DietOrderController> logger, ISms sms)
         {
             _userDiet = userDiet;
             _question = question;
@@ -29,6 +31,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             _sendDiet = sendDiet;
             _fileList = fileList;
             _logger = logger;
+            _sms = sms;
         }
 
         public async Task<IActionResult> Index(int? userId, string fullName, string mobile, string paymentStatus = "Pay",int pageNumber = 1,int pageSize = 10)
@@ -37,20 +40,21 @@ namespace DrMoradi.Areas.Admin.Controllers
             
             
             _logger.LogInformation(EventIdList.Read, "Admin درخواست لیست همه سفارش‌ها");
+            string paymentStatusFilter = paymentStatus;
             if (string.Equals(paymentStatus, "all", StringComparison.OrdinalIgnoreCase))
             {
-                paymentStatus = null;
+                paymentStatusFilter = null;
             }
 
             var result = await _userDiet.GetAllDietsByFilter(
             userId,           // همون ورودی کاربر
-            paymentStatus,    // بعد از تبدیل "all" به null
+            paymentStatusFilter,    // بعد از تبدیل "all" به null
             fullName,         // همون ورودی
             mobile,           // همون ورودی
             pageNumber,
             pageSize
         );
-
+            result.paymentStatus = paymentStatus;
             return View(result);
         }
 
@@ -67,24 +71,41 @@ namespace DrMoradi.Areas.Admin.Controllers
 
             }
             var UserDietList = await _userDiet.GetAllParentAndChild(UserDietId);
-            //if (!UserDietList.Any())
-            //    return NotFound("رژیم ثبت شده‌ای برای این کاربر یافت نشد.");
-            //if (UserDietId == 0)
-            //{
-            //    UserDietId = UserDietList.First().Id;
-            //}
-            //var formname =await _userAnswer.getNameFiel(order.UserId, UserDietId);
+            var userifno =await _userDiet.GetUserInfoByuserDietId(UserDietId);
+        
             ShowUserFormVM obj = new ShowUserFormVM()
             {
                 UserId = order.UserId,
                 userDiets = UserDietList,
                 UserFile = await _fileList.GetALlfileByUserDietId(UserDietId, true),
-                showUserAnswerVMs = await _userAnswer.GetUserAnswerByUserIdAndUserDietId(order.UserId, UserDietId)
+                showUserAnswerVMs = await _userAnswer.GetUserAnswerByUserIdAndUserDietId(order.UserId, UserDietId),
+                UserIfo= userifno
             };
 
             _logger.LogInformation(EventIdList.Read, "فرم کاربر {UserId} برای رژیم {UserDietId} آماده نمایش است", order.UserId, UserDietId);
             return View(obj);
         }
+
+        public async Task<IActionResult> LoadUserFormDetails(int UserDietId)
+        {
+            _logger.LogInformation(EventIdList.Read, "نمایش جزئیات فرم برای UserDietId={UserDietId}", UserDietId);
+
+            var order = await _userDiet.GetUserDietById(UserDietId);
+            if (order == null)
+                return NotFound();
+
+            var userInfo = await _userDiet.GetUserInfoByuserDietId(UserDietId);
+
+            var obj = new ShowUserFormVM()
+            {
+                UserFile = await _fileList.GetALlfileByUserDietId(UserDietId, true),
+                showUserAnswerVMs = await _userAnswer.GetUserAnswerByUserIdAndUserDietId(order.UserId, UserDietId),
+                UserIfo = userInfo
+            };
+
+            return PartialView("_UserFormDetails", obj);
+        }
+
         [HttpGet]
         public async Task<IActionResult> SendDiet(int UserDietId)
         {
@@ -113,24 +134,29 @@ namespace DrMoradi.Areas.Admin.Controllers
                 return View(sendDiet);
             }
             Boolean result = false;
+            var MyUser =await _userDiet.GetUserDietById(sendDiet.UserDietId);
             try
             {
                 var old = await _sendDiet.GetSendDietByUserDietId(sendDiet.UserDietId);
+                //first time
                 if (old == null)
                 {
                     result = await _sendDiet.InsertSendDiet(sendDiet);
+
                     _logger.LogInformation(EventIdList.InsertId, "رژیم جدید ارسال شد. UserDietId={UserDietId}", sendDiet.UserDietId);
                 }
+                //second time
                 else
                 {
                     old.Descript = sendDiet.Descript;
                     result = await _sendDiet.UpdateSendDiet(old);
                     _logger.LogInformation(EventIdList.UpdateId, "رژیم موجود بروزرسانی شد. UserDietId={UserDietId}", sendDiet.UserDietId);
                 }
-
+                //inser or update suceess
                 if (result)
                 {
                     await _userDiet.UpdateToSend(sendDiet.UserDietId);
+                    await _sms.UserAlarm(MyUser.User.UserName, 503720,MyUser.User.FullName);
                     TempData[Success] = SuccessMessage;
                     return RedirectToAction("Index");
                 }
@@ -199,32 +225,30 @@ namespace DrMoradi.Areas.Admin.Controllers
             _logger.LogInformation(EventIdList.DeleteId, "حذف فایل {FileName}", fileName);
             try
             {
-                if (await _fileList.deleteFile(fileName))
+                if (await _fileList.deleteFile("/FileUpload/Attachment/" + fileName))
                 {
-                    if (FileTools.DeleteFile("FileUpload/Attachment/" + fileName))
+                    if (FileTools.DeleteFile("/FileUpload/Attachment/" + fileName))
                     {
                         _logger.LogInformation(EventIdList.DeleteId, "فایل {FileName} با موفقیت حذف شد", fileName);
-                        return Json(new { success = true });
-
+                        return Json(new { success = true, message = "فایل با موفقیت حذف شد" });
                     }
                     else
                     {
                         _logger.LogWarning(EventIdList.Error, "حذف فیزیکی فایل {FileName} ناموفق بود", fileName);
-                        return Json(new { success = false });
-
+                        return Json(new { success = false, message = "حذف فیزیکی فایل ناموفق بود" });
                     }
 
                 }
                 else
                 {
                     _logger.LogInformation(EventIdList.Info, "حذف رکورد فایل {FileName} از دیتابیس ناموفق بود", fileName);
-                    return Json(new { success = false });
+                    return Json(new { success = false, message = "حذف از دیتابیس انجام نشد" });
                 }
             }
             catch
             {
                 _logger.LogWarning(EventIdList.Error, "حذف رکورد فایل {FileName} از دیتابیس ناموفق بود", fileName);
-                return Json(new { success = false });
+                return Json(new { success = false, message = "خطای غیرمنتظره در حذف فایل" });
             }
 
 

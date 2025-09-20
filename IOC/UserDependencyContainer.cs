@@ -1,4 +1,5 @@
-﻿using Core.Dto.ViewModel.Dr.DietVM;
+﻿using Core.Dto.ViewModel.Dr;
+using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Interface.Admin;
 using Core.Interface.Sms;
 using Core.Interface.Store;
@@ -69,6 +70,7 @@ namespace IOC
 
             //ViewModel
             Services.AddScoped<IMaster<ShowUserDietPanelVm>, MasterServices<ShowUserDietPanelVm>>();
+            Services.AddScoped<IMaster<UserInfoVm>, MasterServices<UserInfoVm>>();
         
 
 

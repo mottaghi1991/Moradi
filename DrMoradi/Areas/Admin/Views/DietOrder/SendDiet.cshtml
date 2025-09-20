@@ -34,9 +34,9 @@
                                 <th>عملیات</th>
                             </tr>
                         </thead>
-                      <tbody>
-                          
-                          @if(files.Any())
+                        <tbody>
+
+                            @if (files.Any())
                             {
                                 @foreach (var item in files)
                                 {
@@ -48,7 +48,7 @@
                                                 <a href="@item.File" target="_blank" class="btn btn-primary">نمایش</a>
 
                                                 <button type="button" class="btn btn-danger"
-                                                        onclick="deleteRowAndFile('@item.File', this)">
+                                                        onclick="deleteRowAndFile('@(item.File.Replace("/FileUpload/Attachment/", ""))', this)">
                                                     حذف
                                                 </button>
                                             </div>
@@ -56,7 +56,7 @@
                                     </tr>
                                 }
                             }
-                        
+
                         </tbody>
                     </table>
                     <form action="/FileUpload/Attachment" class="dropzone" id="my-dropzone"></form>
@@ -113,20 +113,71 @@
         }
 
         // حذف آژاکسی فایل از سرور و لیست نمایش
-        function removeFileFromServer(fileName, el=null) {
-            $.post("/admin/DietOrder/Delete", { fileName: fileName }, function(res) {
-                if(res.success && el){
-                    $(el).closest("li").remove();
-                }
-            });
+               function removeFileFromServer(fileName, el = null) {
+            $.post("/admin/DietOrder/Delete", { fileName: fileName })
+                .done(function (res) {
+                    if (res.success) {
+                        if (el) {
+                            $(el).closest("li").remove();
+                        }
+                           Swal.fire({
+            title: "موفق!",
+            text: res.message || "فایل با موفقیت حذف شد",
+            icon: "success",
+            confirmButtonText: "باشه"
+        });
+                    } else {
+                          Swal.fire({
+            title: "خطا!",
+            text: res.message || "حذف فایل ناموفق بود",
+            icon: "error",
+            confirmButtonText:"باشه"
+        });
+                    
+                    }
+                })
+                .fail(function () {
+                                  Swal.fire({
+            title: "خطا!",
+            text: "خطای ارتباط با سرور هنگام حذف فایل",
+            icon: "error",
+            confirmButtonText:"باشه"
+        });
+               
+                });
         }
-                function deleteRowAndFile(fileName, el) {
-            $.post("/admin/DietOrder/Delete", { fileName: fileName }, function (res) {
-                if (res.success) {
-                    // پاک کردن ردیف جدول
-                    $(el).closest("tr").remove();
-                }
-            });
+
+        function deleteRowAndFile(fileName, el) {
+            $.post("/admin/DietOrder/Delete", { fileName: fileName })
+                .done(function (res) {
+                    if (res.success) {
+                        $(el).closest("tr").remove();
+                                          Swal.fire({
+            title: "موفق!",
+            text: res.message || "حذف با موفقیت حذف شد",
+            icon: "success",
+            confirmButtonText: "باشه"
+        });
+                    } else {
+                                                     Swal.fire({
+            title: "خطا!",
+            text: res.message || "حذف فایل از سیستم انجام نشد",
+            icon: "error",
+            confirmButtonText:"باشه"
+        });
+                      
+                        // اینجا هیچ المانی حذف نمی‌شود
+                    }
+                })
+                .fail(function () {
+                                                                 Swal.fire({
+            title: "خطا!",
+            text: "خطا در اتصال به سرور برای حذف فایل",
+            icon: "error",
+            confirmButtonText:"باشه"
+        });
+            
+                });
         }
     </script>
 

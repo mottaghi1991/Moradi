@@ -83,19 +83,52 @@
 </div>
 
 <!-- Pagination -->
-<div class="pagination">
-    @{
-        int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.pageSize);
-        for (int i = 1; i <= totalPages; i++)
-        {
-            <a href="@Url.Action("Index", new {
-                pageNumber = i,
-                pageSize = Model.pageSize,
-                userId = Model.userId,
-                fullName = Model.fullName,
-                mobile = Model.mobile,
-                paymentStatus = Model.paymentStatus
-            })" class="@(i == Model.pageNumber ? "active" : "")">@i</a>
-        }
-    }
-</div>
+@{
+    int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.pageSize);
+}
+
+@if (totalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            <!-- Previous -->
+            <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new {
+                    pageNumber = Model.pageNumber - 1,
+                    pageSize = Model.pageSize,
+                    userId = Model.userId,
+                    fullName = Model.fullName,
+                    mobile = Model.mobile,
+                    paymentStatus = Model.paymentStatus
+                })">قبلی</a>
+            </li>
+
+            <!-- Numbers -->
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == Model.pageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageNumber = i,
+                        pageSize = Model.pageSize,
+                        userId = Model.userId,
+                        fullName = Model.fullName,
+                        mobile = Model.mobile,
+                        paymentStatus = Model.paymentStatus
+                    })">@i</a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(Model.pageNumber == totalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new {
+                    pageNumber = Model.pageNumber + 1,
+                    pageSize = Model.pageSize,
+                    userId = Model.userId,
+                    fullName = Model.fullName,
+                    mobile = Model.mobile,
+                    paymentStatus = Model.paymentStatus
+                })">بعدی</a>
+            </li>
+        </ul>
+    </nav>
+}

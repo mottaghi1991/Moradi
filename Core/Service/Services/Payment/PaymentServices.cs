@@ -81,7 +81,7 @@ namespace Core.Service.Services.Payment
             throw new Exception("خطا در ارتباط با درگاه پرداخت");
         }
 
-        public async Task<bool> VerifyPayment(string authority, int amount)
+        public async Task<PaymentFinalResponse> VerifyPayment(string authority, int amount)
         {
             var requestData = new
             {
@@ -95,8 +95,8 @@ namespace Core.Service.Services.Payment
             //var response = await _httpClient.PostAsync("https://api.zarinpal.com/pg/v4/payment/verify.json", content);
             var response = await _httpClient.PostAsync("https://sandbox.zarinpal.com/pg/v4/payment/verify.json", content);
             var responseContent = await response.Content.ReadAsStringAsync();
-            dynamic result = JsonConvert.DeserializeObject<dynamic>(responseContent);
-            PaymentFinalResponse final = new PaymentFinalResponse();
+            dynamic result = JsonConvert.DeserializeObject<PaymentFinalResponse>(responseContent);
+            
             if (result.data.code == 100 || result.data.code == 101)
             {
                 var userdiet = await _userDiet.GetUserDietByAuthority(authority);
@@ -105,13 +105,14 @@ namespace Core.Service.Services.Payment
                 userdiet.Status = UserDietstatus.Pay;
                 var updateresult = await _userDiet.UpdateToFinaltPay(userdiet);
                 if (updateresult)
-                    return true;
+                    return result;
                 else
-                    return false;
+                    return result;
             }
             else
             {
-                return false;
+                
+                return result;
             }
         }
     }

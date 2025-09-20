@@ -1,8 +1,10 @@
 ﻿using Core.Dto.Shop.CartDto;
 using Core.Extention;
+using Core.Interface.Sms;
 using Core.Service.Interface.Shop;
 using Core.Service.Services.Shop;
 using Domain.Shop;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Security.Claims;
@@ -12,15 +14,17 @@ using WebStore.Base;
 namespace DrMoradi.Areas.UserPanel.Controllers
 {
     [Area(AreaName.UserPanel)]
+    [AllowAnonymous]
     public class UserShopController : BaseController
     {
         private readonly ICart _cart;
         private readonly ICartItem _cartItem;
-
-        public UserShopController(ICart cart, ICartItem cartItem)
+        private readonly ISms _sms;
+        public UserShopController(ICart cart, ICartItem cartItem, ISms sms)
         {
             _cart = cart;
             _cartItem = cartItem;
+            _sms = sms;
         }
 
         [HttpPost]
@@ -54,8 +58,8 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpDelete("Remove/{id}")]
-        public async Task<IActionResult> Remove(int id)
+        [HttpPost()]
+        public async Task<IActionResult> Remove(int productId)
         {
             try
             {
@@ -63,7 +67,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 var userId =User.GetUserId();
 
                 // حذف محصول از سبد کاربر
-                var result = await _cartItem.RemoveFromCartAsync(userId, id);
+                var result = await _cartItem.RemoveFromCartAsync(userId, productId);
                 if (!result)
                     return BadRequest(new { message = "محصول پیدا نشد یا حذف انجام نشد." });
 

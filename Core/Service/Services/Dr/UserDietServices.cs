@@ -32,14 +32,17 @@ namespace Core.Service.Services.Dr
         private readonly IUserAnswer _userAnswer;
         private readonly IDiet _diet;
         private readonly IMaster<ShowUserDietPanelVm> _Vm;
+        private readonly IMaster<UserInfoVm> _UserVm;
 
-        public UserDietServices(IMaster<UserDiet> master, IFileList fileList, IUserAnswer userAnswer, HttpClient httpClient, IDiet diet, IMaster<ShowUserDietPanelVm> vm)
+
+        public UserDietServices(IMaster<UserDiet> master, IFileList fileList, IUserAnswer userAnswer, HttpClient httpClient, IDiet diet, IMaster<ShowUserDietPanelVm> vm, IMaster<UserInfoVm> userVm)
         {
             _master = master;
             _fileList = fileList;
             _userAnswer = userAnswer;
             _diet = diet;
             _Vm = vm;
+            _UserVm = userVm;
         }
 
 
@@ -131,7 +134,16 @@ namespace Core.Service.Services.Dr
             return obj;
         }
 
-        public async Task<bool> InsertAnswerAsync(ShowQuestionToUserVM vm,int UserId)
+        public async Task<UserInfoVm> GetUserInfoByuserDietId(int UserDietId)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserDietId", UserDietId , DbType.Int32);
+            var obj = await _UserVm.GetAllAsync("GetUserInfoByuserDietId", p);
+            return obj.FirstOrDefault();
+
+        }
+
+        public async Task<UserDiet> InsertAnswerAsync(ShowQuestionToUserVM vm,int UserId)
         {
             using var transaction = await _master.BeginTransactionAsync();
             var uploadedFiles = new List<string>();
@@ -181,7 +193,7 @@ namespace Core.Service.Services.Dr
                 if (!answerRes) throw new Exception("ثبت پاسخ‌ها انجام نشد.");
                 await transaction.CommitAsync();
              
-                    return true;
+                    return userDiet;
             }
             catch (Exception ex)
             {
@@ -195,7 +207,7 @@ namespace Core.Service.Services.Dr
                     }
                     catch { /* لاگ خطا */ }
                 }
-                return false;
+                return null;
             }
 
         }

@@ -14,6 +14,16 @@ namespace Core.Services.Sms
 {
     public class SmsIRServices : ISms
     {
+        public Task<SmsResponse> AdminAlarm(string mobile, int TemplateId, string UserDietId, string UserName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SmsResponse> PaymentSucess(string mobile, int TemplateId, string code)
+        {
+            throw new NotImplementedException();
+        }
+
         //private readonly HttpClient _httpClient;
 
         //public SmsIRServices(HttpClient httpClient)
@@ -55,6 +65,11 @@ namespace Core.Services.Sms
 
         //}
         public Task<SmsResponse> SendSms(string mobile, int TemplateId, string code)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SmsResponse> UserAlarm(string mobile, int TemplateId, string code)
         {
             throw new NotImplementedException();
         }

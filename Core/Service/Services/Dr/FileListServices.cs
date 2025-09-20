@@ -22,7 +22,7 @@ namespace Core.Service.Services.Dr
         public async Task<bool> deleteFile(string filename)
         {
           var obj=await _master.GetAllEfAsync(a=>a.File==filename);
-            if (obj != null)
+            if (obj .Any())
             {
                 var result = await _master.DeleteAsync(obj.FirstOrDefault());
                 if (result)

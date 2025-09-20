@@ -1,0 +1,43 @@
+﻿@using Core.Dto.ViewModel.Dr
+@model ShowUserFormVM
+
+<table class="table table-responsive table-hover">
+    <tbody>
+        <tr>
+            <td>شماره سفارش</td>
+            <td>@Model.UserIfo.UserDietId</td>
+        </tr>
+        <tr>
+            <td>کاربر سیستم</td>
+            <td style="color:blue">@Model.UserIfo.UserPanelName</td>
+        </tr>
+        <tr>
+            <td>رژیم گیرنده</td>
+            <td style="color:red">@Model.UserIfo.UserDiteName</td>
+        </tr>
+
+        @foreach (var item in Model.showUserAnswerVMs)
+        {
+            <tr>
+                <td>@item.QuestionText</td>
+                <td>@item.Answer</td>
+            </tr>
+        }
+        <tr>
+            <td>فایل‌ها</td>
+            <td>
+                @if (Model.UserFile.Any())
+                {
+                    int a = 1;
+                    foreach (var file in Model.UserFile)
+                    {
+                        <a href="@file.File" target="_blank">ضمیمه @a</a>
+                
+                        <br />
+                        a++;
+                    }
+                }
+            </td>
+        </tr>
+    </tbody>
+</table>
