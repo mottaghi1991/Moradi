@@ -14,7 +14,7 @@ namespace DrMoradi.Views.Shared.component.Diet
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _diet.GetAllAsync();
+            var result = await _diet.GetAllByActiveAsync(true);
             return View("~/Component/Navbar/_Navbar.cshtml", result);
         }
     }

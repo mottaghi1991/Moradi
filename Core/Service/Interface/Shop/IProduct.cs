@@ -22,6 +22,7 @@ namespace Core.Interface.Store
         public Task<ProductImage> InsertImage(ProductImage productImage);
         public Task<bool> DeleteImage(int productImageId);
         public Task<ProductImage> GetProductImageById(int productImageId);
+        public Task<int> GetStockAsync(int productId);
 
     }
 }

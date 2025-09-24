@@ -75,6 +75,14 @@ namespace Core.Services.Store
             return product;
         }
 
+        public async Task<int> GetStockAsync(int productId)
+        {
+            var obj =await _master.GetAllEfAsync();
+            return obj.Where(p => p.Id == productId)
+       .Select(p => p.Stock).FirstOrDefault(); // فرض می‌کنیم ستون موجودی اسمش Stock هست
+       
+        }
+
         public async Task<Product> Insert(Product product)
         {
             return await _master.InsertAsync(product);

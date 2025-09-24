@@ -1,4 +1,5 @@
-﻿using Domain.Shop;
+﻿using Core.Dto.Shop.CartDto;
+using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;

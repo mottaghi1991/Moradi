@@ -20,6 +20,7 @@ namespace Core.Service.Services.Shop
             _master = master;
         }
 
+       
         public async Task<List<CartItem>> GetCartItemsAsync(int userId)
         {
             return await _master.GetAllAsQueryable()
@@ -52,6 +53,11 @@ namespace Core.Service.Services.Shop
         {
             var obj = await _master.UpdateAsync(cartItem);
             return obj != null;
+        }
+
+        public Task UpdateCartItemAsync(int userId, int productId, int quantity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

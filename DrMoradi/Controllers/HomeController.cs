@@ -100,7 +100,7 @@ namespace DrMoradi.Controllers
         [Route("/Diets")]
         public async Task<IActionResult> Diets()
         {
-            return View(await _diet.GetAllAsync());
+            return View(await _diet.GetAllByActiveAsync(true));
         }
         [Route("/BMI")]
         [HttpGet]

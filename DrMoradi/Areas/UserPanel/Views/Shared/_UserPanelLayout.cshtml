@@ -24,7 +24,7 @@
 
     @await RenderSectionAsync("style", false)
 </head>
-<body>
+<body data-isloggin="@User.Identity.IsAuthenticated.ToString().ToLower()">
 
     <partial name="_SiteHeader" />
 
@@ -99,7 +99,7 @@
 
     @await RenderSectionAsync("Scripts", required: false)
     <script src="~/js/mainjs.js"></script>
-    <script src="/js/shop/shoporder.js"></script>
+    @* <script src="/js/shop/shoporder.js"></script> *@
 
     <script>
         // Toggle Offcanvas Sidebar

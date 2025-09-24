@@ -1,6 +1,7 @@
 ﻿using Core.Dto.Shop.CartDto;
 using Core.Extention;
 using Core.Interface.Sms;
+using Core.Interface.Store;
 using Core.Service.Interface.Shop;
 using Core.Service.Services.Shop;
 using Domain.Shop;
@@ -14,17 +15,20 @@ using WebStore.Base;
 namespace DrMoradi.Areas.UserPanel.Controllers
 {
     [Area(AreaName.UserPanel)]
-    [AllowAnonymous]
+    //[AllowAnonymous]
+    [Authorize]
     public class UserShopController : BaseController
     {
         private readonly ICart _cart;
         private readonly ICartItem _cartItem;
         private readonly ISms _sms;
-        public UserShopController(ICart cart, ICartItem cartItem, ISms sms)
+        private readonly IProduct _product;
+        public UserShopController(ICart cart, ICartItem cartItem, ISms sms, IProduct product)
         {
             _cart = cart;
             _cartItem = cartItem;
             _sms = sms;
+            _product = product;
         }
 
         [HttpPost]
@@ -58,6 +62,34 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> MergeCart([FromBody] List<CartItemDto> guestCart)
+        {
+            if (guestCart == null || guestCart.Count == 0)
+                return BadRequest(new { success = false, message = "سبد مهمان خالی است" });
+
+            var userId = User.GetUserId(); // متد Extension خودت برای گرفتن Id کاربر
+
+            foreach (var item in guestCart)
+            {
+                var maxStock = await _product.GetStockAsync(item.ProductId);
+                if (maxStock <= 0) continue;
+
+                var exists = await _cart.GetCartItemAsync(userId, item.ProductId);
+                var totalQuantity = (exists?.Quantity ?? 0) + item.Quantity;
+
+                if (totalQuantity > maxStock)
+                    totalQuantity = maxStock;
+
+                if (exists != null)
+                    await _cart.UpdateCartItemAsync(userId, item.ProductId, totalQuantity);
+                else
+                    await _cart.AddToDbCart(User, item.ProductId, totalQuantity);
+            }
+
+            return Ok(new { success = true, message = "سبد مهمان با موفقیت منتقل شد" });
+        }
+
         [HttpPost()]
         public async Task<IActionResult> Remove(int productId)
         {

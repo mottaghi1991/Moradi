@@ -88,7 +88,7 @@ namespace Core.Service.Services.Sms
             try
             {
                 Kavenegar.KavenegarApi api = new Kavenegar.KavenegarApi(_Api);
-                var result = api.VerifyLookup(mobile, UserDietId, UserName,"","PAYMENTSUCCESSADMIN").Result;
+                var result =await api.VerifyLookup(mobile, UserDietId,"","", UserName,"","PAYMENTSUCCESSADMIN",Kavenegar.Core.Models.Enums.VerifyLookupType.Sms);
                 result.Messageid.ToString();
                 return new SmsResponse()
                 {
@@ -123,7 +123,7 @@ namespace Core.Service.Services.Sms
             try
             {
                 Kavenegar.KavenegarApi api = new Kavenegar.KavenegarApi(_Api);
-                var result = api.VerifyLookup(mobile,code,"SendFile").Result;
+                var result =await api.VerifyLookup(mobile,".","","",code,"SendFile");
                 result.Messageid.ToString();
                 return new SmsResponse()
                 {

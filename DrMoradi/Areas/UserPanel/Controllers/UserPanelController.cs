@@ -64,8 +64,8 @@ namespace WebStore.Areas.UserPanel.Controllers
             if (First.data != null)
             {
                 _logger.LogInformation("درخواست اولیه پرداخت موفق. Authority={Authority}, Amount={Amount}, UserId={UserId}", First.data.authority, userdiet.Amount, User.GetUserId());
-                //return RedirectToAction("SendTOBank", new { Url = "https://zarinpal.com/pg/StartPay/" + First.data.authority });
-                return RedirectToAction("SendTOBank", new { Url = "https://sandbox.zarinpal.com/pg/StartPay/" + First.data.authority });
+                return RedirectToAction("SendTOBank", new { Url = "https://zarinpal.com/pg/StartPay/" + First.data.authority });
+                //return RedirectToAction("SendTOBank", new { Url = "https://sandbox.zarinpal.com/pg/StartPay/" + First.data.authority });
             }
             else
             {
@@ -77,13 +77,11 @@ namespace WebStore.Areas.UserPanel.Controllers
         public IActionResult SendTOBank(string Url)
         {
             _logger.LogInformation("انتقال کاربر {UserId} به درگاه بانکی. URL={Url}", User.GetUserId(), Url);
-            LogCookies(HttpContext, "Before Payment Redirect");
             return Redirect(Url);
         }
         [HttpGet]
         public async Task<IActionResult> verify(string Authority, string Status)
         {
-            LogCookies(HttpContext, "After Payment Callback");
             _logger.LogInformation("بازگشت از درگاه بانکی. Authority={Authority}, Status={Status}, UserId={UserId}", Authority, Status, User.GetUserId());
             if (Status == "OK")
             {
@@ -101,7 +99,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                     _logger.LogInformation("پرداخت موفق. UserId={UserId}, Amount={Amount}, userdiet={userdiet}, Authority={Authority}",
                  User.GetUserId(), userdiet.Amount, userdiet, Authority);
                    await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
-                    await _sms.AdminAlarm("09124790243", 502847, userdiet.Id.ToString(), myuser.FullName);
+                    await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
                     TempData[Success] = " درخواست رژیم شما در سایت دکتر مرادی ثبت شد و حداکثر تا ۴۸ ساعت کاری آینده رژیم برای شما ارسال می گردد شناسه پرداخت :"+ payevent.data.ref_id;
                     // نمایش خطا
                     return RedirectToAction("Index", "UserPanel", "UserPanel");
@@ -166,15 +164,7 @@ namespace WebStore.Areas.UserPanel.Controllers
             _logger.LogInformation("اطلاعات کاربر {UserId} با موفقیت بروزرسانی شد. FullName={FullName}", User.GetUserId(), result.FullName);
             return RedirectToAction("Index");
         }
-        private void LogCookies(HttpContext context, string logPoint)
-        {
-            var sessionCookie = context.Request.Cookies[".AspNetCore.Session"];
-            var authCookie = context.Request.Cookies[".AspNetCore.Cookies"]; // یا اسم Custom
-            _logger.LogInformation(EventIdList.APi,"---- COOKIE LOG [{logPoint}] ----", logPoint);
-            _logger.LogInformation("Session cookie: {cookieValue}", sessionCookie ?? "NULL");
-            _logger.LogInformation("Auth cookie: {cookieValue}", authCookie ?? "NULL");
-            _logger.LogInformation("-------------------------------");
-        }
+      
         public async Task<IActionResult> Comment()
         {
       

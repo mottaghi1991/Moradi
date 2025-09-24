@@ -156,7 +156,7 @@ namespace DrMoradi.Areas.Admin.Controllers
                 if (result)
                 {
                     await _userDiet.UpdateToSend(sendDiet.UserDietId);
-                    await _sms.UserAlarm(MyUser.User.UserName, 503720,MyUser.User.FullName);
+                    await _sms.UserAlarm(MyUser.User.UserName,503720,MyUser.User.FullName);
                     TempData[Success] = SuccessMessage;
                     return RedirectToAction("Index");
                 }

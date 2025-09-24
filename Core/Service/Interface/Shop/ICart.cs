@@ -17,9 +17,13 @@ namespace Core.Service.Interface.Shop
         public Task<bool> AddToDbCart(ClaimsPrincipal user, int productId, int quantity);
  
         public Task<IEnumerable<CartItemDto>> UpdateCart(int UserId);
+
         public Task<Cart> GetCartByUserId(int UserId);
         public Task<bool> Insert(Cart cart);
         public Task<bool> Update(Cart cart);
+       public Task<CartItem> GetCartItemAsync(int UserId, int productId);
+        public Task UpdateCartItemAsync(int userId, int productId, int quantity);
+
 
     }
 }

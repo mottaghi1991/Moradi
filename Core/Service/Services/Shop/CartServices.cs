@@ -87,7 +87,13 @@ namespace Core.Service.Services.Shop
                return obj.FirstOrDefault();
         }
 
-       
+        public async Task<CartItem> GetCartItemAsync(int UserId, int productId)
+        {
+            var obj = await _master.GetAllAsQueryable().Include(a=>a.Items).ThenInclude(i => i.Product)
+             .Where(c => c.UserId == UserId).SelectMany(c => c.Items)
+        .FirstOrDefaultAsync(i => i.ProductId == productId);
+            return obj;
+        }
 
         public async Task<bool> Insert(Cart cart)
         {
@@ -117,6 +123,20 @@ namespace Core.Service.Services.Shop
                              ProductName = i.Product.ProductName
                          })
                          .ToListAsync();
+        }
+
+        public async Task UpdateCartItemAsync(int userId, int productId, int quantity)
+        {
+            var cart = await _master.GetAllEfAsync();
+       var cartItem = cart.Where(c => c.UserId == userId)
+        .SelectMany(c => c.Items)
+        .FirstOrDefault(i => i.ProductId == productId);
+
+            if (cartItem != null)
+            {
+                cartItem.Quantity = quantity;
+                await _cartItem.UpdateAsync(cartItem);
+            }
         }
     }
 }
