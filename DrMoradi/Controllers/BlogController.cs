@@ -35,10 +35,14 @@ namespace DrMoradi.Controllers
         [Route("blogDetails/{id:int}")]
         public async Task<IActionResult> blogDetails(int id)
         {
-          
+            var po = await _post.GetpostById(id);
+            if (po == null)
+            {
+                return NotFound();
+            }
             return View(new ShowPostDetailvm()
             {
-                post = await _post.GetpostById(id),
+                post = po,
                 TopPost = await _post.GetTopPost(4)
             });
         }     
