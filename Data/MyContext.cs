@@ -48,6 +48,11 @@ namespace Data
         public virtual DbSet<Product> Products{ get; set; }
         public virtual DbSet<Cart> Carts{ get; set; }
         public virtual DbSet<CartItem> CartItems{ get; set; }
+        public virtual DbSet<City> Cities{ get; set; }
+        public virtual DbSet<Province> Provinces{ get; set; }
+        public virtual DbSet<ShippingAddres> ShippingAddres { get; set; }
+        public virtual DbSet<PostPrice> PostPrices{ get; set; }
+
 
         #endregion
         public virtual DbSet<Setting> Settings{ get; set; }
@@ -91,10 +96,7 @@ namespace Data
        .HasForeignKey(ud => ud.ParentId) // کلید خارجی برای Parent
        .OnDelete(DeleteBehavior.Restrict); // حذف پدر، بچه‌ها رو حذف نکن
 
-            modelBuilder.Entity<Order>()
-        .HasOne(o => o.ShippingAddress)
-        .WithOne(sa => sa.Order)
-        .HasForeignKey<ShippingAddress>(sa => sa.Id);
+        
 
 
 

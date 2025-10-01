@@ -11,16 +11,7 @@
                 <div class="section-title text-center">
                     <h3 class="sub-title mb-4">
                         @Model.post.Title                    </h3>
-                    <ul class="list-unstyled mt-4">
-                        <li class="list-inline-item user text-muted ms-3">
-                            <i class="mdi mdi-eye"></i>
-                            33 <span>بازدید</span>
-                        </li>
-                        <li class="list-inline-item date text-muted">
-                            <i class="mdi mdi-calendar-check"></i>
-                            پنج‌شنبه, 19 تیر 1404
-                        </li>
-                    </ul>
+                  
                 </div>
             </div>
         </div>
@@ -64,7 +55,7 @@
                                 <li class="d-flex mb-3">
                                     <img src="@item.Image" alt="@item.Title" class="flex-shrink-0 me-2 rounded" width="60" height="60">
                                     <div>
-                                        <a href="blogDetails/@item.Id" class="d-block mb-1 fw-semibold text-decoration-none text-dark">
+                                        <a href="@item.Id" class="d-block mb-1 fw-semibold text-decoration-none text-dark">
                                             @item.Title
                                         </a>
                                         <small class="text-muted">یکشنبه، 19 تیر 1401</small>

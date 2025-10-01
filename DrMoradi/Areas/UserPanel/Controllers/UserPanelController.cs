@@ -1,5 +1,6 @@
 ﻿using Core.Dto.ViewModel.main;
 using Core.Dto.ViewModel.User;
+using Core.Enums;
 using Core.Extention;
 using Core.Interface.Sms;
 using Core.Service.Interface.Dr;
@@ -22,8 +23,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace WebStore.Areas.UserPanel.Controllers
 {
     [Area("UserPanel")]
-    //[Authorize]
-    [AllowAnonymous]
+    [Authorize]
+    //[AllowAnonymous]
     public class UserPanelController : BaseController
     {
         private readonly IPayment _payment;
@@ -60,7 +61,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                 return RedirectToAction("Index");
             }
             string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/UserPanel/verify";
-            var First = await _payment.FirstRequestPayment(UserDietId, (int)userdiet.Amount, callbackUrl, userdiet.diet.Name, "", User.Identity?.Name);
+            var First = await _payment.FirstRequestPayment(UserDietId, (int)userdiet.Amount, callbackUrl, userdiet.diet.Name, "", User.Identity?.Name,Core.Enums.StoreType.Diet);
             if (First.data != null)
             {
                 _logger.LogInformation("درخواست اولیه پرداخت موفق. Authority={Authority}, Amount={Amount}, UserId={UserId}", First.data.authority, userdiet.Amount, User.GetUserId());
@@ -92,7 +93,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                     TempData[Error] = "پرداخت پیدا نشد";
                     return RedirectToAction("Index");
                 }
-                var payevent = await _payment.VerifyPayment(authority: Authority, (int)userdiet.Amount);
+                var payevent = await _payment.VerifyPayment(authority: Authority, (int)userdiet.Amount,StoreType.Diet);
                 var myuser =await _user.GetUserByUserId(User.GetUserId());
                 if (payevent.Error==null)
                 {

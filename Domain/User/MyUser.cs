@@ -42,6 +42,7 @@ namespace Domain.User
         public ICollection<Comment> Comments{ get; set; }
         public ICollection<Cart> carts{ get; set; }
         public ICollection<Order> orders{ get; set; }
+        public ICollection<ShippingAddres> shippingAddres{ get; set; }
 
     }
 

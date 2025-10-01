@@ -103,11 +103,22 @@ namespace IOC
             Services.AddScoped<IMaster<ProductImage>, MasterServices<ProductImage>>();
             Services.AddScoped<IMaster<Cart>, MasterServices<Cart>>();
             Services.AddScoped<IMaster<CartItem>, MasterServices<CartItem>>();
+            Services.AddScoped<IMaster<ShippingAddres>, MasterServices<ShippingAddres>>();
+            Services.AddScoped<IMaster<Province>, MasterServices<Province>>();
+            Services.AddScoped<IMaster<City>, MasterServices<City>>();
+            Services.AddScoped<IMaster<PostPrice>, MasterServices<PostPrice>>();
+            Services.AddScoped<IMaster<Order>, MasterServices<Order>>();
+
+
+
 
             Services.AddScoped<ICategory, CategoriesServices>();
             Services.AddScoped<IProduct, ProductServies>();
             Services.AddScoped<ICart, CartServices>();
             Services.AddScoped<ICartItem, CartItemServices>();
+            Services.AddScoped<IAddress, AddressServices>();
+            Services.AddScoped<IProvince, ProvinceServices>();
+            Services.AddScoped<IOrder, OrderServices>();
 
             #endregion
             #region Sms

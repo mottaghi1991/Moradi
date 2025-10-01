@@ -23,16 +23,18 @@ namespace Core.Service.Services.Shop
         private readonly IMaster<Cart> _master;
         private readonly ICartItem _cartItem;
         private readonly IProduct _product;
+        private readonly IProvince _province;
 
-        public CartServices(IMaster<Cart> master, IHttpContextAccessor httpContextAccessor, ICartItem cartItem, IProduct product)
+        public CartServices(IMaster<Cart> master, IHttpContextAccessor httpContextAccessor, ICartItem cartItem, IProduct product, IProvince province)
         {
             _master = master;
             _httpContextAccessor = httpContextAccessor;
             _cartItem = cartItem;
             _product = product;
+            _province = province;
         }
 
-      
+
 
         public async Task<bool> AddToDbCart(ClaimsPrincipal user, int productId, int quantity)
         {
@@ -81,9 +83,17 @@ namespace Core.Service.Services.Shop
  
         }
 
+        public async Task<int> CalculatePrice(int UserId, int proviceId)
+        {
+            var cart =await GetCartByUserId(UserId);
+            var itemWeights = cart.Items.Sum(a => a.Product.Weight);
+          return await _province.PriceValue(proviceId, itemWeights);
+        }
+
         public async Task<Cart> GetCartByUserId(int UserId)
         {
-            var obj = await _master.GetAllEfAsync(a => a.UserId == UserId);
+            var obj = await _master.GetAllAsQueryable().Include(a => a.Items).ThenInclude(i => i.Product)
+             .Where(c => c.UserId == UserId).ToListAsync();
                return obj.FirstOrDefault();
         }
 
@@ -101,6 +111,12 @@ namespace Core.Service.Services.Shop
             return obj != null;
         }
 
+        public async Task<bool> RemoveUserCart(int UserId)
+        {
+            var usercart =await GetCartByUserId(UserId);
+         return  await _master.DeleteAsync(usercart);
+
+        }
 
         public async Task<bool> Update(Cart cart)
         {

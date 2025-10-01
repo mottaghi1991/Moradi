@@ -34,6 +34,8 @@ namespace Domain.Shop
         public string ImageUrl { get; set; }
         [DisplayName("وضعیت")]
         public bool IsActive { get; set; }
+        [DisplayName("وزن محصول")]
+        public decimal Weight { get; set; }
         [DisplayName("دسته بندی")]
         public int CategoryId { get; set; }
 

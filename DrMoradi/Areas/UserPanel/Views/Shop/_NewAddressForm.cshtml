@@ -1,0 +1,52 @@
+﻿@using Domain.Shop
+@model ShippingAddres
+<div class="card shadow-sm border-0">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">افزودن آدرس جدید</h5>
+
+        <form id="newAddressFormAjax">
+
+        <div class="mb-3">
+            <label class="form-label">استان</label>
+            <select asp-for="provinceId" class="form-select" asp-items="ViewBag.Province" onchange="GetCityByProvinceId(this.value)">
+                <option value="">انتخاب کنید</option>
+               
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">استان</label>
+            <select id="City" name="City" class="form-select">
+                <option value="">انتخاب کنید</option>
+
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">کد پستی</label>
+            <input type="text" asp-for="PostalCode" class="form-control" placeholder="کد 10 رقمی" />
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">آدرس کامل</label>
+            <textarea asp-for="AddressLine" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success">
+                ثبت آدرس
+            </button>
+        </div>
+        </form>
+    </div>
+
+</div>
+@section Scripts {
+    <script src="~/js/fillselectlist.js"></script>
+
+}
+
+

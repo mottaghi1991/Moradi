@@ -1,4 +1,5 @@
-﻿using Domain.Payment;
+﻿using Core.Enums;
+using Domain.Payment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Core.Service.Interface.Payment
 {
     public interface IPayment
     {
-        public Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile);
-        public Task<PaymentFinalResponse> VerifyPayment(string authority,int amount);
+        public Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile, StoreType type);
+        public Task<PaymentFinalResponse> VerifyPayment(string authority,int amount,StoreType type);
     }
 }

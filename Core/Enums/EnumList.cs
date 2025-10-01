@@ -19,6 +19,11 @@ namespace Core.Enums
         error,
         fileNotUpload,
     }
+    public enum StoreType
+    {
+        Diet,
+        Shop
+    }
 
  
 }

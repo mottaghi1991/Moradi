@@ -1,5 +1,7 @@
-﻿using Core.Service.Interface.Dr;
+﻿using Core.Enums;
+using Core.Service.Interface.Dr;
 using Core.Service.Interface.Payment;
+using Core.Service.Interface.Shop;
 using Domain;
 using Domain.Dr;
 using Domain.Payment;
@@ -17,15 +19,17 @@ namespace Core.Service.Services.Payment
     {
         private readonly HttpClient _httpClient;
         private readonly IUserDiet _userDiet;
+        private readonly IOrder _Order;
         private readonly string _merchantId = "bb48b37a-7d42-4452-b65f-ccf8aa7a4e21";
 
-        public PaymentServices(HttpClient httpClient, IUserDiet userDiet)
+        public PaymentServices(HttpClient httpClient, IUserDiet userDiet, IOrder order)
         {
             _httpClient = httpClient;
             _userDiet = userDiet;
+            _Order = order;
         }
 
-        public async Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile)
+        public async Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile, StoreType type)
         {
             var requestData = new PaymentRequest()
             {
@@ -53,12 +57,15 @@ namespace Core.Service.Services.Payment
             dynamic FInalresult = JsonConvert.DeserializeObject<dynamic>(result);
             if (FInalresult.data.code != null)
             {
-                await _userDiet.UpdateToFirstPay(userDietId, (string)FInalresult.data.authority);
+                if (type == StoreType.Diet)
+                    await _userDiet.UpdateToFirstPay(userDietId, (string)FInalresult.data.authority);
+                if (type == StoreType.Shop)
+                    await _Order.UpdateToFirstPay(userDietId, (string)FInalresult.data.authority);
                 return new PaymentFirstResponse
                 {
                     data = new PaymentFirstResponse.Data
                     {
-                        authority= FInalresult.data.authority
+                        authority = FInalresult.data.authority
                     }
 
                 };
@@ -81,7 +88,7 @@ namespace Core.Service.Services.Payment
             throw new Exception("خطا در ارتباط با درگاه پرداخت");
         }
 
-        public async Task<PaymentFinalResponse> VerifyPayment(string authority, int amount)
+        public async Task<PaymentFinalResponse> VerifyPayment(string authority, int amount,StoreType type)
         {
             var requestData = new
             {
@@ -96,22 +103,34 @@ namespace Core.Service.Services.Payment
             //var response = await _httpClient.PostAsync("https://sandbox.zarinpal.com/pg/v4/payment/verify.json", content);
             var responseContent = await response.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject<PaymentFinalResponse>(responseContent);
-            
+
             if (result.data.code == 100 || result.data.code == 101)
             {
-                var userdiet = await _userDiet.GetUserDietByAuthority(authority);
-                userdiet.PaymentRefId =(string) result.data.ref_id;
-                userdiet.PaymentDate = DateTime.UtcNow;
-                userdiet.Status = UserDietstatus.Pay;
-                var updateresult = await _userDiet.UpdateToFinaltPay(userdiet);
-                if (updateresult)
+                var updateresult=false;
+                if (type == StoreType.Diet)
+                {
+                    var userdiet = await _userDiet.GetUserDietByAuthority(authority);
+                    userdiet.PaymentRefId = (string)result.data.ref_id;
+                    userdiet.PaymentDate = DateTime.UtcNow;
+                    userdiet.Status = UserDietstatus.Pay;
+                    updateresult = await _userDiet.UpdateToFinaltPay(userdiet);
+                }
+                if (type == StoreType.Shop)
+                {
+                    var order=await _Order.GetOrderByAutority(authority);
+                    order.PaymentRefId = (string)result.data.ref_id;
+                    order.PaymentDate = DateTime.UtcNow;
+                    order.Status=OrderStatus.Paid;
+                     updateresult = await _Order.UpdateToFinaltPay(order);
+                }
+                    if (updateresult)
                     return result;
                 else
                     return result;
             }
             else
             {
-                
+
                 return result;
             }
         }

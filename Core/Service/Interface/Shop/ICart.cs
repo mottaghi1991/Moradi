@@ -1,4 +1,5 @@
-﻿using Core.Dto.Shop.CartDto;
+﻿using Azure.Identity;
+using Core.Dto.Shop.CartDto;
 using Domain.Shop;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace Core.Service.Interface.Shop
         public Task<bool> Update(Cart cart);
        public Task<CartItem> GetCartItemAsync(int UserId, int productId);
         public Task UpdateCartItemAsync(int userId, int productId, int quantity);
+        Task<int> CalculatePrice(int UserId,int proviceId);
+        Task<bool> RemoveUserCart(int UserId);
 
 
     }
