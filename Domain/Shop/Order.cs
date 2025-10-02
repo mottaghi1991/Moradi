@@ -18,6 +18,7 @@ namespace Domain.Shop
         [DisplayName("مبلغ پرداختی")]
         public decimal TotalAmount { get; set; }
         public OrderStatus Status { get; set; }
+        [DisplayName("ضعیت")]
         public int SendPrice { get; set; }
         [DisplayName("کد تراکنش درگاه")]
         public string PaymentAuthority { get; set; } // Authority برگشتی از درگاه

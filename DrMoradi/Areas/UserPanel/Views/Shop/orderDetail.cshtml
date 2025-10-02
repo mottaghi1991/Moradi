@@ -1,5 +1,5 @@
 ﻿@using Domain.Shop
-@model Cart
+@model Order
 
 @{
     ViewData["Title"] = "پیش‌فاکتور خرید";
@@ -8,7 +8,7 @@
 <div class="col-12">
     <div class="card border-primary">
         <div class="card-header bg-primary text-white">
-            <h3 class="card-title mb-0">پیش‌فاکتور</h3>
+            <h3 class="card-title mb-0">‌</h3>
         </div>
         <div class="card-body p-0">
 
@@ -25,7 +25,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.Items == null || !Model.Items.Any())
+                        @if (Model.OrderItems == null || !Model.OrderItems.Any())
                         {
                             <tr>
                                 <td colspan="5">
@@ -35,7 +35,7 @@
                         }
                         else
                         {
-                            foreach (var item in Model.Items)
+                            foreach (var item in Model.OrderItems)
                             {
                                 <tr>
                                     <td>
@@ -45,13 +45,25 @@
                                     <td>@item.Product.ProductName</td>
                                     <td>@item.Quantity</td>
                                     <td>@((item.UnitPrice/10).ToString("N0"))</td>
-                                    <td>@((item.Quantity* (item.UnitPrice/10)).ToString("N0"))</td>
+                                    <td>@((item.Quantity * (item.UnitPrice/10)).ToString("N0"))</td>
                                 </tr>
                             }
+                            <tr>
+                                <td colspan="4">
+                                   آدرس
+                                </td>
+                                <td>     @Model.ShippingAddress.AddressLine </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    هزینه ارسال
+                                </td>
+                                <td>     @((Model.SendPrice / 10).ToString("N0")) </td>
+                            </tr>
                             <tr class="table-info fw-bold">
                                 <td colspan="4">مجموع</td>
                                 <td>
-                                    @Model.Items.Sum(i => i.Quantity * (i.UnitPrice/10)).ToString("N0")
+                                    @((Model.OrderItems.Sum(i => i.Quantity * (i.UnitPrice/10)) + (Model.SendPrice / 10)).ToString("N0"))
                                 </td>
                             </tr>
                         }
@@ -61,13 +73,13 @@
 
             <!-- Mobile Card View -->
             <div class="d-md-none p-2">
-                @if (Model.Items == null || !Model.Items.Any())
+                @if (Model.OrderItems == null || !Model.OrderItems.Any())
                 {
                     <span class="badge bg-danger">سبد خرید شما خالی است</span>
                 }
                 else
                 {
-                    foreach (var item in Model.Items)
+                    foreach (var item in Model.OrderItems)
                     {
                         <div class="card mb-3 shadow-sm">
                             <div class="card-body text-center">
@@ -75,16 +87,32 @@
                                      class="mb-2" style="width:80px;height:80px;object-fit:cover;border-radius:5px;" />
                                 <h5 class="card-title fw-bold">@item.Product.ProductName</h5>
                                 <p class="mb-1">تعداد: @item.Quantity</p>
-                                <p class="mb-1">قیمت واحد: @((item.UnitPrice/10).ToString("N0"))</p>
-                                <p class="text-success fw-bold">جمع کل: @((item.Quantity* item.UnitPrice/10).ToString("N0"))</p>
+                                <p class="mb-1">قیمت واحد: @item.UnitPrice.ToString("N0")</p>
+                                <p class="text-success fw-bold">جمع کل: @((item.Quantity * item.UnitPrice).ToString("N0"))</p>
                             </div>
                         </div>
                     }
                     <div class="card p-3 bg-light">
                         <div class="d-flex justify-content-between fw-bold">
+                            <span>هزینه ارسال:</span>
+                            <span class="text-primary">
+                                @((Model.SendPrice / 10).ToString("N0"))
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card p-3 bg-light">
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>آدرس</span>
+                            <span class="text-primary">
+                                @Model.ShippingAddress.AddressLine
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card p-3 bg-light">
+                        <div class="d-flex justify-content-between fw-bold">
                             <span>مجموع پرداختی:</span>
                             <span class="text-primary">
-                                @Model.Items.Sum(i => i.Quantity * i.UnitPrice/10).ToString("N0") تومان
+                                @((Model.OrderItems.Sum(i => i.Quantity * i.UnitPrice) + (Model.SendPrice / 10)).ToString("N0")) تومان
                             </span>
                         </div>
                     </div>
@@ -92,12 +120,5 @@
             </div>
         </div>
 
-        <!-- دکمه ادامه -->
-        <div class="card-footer text-center">
-            <a asp-action="UserAddress" asp-controller="shop" asp-area="UserPanel"
-               class="btn btn-success btn-lg px-4 fw-bold">
-                <i class="fa fa-credit-card"></i> نحوه ارسال 
-            </a>
-        </div>
     </div>
 </div>

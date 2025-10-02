@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Core.Service.Services.Shop
 {
+
     public class OrderServices : IOrder
     {
         private readonly IMaster<Order> _master;
@@ -31,7 +32,7 @@ namespace Core.Service.Services.Shop
                 {
                     UserId = UserId,
                     OrderDate = DateTime.UtcNow,
-                    Amount = cart.Items.Sum(a => a.Product.Price),
+                    Amount = cart.Items.Sum(a => a.Product.Price*a.Quantity),
 
                     Status = Domain.OrderStatus.Pending,
                     ShippingAddressId = AddressId,
@@ -39,14 +40,14 @@ namespace Core.Service.Services.Shop
                     PaymentDate = null,
                     PaymentRefId = null,
                     SendPrice = sendPrice,
-                    TotalAmount = cart.Items.Sum(a => a.Product.Price) + sendPrice,
+                    TotalAmount = (cart.Items.Sum(a => a.Product.Price*a.Quantity) + sendPrice),
+                    OrderItems = new List<OrderItem>()
                 };
 
                 foreach (var cartitem in cart.Items)
                 {
                     var orderitem = new OrderItem()
                     {
-                        OrderId = order.Id,
                         ProductId = cartitem.ProductId,
                         Quantity = cartitem.Quantity,
                         UnitPrice = cartitem.UnitPrice,
@@ -77,6 +78,12 @@ namespace Core.Service.Services.Shop
                  
         }
 
+        public async Task<IEnumerable<Order>> GetAllOrderByUserId(int userId)
+        {
+            return await _master.GetAllAsQueryable().Include(a => a.OrderItems).ThenInclude(i => i.Product)
+                   .Where(c => c.UserId == userId).ToListAsync();
+        }
+
         public async Task<Order> GetOrderByAutority(string Autority)
         {
             var obj = await _master.GetAllEfAsync(a => a.PaymentAuthority == Autority);
@@ -85,7 +92,8 @@ namespace Core.Service.Services.Shop
 
         public async Task<Order> GetOrderById(int orderId)
         {
-            var obj = await _master.GetAllEfAsync(a => a.Id == orderId);
+            var obj = await _master.GetAllAsQueryable().Include(a=>a.ShippingAddress).Include(a => a.OrderItems).ThenInclude(i => i.Product)
+              .Where(c => c.Id == orderId).ToListAsync();
             return obj.FirstOrDefault();
         }
 

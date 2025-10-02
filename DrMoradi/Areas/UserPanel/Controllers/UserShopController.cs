@@ -136,7 +136,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 {
                     productId = c.ProductId,
                     productName = c.Product.ProductName,
-                    price = c.UnitPrice,
+                    price = (c.UnitPrice/10),
                     quantity = c.Quantity
                 });
 

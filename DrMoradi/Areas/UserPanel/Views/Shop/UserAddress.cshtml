@@ -1,9 +1,6 @@
 ﻿@using Core.Dto.Shop.Address
 @using Domain.Shop
 @model GetAddressOfUserVM
-@{
-    ViewData["Title"] = "UserAddress";
-}
 
 <div class="col-12">
     <div class="card border-primary">
@@ -19,25 +16,23 @@
                     <table class="table table-hover text-center mb-0">
                         <thead class="table-dark">
                             <tr>
-                               
-                            
                                 <th>آدرس کامل</th>
                                 <th>کد پستی</th>
                                 <th>انتخاب</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="addressesListDesktop">
                             @foreach (var addr in Model.OldAddress)
                             {
                                 <tr>
-
                                     <td>@addr.AddressLine</td>
                                     <td>@addr.PostalCode</td>
                                     <td>
-                                        <a asp-action="FinalFaktor" asp-controller="Shop" asp-area="UserPanel" asp-route-AddressId="@addr.Id" class="btn btn-success btn-sm">
-                              
-                                            انتخاب
-                                        </a>
+                                        <a asp-action="FinalFaktor"
+                                           asp-controller="Shop"
+                                           asp-area="UserPanel"
+                                           asp-route-AddressId="@addr.Id"
+                                           class="btn btn-success btn-sm">انتخاب</a>
                                     </td>
                                 </tr>
                             }
@@ -46,84 +41,98 @@
                 </div>
 
                 <!-- Mobile Card View -->
-                <div class="d-md-none p-2">
+                <div id="addressesListMobile" class="d-md-none p-2">
                     @foreach (var addr in Model.OldAddress)
                     {
                         <div class="card mb-3 shadow-sm">
                             <div class="card-body">
-                                <p class="mb-1"><i class="fa fa-mail-bulk"></i> کدپستی: @addr.AddressLine</p>
+                                <p class="mb-1"><i class="fa fa-map-marker-alt"></i> آدرس: @addr.AddressLine</p>
                                 <p class="mb-1"><i class="fa fa-mail-bulk"></i> کدپستی: @addr.PostalCode</p>
-                                <button class="btn btn-success btn-sm mt-2 w-100"
-                                        onclick="selectAddress('@addr.Id')">
+                                <a class="btn btn-success btn-sm mt-2 w-100"
+                                   asp-action="FinalFaktor"
+                                   asp-controller="Shop"
+                                   asp-area="UserPanel" asp-route-AddressId="@addr.Id">
                                     انتخاب این آدرس
-                                </button>
+                                </a>
                             </div>
                         </div>
                     }
                 </div>
 
                 <div class="text-center my-3">
-                    <button id="showNewAddressFormBtn">افزودن آدرس جدید</button>
-
+                    <button id="showNewAddressFormBtn" class="btn btn-primary">افزودن آدرس جدید</button>
                 </div>
             }
             else
             {
-                <!-- اگر آدرس وجود ندارد -->
                 <div class="p-3">
                     <span class="badge bg-danger">هیچ آدرسی ثبت نشده است</span>
                 </div>
                 <div class="text-center my-3">
-                    <button id="showNewAddressFormBtn">افزودن آدرس جدید</button>
+                    <button id="showNewAddressFormBtn" class="btn btn-primary">افزودن آدرس جدید</button>
                 </div>
             }
         </div>
     </div>
 </div>
 
-<!-- فرم آدرس جدید - پیش‌فرض مخفی -->
-<div id="newAddressForm" class="mt-4 @(Model.ShowNewAddressForm ? "" : "d-none")">
+<!-- فرم آدرس جدید -->
+<div id="newAddressForm" class="mt-4 d-none">
     <div id="newAddressFormWrapper" style="display:none;">
-        @Html.Partial("_NewAddressForm", new ShippingAddres())
+        @Html.Partial("_NewAddressForm", new AddAdressVm())
     </div>
 </div>
+
 <div id="newAddressMessages"></div>
-@section Scripts{
+
+@section Scripts {
     <script>
-            $(document).ready(function () {
-            // نمایش فرم افزودن آدرس
+        $(document).ready(function () {
+
             $("#showNewAddressFormBtn").on("click", function () {
-            $("#newAddressForm").removeClass("d-none");
+                $("#newAddressForm").removeClass("d-none");
                 $("#newAddressFormWrapper").slideDown();
             });
 
-            // ارسال فرم با AJAX
+            // ارسال فرم آدرس جدید
             $(document).on("submit", "#newAddressFormAjax", function (e) {
                 e.preventDefault();
 
                 $.ajax({
-                    url: '/UserPanel/Shop/AddCity',
+                    url: '/UserPanel/Shop/AddCity', // اکشن ذخیره آدرس
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function (res) {
                         if (res.success) {
-                            $("#newAddressMessages").html("<p style='color:green'>آدرس با موفقیت ثبت شد.</p>");
-
-                            // بستن فرم و پاک کردن فیلدها
+                                console.log("📦 پاسخ سرور:", res);
+                            $("#newAddressMessages").html("<p class='text-success'>✅ آدرس با موفقیت ثبت شد.</p>");
                             $("#newAddressFormAjax")[0].reset();
                             $("#newAddressFormWrapper").slideUp();
 
-                            // افزودن به لیست آدرس‌ها بدون رفرش
-                            $(".addresses-list").append(
-                                `<div class="address-card">
-                                    <p>${res.newAddress.AddressLine}</p>
-                                    <p>${res.newAddress.PostalCode}</p>
-                                </div>`
-                            );
+                            // ساخت HTML برای دسکتاپ و موبایل
+                            let newRowDesktop = `
+                                <tr>
+                                    <td>${res.newAddress.addressLine}</td>
+                                    <td>${res.newAddress.postalCode}</td>
+                                    <td><a href="/UserPanel/Shop/FinalFaktor?AddressId=${res.newAddress.id}" class="btn btn-success btn-sm">انتخاب</a></td>
+                                </tr>
+                            `;
+                            let newCardMobile = `
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-body">
+                                        <p class="mb-1">آدرس: ${res.newAddress.AddressLine}</p>
+                                        <p class="mb-1">کدپستی: ${res.newAddress.PostalCode}</p>
+                                        <button class="btn btn-success btn-sm mt-2 w-100" onclick="selectAddress('${res.newAddress.Id}')">انتخاب این آدرس</button>
+                                    </div>
+                                </div>
+                            `;
+
+                            // اضافه کردن به هر دو لیست
+                            $("#addressesListDesktop").append(newRowDesktop);
+                            $("#addressesListMobile").append(newCardMobile);
 
                         } else {
-                            // نمایش خطاها
-                            let errorHtml = "<ul style='color:red'>";
+                            let errorHtml = "<ul class='text-danger'>";
                             for (let field in res.errors) {
                                 res.errors[field].forEach(msg => {
                                     errorHtml += `<li>${msg}</li>`;
@@ -134,25 +143,15 @@
                         }
                     },
                     error: function () {
-                        $("#newAddressMessages").html("<p style='color:red'>خطا در ارسال درخواست.</p>");
+                        $("#newAddressMessages").html("<p class='text-danger'>❌ خطا در ارسال درخواست.</p>");
                     }
                 });
             });
         });
 
-
-
-    </script>
-
-    <script>
         function selectAddress(id) {
             console.log("✅ آدرس انتخاب شد:", id);
-            // اینجا می‌تونی به مرحله انتخاب روش ارسال و محاسبه هزینه هدایت کنی
-        }
-        function showNewAddressForm() {
-            document.getElementById('newAddressForm').classList.remove('d-none');
-            window.scrollTo({ top: document.getElementById('newAddressForm').offsetTop, behavior: 'smooth' });
+            // اینجا می‌توان به صفحه فاکتور هدایت کرد
         }
     </script>
 }
-

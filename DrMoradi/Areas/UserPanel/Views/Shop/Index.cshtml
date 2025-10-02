@@ -1,0 +1,130 @@
+﻿@using Core.Extention
+@using Domain.Shop
+@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@section style {
+    <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
+}
+
+
+<div class="col-12">
+    <div class="card border-success">
+        <div class="card-header bg-success text-white">
+            <h3 class="card-title mb-0">لیست رژیم‌ها</h3>
+        </div>
+        <div class="card-body p-0">
+
+            <!-- Desktop Table -->
+            <div class="table-responsive d-none d-md-block">
+                <table class="table table-hover text-center mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>شماره سفارش</th>
+                            <th>@Html.DisplayNameFor(model => model.TotalAmount)</th>
+                            <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
+                            <th>@Html.DisplayNameFor(model => model.Status)</th>
+                            <th>جزئیات سفارش</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td>
+                                    <label class="badge bg-danger">شما تا کنون محصولی خریداری نکرده اید</label>
+
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@((item.TotalAmount/10).ToString("N0"))</td>
+                                <td>@(item.PaymentDate?.ToPersian() ?? "")</td>
+                                <td>
+                                    @if (item.Status == Domain.OrderStatus.Pending)
+                                    {
+                                        <span class="badge bg-danger">در انتظار پرداخت</span>
+                                        <a class="badge bg-success" asp-action="StartPaymentShop" asp-route-orderId="@item.Id">پرداخت</a>
+                                    }
+                                    else if (item.Status == Domain.OrderStatus.Paid)
+                                    {
+                                        <span class="badge bg-warning text-dark">در صف ارسال</span>
+                                    }
+                                    else if (item.Status == Domain.OrderStatus.Shipped)
+                                    {
+                                        <span class="badge bg-success">ارسال شده</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a class="badge bg-primary" asp-action="orderDetail" asp-route-OrderId="@item.Id">جزئیات سفارش</a>
+
+
+                                </td>
+                     
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View -->
+            <div class="d-md-none p-2">
+                @if (!Model.Any())
+                {
+
+                    <label class="badge bg-danger">شما تا کنون رژیمی دریافت نکردیده اید</label>
+
+
+                }
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-3 shadow-sm">
+                        <div class="card-body text-center">
+                            <p class="mb-1">شماره فاکتور: @item.Id</p>
+                            <p class="mb-1">جمع پرداختی: @((item.TotalAmount/10).ToString("N0"))</p>
+                            <p class="mb-1">تاریخ پرداخت: @(item.PaymentDate?.ToPersian() ?? "")</p>
+
+                            @if (item.Status == Domain.OrderStatus.Pending)
+                            {
+                                <span class="badge bg-danger mb-2">در انتظار پرداخت</span>
+                                <a class="badge bg-success" asp-action="StartPaymentShop" asp-route-orderId="@item.Id">پرداخت</a>
+
+                            }
+                            else if (item.Status == Domain.OrderStatus.Paid)
+                            {
+                                <span class="badge bg-warning text-dark mb-2">در صف ارسال</span>
+                            }
+                            else if (item.Status == Domain.OrderStatus.Paid)
+                            {
+                                <span class="badge bg-success mb-2">ارسال شده</span>
+                            }
+
+
+                            <a class="btn btn-success btn-lg w-100" asp-action="orderDetail" asp-route-orderId="@item.Id">
+                                    جزئیات سفارش
+                                </a>
+                            
+
+
+                           
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("DietComponent")
+</div>
+
+
+

@@ -1,5 +1,5 @@
-﻿@using Domain.Shop
-@model ShippingAddres
+﻿@using Core.Dto.Shop.Address
+@model AddAdressVm
 <div class="card shadow-sm border-0">
     <div class="card-body">
         <h5 class="fw-bold mb-3">افزودن آدرس جدید</h5>
@@ -8,19 +8,13 @@
 
         <div class="mb-3">
             <label class="form-label">استان</label>
-            <select asp-for="provinceId" class="form-select" asp-items="ViewBag.Province" onchange="GetCityByProvinceId(this.value)">
+            <select asp-for="provinceId" class="form-select" asp-items="ViewBag.Province" >
                 <option value="">انتخاب کنید</option>
                
             </select>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">استان</label>
-            <select id="City" name="City" class="form-select">
-                <option value="">انتخاب کنید</option>
-
-            </select>
-        </div>
+      
 
         <div class="mb-3">
             <label class="form-label">کد پستی</label>
@@ -30,12 +24,12 @@
 
         <div class="mb-3">
             <label class="form-label">آدرس کامل</label>
-            <textarea asp-for="AddressLine" class="form-control" rows="3"></textarea>
+            <textarea asp-for="AddressLine" class="form-control" rows="3" placeholder="شهر -...."></textarea>
                 <span asp-validation-for="PostalCode" class="text-danger"></span>
 
         </div>
 
-        <div class="text-end">
+        <div class="text-center">
             <button type="submit" class="btn btn-success">
                 ثبت آدرس
             </button>

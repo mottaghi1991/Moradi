@@ -80,7 +80,7 @@
         <!-- بخش اطلاعات محصول -->
         <div class="col-lg-6 product-column  p-4 rounded shadow-strong d-flex flex-column ml-3">
             <h4 class="mb-3">@Model.ProductName</h4>
-            <div class="price mb-2">@Model.Price تومان</div>
+            <div class="price mb-2">@((Model.Price / 10).ToString("N0")) تومان</div>
             <div class="mb-3">
                 <span class="text-warning">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
                 <span class="text-muted">(0 نظر)</span>

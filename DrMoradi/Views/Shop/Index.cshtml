@@ -24,7 +24,7 @@
                     <div class="card-body">
                         <h5 class="text-center"><a class="unstyled-link" asp-action="ProductDetail" asp-route-ProductId="@item.Id">@item.ProductName</a></h5>
                         <p class="plan-price text-center">
-                            <span>@item.Price</span> تومان
+                            <span>@((item.Price/10).ToString("N0"))</span> تومان
                         </p>
                     </div>
                 </div>

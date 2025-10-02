@@ -37,7 +37,19 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             _order = order;
             _user = user;
         }
+        public async Task<IActionResult> Index()
+        {
+            return View(await _order.GetAllOrderByUserId(User.GetUserId()));
+        }
+        public async Task<IActionResult> orderDetail(int OrderId)
+        {
 
+            var order =await _order.GetOrderById(OrderId);
+            
+            
+
+            return View(order);
+        }
         [HttpGet]
         public async Task<IActionResult> Invoice()
         {
@@ -90,7 +102,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
           
           var merg= await _order.FillOrder(cart, User.GetUserId(),AddressId,(int)price);
             if(merg)
-                return RedirectToAction("StartPaymentShop", new { addressId = AddressId });
+                return RedirectToAction("StartPaymentShop");
             else
             {
                 TempData[warning] = "انتقال به فاکتور نهایی با مشکل مواجه شد";
@@ -99,25 +111,33 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             }
         }
 
-        public async Task<IActionResult> StartPaymentShop(int addressId)
+        public async Task<IActionResult> StartPaymentShop(int orderId)
         {
-            _logger.LogInformation("شروع فرایند پرداخت برای فروشگاه addressId={addressId}, UserId={UserId}", addressId, User.GetUserId());
-            var address = await _address.GetAddresById(addressId);
-            var Order = await _order.GetOrderByUserId(User.GetUserId());
-         
-            if (address == null)
+            _logger.LogInformation("شروع فرایند پرداخت برای فروشگاه orderId={orderId}, UserId={UserId}", orderId, User.GetUserId());
+            Order? Order = null;
+          if (orderId==0)
             {
-                _logger.LogError("addressId با شناسه {addressId} یافت نشد. UserId={UserId}", addressId, User.GetUserId());
+                 Order = await _order.GetOrderByUserId(User.GetUserId());
+
+            }
+            else
+            {
+                 Order = await _order.GetOrderById(orderId);
+            }
+
+            if (Order == null)
+            {
+                _logger.LogError("orderId با شناسه {orderId} یافت نشد. UserId={UserId}", orderId, User.GetUserId());
                 TempData[Error] = "اطلاعات رژیم پیدا نشد";
                 return RedirectToAction("Index");
             }
-            string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/UserPanel/verify";
+            string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/Shop/verify";
             var First = await _payment.FirstRequestPayment(Order.Id, (int)Order.TotalAmount, callbackUrl,"خرید اقلام","" , User.Identity?.Name,Core.Enums.StoreType.Shop);
             if (First.data != null)
             {
                 _logger.LogInformation("درخواست اولیه پرداخت موفق. Authority={Authority}, Amount={Amount}, UserId={UserId}", First.data.authority, Order.TotalAmount, User.GetUserId());
-                return RedirectToAction("SendTOBank", new { Url = "https://zarinpal.com/pg/StartPay/" + First.data.authority });
-                //return RedirectToAction("SendTOBank", new { Url = "https://sandbox.zarinpal.com/pg/StartPay/" + First.data.authority });
+                //return RedirectToAction("SendTOBank", new { Url = "https://zarinpal.com/pg/StartPay/" + First.data.authority });
+                return RedirectToAction("SendTOBank", new { Url = "https://sandbox.zarinpal.com/pg/StartPay/" + First.data.authority });
             }
             else
             {
@@ -154,7 +174,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
                     TempData[Success] = " پرداخت شما با موفقیت انجام شد :" + payevent.data.ref_id;
                     // نمایش خطا
-                    return RedirectToAction("Index", "UserPanel", "UserPanel");
+                    return RedirectToAction("Index", "Shop", "UserPanel");
                 }
                 else
                 {
@@ -164,7 +184,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     User.GetUserId(), Order.TotalAmount, Authority);
                     TempData[Error] = " پرداخت با مشکل مواجه گردیده است";
                     // نمایش خطا
-                    return RedirectToAction("Index", "UserPanel", "UserPanel");
+                    return RedirectToAction("Index", "Shop", "UserPanel");
                 }
             }
             if (Status == "NOK")
@@ -173,17 +193,17 @@ namespace DrMoradi.Areas.UserPanel.Controllers
           User.GetUserId(), Authority);
                 TempData[Error] = " پرداخت با مشکل مواجه گردیده است";
                 // نمایش خطا
-                return RedirectToAction("Index", "UserPanel", "UserPanel");
+                return RedirectToAction("Index", "Shop", "UserPanel");
             }
 
             _logger.LogWarning("وضعیت پرداخت موفق. Status={Status}, UserId={UserId}, Authority={Authority}",
            Status, User.GetUserId(), Authority);
             TempData[Success] = " از پرداخت شما متشکریم";
             // نمایش خطا
-            return RedirectToAction("Index", "UserPanel", "UserPanel");
+            return RedirectToAction("Index", "Shop", "UserPanel");
         }
         [HttpPost]
-        public async Task<IActionResult> AddCity(ShippingAddres model)
+        public async Task<IActionResult> AddCity(AddAdressVm model)
         {
             if (!ModelState.IsValid)
             {
@@ -197,8 +217,17 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
                 return Json(new { success = false, errors });
             }
-            model.UserId = User.GetUserId();
-            var result = await _address.Add(model);
+             ShippingAddres obj=new ShippingAddres()
+             {
+                 UserId = User.GetUserId(),
+                 AddressLine=model.AddressLine,
+                 PostalCode=model.PostalCode,
+                 provinceId=model.provinceId.Value,
+                 
+                 
+             };
+          
+            var result = await _address.Add(obj);
             if (result)
             {
                 return Json(new
@@ -206,9 +235,9 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     success = true,
                     newAddress = new
                     {
-                        id = model.Id,
-                        fullAddress = model.AddressLine,
-                        postalCode = model.PostalCode
+                        Id = obj.provinceId,
+                        AddressLine = obj.AddressLine,
+                        PostalCode = obj.PostalCode
                     }
                 });
             }

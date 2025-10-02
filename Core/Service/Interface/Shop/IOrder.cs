@@ -14,6 +14,7 @@ namespace Core.Service.Interface.Shop
         Task<bool> Insert(Order order);
         Task<bool> Update(Order order);
         Task<Order> GetOrderByUserId(int userId);
+        Task<IEnumerable<Order>> GetAllOrderByUserId(int userId);
         Task<bool> UpdateToFirstPay(int orderId, string Aauthority);
         Task<Order> GetOrderById(int orderId);
         Task<Order> GetOrderByAutority(string Autority);
