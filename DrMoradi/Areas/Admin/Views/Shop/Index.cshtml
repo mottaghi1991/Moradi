@@ -1,0 +1,83 @@
+﻿@using Core.Extention
+@using Domain
+@model IEnumerable<Domain.Shop.Order>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> لیست سفارشات</h3>
+        </div>
+        <div class="card-body">
+
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+شماره سفارش                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SendPrice)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalAmount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.PaymentDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ShippingAddress.AddressLine)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @((item.SendPrice / 10).ToString("N0"))
+                            </td>
+                            <td>
+                                @((item.TotalAmount/10).ToString("N0"))
+                            </td>
+                            <td>
+                                @(item.PaymentDate.HasValue?item.PaymentDate.Value.ToPersian():"")
+                            
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ShippingAddress.province.Title)
+                            </td>
+                             <td>
+                                @if (item.Status == OrderStatus.Pending)
+                                {
+                                    <label class="badge badge-danger">در انتظار پرداخت</label>
+
+                                }
+                                else if(item.Status==OrderStatus.Paid)
+                                {
+                                    <label class="badge badge-warning">پرداخت شده</label>
+                                }
+                                else if (item.Status ==OrderStatus.Shipped)
+                                {
+                                    <label class="badge badge-success">ارسال شده</label>
+
+                                }
+
+                            </td>
+                            <td> <a class="badge btn-primary" >ارسال مرسوله</a>  </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+            </div>
+            </div>
+

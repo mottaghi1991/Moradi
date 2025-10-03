@@ -17,8 +17,7 @@ namespace Domain.Shop
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
 
-
-        [DisplayName("قیمت")]
+        [DisplayName("قیمت(ریال)")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
         public decimal Price { get; set; }
 
@@ -35,6 +34,8 @@ namespace Domain.Shop
         [DisplayName("وضعیت")]
         public bool IsActive { get; set; }
         [DisplayName("وزن محصول")]
+        [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Weight { get; set; }
         [DisplayName("دسته بندی")]
         public int CategoryId { get; set; }

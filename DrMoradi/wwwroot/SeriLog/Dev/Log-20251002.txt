@@ -614,3 +614,30 @@ Error Number:-2,State:0,Class:11
 2025-10-02 16:00:54.421 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
 2025-10-02 16:06:15.748 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
 2025-10-02 16:06:15.949 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-02 16:17:53.181 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:17:54.137 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:17:59.834 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:17:59.984 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:18:02.750 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:18:02.897 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:04.503 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:04.708 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:13.580 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:13.742 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:38.360 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:38.531 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:44.409 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:19:44.581 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:41.105 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:41.287 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:42.584 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:42.752 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:48.682 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:48.863 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:51.666 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:20:51.814 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:21:00.451 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:21:04.886 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:21:05.031 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:21:23.381 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-02 16:21:23.530 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 

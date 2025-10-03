@@ -28,18 +28,36 @@ namespace Core.Services.Store
 
         public async Task<bool> DeleteImage(int productImageId)
         {
-            var obj=await GetProductImageById(productImageId);
+            var obj = await GetProductImageById(productImageId);
             return await _masterImage.DeleteAsync(obj);
         }
 
         public async Task<IEnumerable<Product>> GetAll()
         {
-           return await _master.GetAllEfAsync();
+            return await _master.GetAllEfAsync();
         }
 
         public async Task<IEnumerable<ProductImage>> GetAllImageOfProductById(int ProductId)
         {
             return await _masterImage.GetAllEfAsync(a => a.ProductId == ProductId);
+        }
+
+        public async Task<IEnumerable<Product>> getByFilter(int? categoryId, string sort)
+        {
+            
+            var obj = _master.GetAllAsQueryable();
+            if (categoryId.HasValue)
+                obj = obj.Where(p => p.CategoryId == categoryId.Value);
+
+            if (!string.IsNullOrEmpty(sort))
+            {
+                if (sort == "cheap")
+                    obj = obj.OrderBy(p => p.Price);
+
+                else if (sort == "expensive")
+                    obj = obj.OrderByDescending(p => p.Price);
+            }
+            return obj.ToList();
         }
 
         public Task<IEnumerable<Product>> GetProductBybcategory(int CategoryId)
@@ -50,7 +68,7 @@ namespace Core.Services.Store
         public async Task<Product> GetProductById(int ProductId)
         {
             var obj = await _master.GetAllAsQueryable().Include(a => a.Category).ToListAsync();
-           return obj.FirstOrDefault(a => a.Id == ProductId);
+            return obj.FirstOrDefault(a => a.Id == ProductId);
         }
 
         public async Task<IEnumerable<Product>> GetProductBySubcategory(int CategoryId)
@@ -58,7 +76,7 @@ namespace Core.Services.Store
             return await _master.GetAllEfAsync(a => a.CategoryId == CategoryId);
         }
 
-      
+
 
         public async Task<ProductImage> GetProductImageById(int productImageId)
         {
@@ -71,16 +89,16 @@ namespace Core.Services.Store
             var product = _master.GetAllAsQueryable()
                           .Where(p => p.Id == ProductId)
                   .ProjectTo<ShowProductDetailVm>(_mapper.ConfigurationProvider).FirstOrDefault();
-                  
+
             return product;
         }
 
         public async Task<int> GetStockAsync(int productId)
         {
-            var obj =await _master.GetAllEfAsync();
+            var obj = await _master.GetAllEfAsync();
             return obj.Where(p => p.Id == productId)
        .Select(p => p.Stock).FirstOrDefault(); // فرض می‌کنیم ستون موجودی اسمش Stock هست
-       
+
         }
 
         public async Task<Product> Insert(Product product)
@@ -90,18 +108,18 @@ namespace Core.Services.Store
 
         public async Task<ProductImage> InsertImage(ProductImage productImage)
         {
-           return await _masterImage.InsertAsync(productImage);
+            return await _masterImage.InsertAsync(productImage);
         }
 
 
 
         public async Task<Product> Update(Product product)
         {
-       return await _master.UpdateAsync(product);
+            return await _master.UpdateAsync(product);
         }
 
-      
-     
+
+
 
     }
 }

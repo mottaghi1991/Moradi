@@ -19,5 +19,6 @@ namespace Core.Service.Interface.Shop
         Task<Order> GetOrderById(int orderId);
         Task<Order> GetOrderByAutority(string Autority);
         Task<bool> UpdateToFinaltPay(Order order);
+        Task<IEnumerable<Order>> GetAllOrder();
     }
 }

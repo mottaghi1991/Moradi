@@ -45,7 +45,7 @@
                             </td>
                       
                             <td>
-                                @Html.DisplayFor(modelItem => item.Price)
+                                @((item.Price/10).ToString("N0"))
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.IsActive)

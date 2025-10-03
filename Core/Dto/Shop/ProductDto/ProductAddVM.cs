@@ -15,10 +15,12 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [MaxLength(100, ErrorMessage = "طول نام محصول بیشتر از 100 کاراکتر است")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
+        [DisplayName("وزن محصول")]
+        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
+        public decimal Weight { get; set; }
 
-     
 
-        [DisplayName("قیمت")]
+        [DisplayName("قیمت(ریال)")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public decimal Price { get; set; }

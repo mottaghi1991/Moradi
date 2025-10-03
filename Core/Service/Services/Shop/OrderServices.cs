@@ -78,6 +78,12 @@ namespace Core.Service.Services.Shop
                  
         }
 
+        public async Task<IEnumerable<Order>> GetAllOrder()
+        {
+            return await _master.GetAllAsQueryable().Include(a=>a.ShippingAddress).ThenInclude(a=>a.province).Include(a => a.OrderItems).ThenInclude(i => i.Product)
+                             .ToListAsync();
+        }
+
         public async Task<IEnumerable<Order>> GetAllOrderByUserId(int userId)
         {
             return await _master.GetAllAsQueryable().Include(a => a.OrderItems).ThenInclude(i => i.Product)

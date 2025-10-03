@@ -17,9 +17,8 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
 
-      
 
-        [DisplayName("قیمت")]
+        [DisplayName("قیمت(ریال)")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public decimal Price { get; set; }
@@ -36,7 +35,9 @@ namespace Core.Dto.ViewModel.Store.ProductDto
 
         [DisplayName("تصویر محصول")]
         public string ImageUrl { get; set; }
-
+        [DisplayName("وزن محصول")]
+        [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
+        public decimal Weight { get; set; }
         public IFormFile ImageFile { get; set; }
         [DisplayName("وضعیت")]
         public bool IsActive { get; set; }

@@ -12,16 +12,21 @@ namespace DrMoradi.Controllers
     {
         private readonly IProduct _product;
         private readonly IProvince _province;
+        private readonly ICategory _category;
 
-        public ShopController(IProduct product, IProvince province)
+        public ShopController(IProduct product, IProvince province, ICategory category)
         {
             _product = product;
             _province = province;
+            _category = category;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? categoryId, string sort)
         {
-            return View(await _product.GetAll());
+            
+            ViewBag.Categories = new SelectList(await _category.GetAllByActive(true),"Id", "CategoryName",categoryId);
+            var obj = await _product.getByFilter(categoryId, sort);
+            return View(obj);
         }
         public async Task<IActionResult> ProductDetail(int ProductId)
         {

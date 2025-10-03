@@ -17,8 +17,9 @@ namespace Domain.Shop
         public DateTime OrderDate { get; set; }
         [DisplayName("مبلغ پرداختی")]
         public decimal TotalAmount { get; set; }
-        public OrderStatus Status { get; set; }
         [DisplayName("ضعیت")]
+        public OrderStatus Status { get; set; }
+        [DisplayName("هزینه ارسال")]
         public int SendPrice { get; set; }
         [DisplayName("کد تراکنش درگاه")]
         public string PaymentAuthority { get; set; } // Authority برگشتی از درگاه

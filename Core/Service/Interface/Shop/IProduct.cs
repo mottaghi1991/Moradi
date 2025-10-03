@@ -23,6 +23,7 @@ namespace Core.Interface.Store
         public Task<bool> DeleteImage(int productImageId);
         public Task<ProductImage> GetProductImageById(int productImageId);
         public Task<int> GetStockAsync(int productId);
+        public Task<IEnumerable<Product>> getByFilter(int? categoryId, string sort);
 
     }
 }

@@ -12,6 +12,33 @@
     </style>
 }
 <div class="container mt-4">
+
+    <form method="get" asp-action="Index" asp-controller="Shop">
+        <div class="row justify-content-center text-center">
+            <!-- فیلتر دسته‌بندی -->
+            <div class="col-md-3">
+                <select name="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                    <option value="">همه دسته‌ها</option>
+                
+                </select>
+            </div>
+
+            <!-- فیلتر ارزان‌ترین -->
+            <div class="col-md-3">
+                <select name="sort" class="form-select">
+                    <option value="">مرتب‌سازی پیش‌فرض</option>
+                    <option value="cheap">ارزان‌ترین</option>
+                    <option value="expensive">گران ‌ترین</option>
+                </select>
+            </div>
+
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">جستجو</button>
+            </div>
+        </div>
+        </form>
+
+
     <div class="row justify-content-center text-center">
         @foreach (var item in Model)
         {
