@@ -25,6 +25,11 @@ namespace Domain.Shop
         [ForeignKey("provinceId")]
         public Province  province{ get; set; }
         public int UserId { get; set; }
+        [DisplayName("عرض جغرافیایی")]
+        public double? Latitude { get; set; }   // لازم برای الوپیک
+
+        [DisplayName("طول جغرافیایی")]
+        public double? Longitude { get; set; }  // لازم برای الوپیک
         [ForeignKey("UserId")]
         public MyUser  user{ get; set; }
 

@@ -70,6 +70,15 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             return View(add); // ویوی فاکتور که با بوت‌استرپ 5 ساختیم
         }
         [HttpGet]
+        public IActionResult AloPeyk()
+        {
+            List<ShippingAddres> obj = new List<ShippingAddres>();
+            return View(obj);
+
+        }
+           
+        
+        [HttpGet]
         public async Task<IActionResult> FinalFaktor(int AddressId)
         {
             var address = await _address.GetAddresById(AddressId);

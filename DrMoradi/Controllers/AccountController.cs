@@ -74,28 +74,30 @@ namespace DrMoradi.Controllers
                 _logger.LogWarning(EventIdList.Login, "Invalid OTP code entered for {PhoneNumber}", phoneNumber);
                 return BadRequest(JsonFailure("کد وارد شده صحیح نیست"));
             }
-
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             var user = await _user.GetOrCreateUser(phoneNumber);
+
             await _user.SignIn(HttpContext, user);
-            await _userOtp.UseCodeAsync(phoneNumber, acceptCode.SendCode);
+            HttpContext.Session.Remove("PhoneNumber");
+
+
+            //await _userOtp.UseCodeAsync(phoneNumber, acceptCode.SendCode);
             _logger.LogInformation(EventIdList.Login, "User {UserId} with phone {PhoneNumber} signed in via SMS", user.ItUserId, phoneNumber); var obj=await _user.GetUserByUserNameAsync(user.UserName);
+
+
+
             var redirectUrl = !string.IsNullOrEmpty(acceptCode.ReturnUrl) && Url.IsLocalUrl(acceptCode.ReturnUrl)
      ? acceptCode.ReturnUrl
      : Url.Content("~/");
-            string Fullname = (obj?.FullName);
-            if(Fullname==null)
+            if (string.IsNullOrEmpty(user.FullName))
             {
                 _logger.LogInformation(EventIdList.Login, "Redirecting user {UserId} to fill profile form", user.ItUserId);
                 return Json(JsonSuccess("ورود موفق", redirectUrl: "UserPanel/UserPanel/Fillform"));
-
             }
-
             else
             {
                 _logger.LogInformation(EventIdList.Login, "User {UserId} redirected to {RedirectUrl}", user.ItUserId, redirectUrl);
                 return Json(JsonSuccess("ورود موفق", redirectUrl: redirectUrl));
-
-
             }
 
         }

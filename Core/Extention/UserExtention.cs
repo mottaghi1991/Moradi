@@ -24,7 +24,6 @@ namespace Core.Extention
                     return 0;
                 }
 
-                return identifier.Value == null ? 0 : int.Parse(identifier.Value);
             }
             catch (Exception e)
             {

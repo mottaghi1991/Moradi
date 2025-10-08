@@ -1,0 +1,130 @@
+﻿@model List<Domain.Shop.ShippingAddres>
+@{
+    ViewData["Title"] = "ارسال با الوپیک";
+}
+
+<div class="col-12">
+    <div class="card border-primary">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">انتخاب آدرس مقصد (الوپیک - فقط تهران)</h3>
+        </div>
+
+        <div class="card-body p-0">
+
+            @if (Model == null || !Model.Any())
+            {
+                <div class="p-3 text-center">
+                    <span class="badge bg-danger">هیچ آدرسی ثبت نشده است</span>
+                    <br />
+                    <a href="/UserPanel/Address/Add" class="btn btn-success mt-3">
+                        <i class="fa fa-plus"></i> افزودن آدرس جدید
+                    </a>
+                </div>
+            }
+            else
+            {
+                <!-- دسکتاپ -->
+                <div class="table-responsive d-none d-md-block">
+                    <table class="table table-hover text-center mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>استان</th>
+                                <th>نشانی دقیق</th>
+                                <th>کد پستی</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var addr in Model)
+                            {
+                                <tr>
+                                    <td>@addr.province?.Title</td>
+                                    <td>@addr.AddressLine</td>
+                                    <td>@addr.PostalCode</td>
+                                    <td>
+                                        @if (addr.Latitude.HasValue && addr.Longitude.HasValue)
+                                        {
+                                            <button class="btn btn-sm btn-primary"
+                                                    onclick="calculateAloPeykPrice(@addr.Latitude, @addr.Longitude)">
+                                                محاسبه قیمت
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <a href="/UserPanel/Address/Edit/@addr.Id" class="btn btn-warning btn-sm">
+                                                تکمیل مختصات
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- موبایل -->
+                <div class="d-md-none p-2">
+                    @foreach (var addr in Model)
+                    {
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title fw-bold">@addr.province?.Title</h5>
+                                <p class="mb-1"><strong>نشانی:</strong> @addr.AddressLine</p>
+                                <p class="mb-1"><strong>کد پستی:</strong> @addr.PostalCode</p>
+                                @if (addr.Latitude.HasValue && addr.Longitude.HasValue)
+                                {
+                                    <button class="btn btn-primary btn-sm w-100 mt-2"
+                                            onclick="calculateAloPeykPrice(@addr.Latitude, @addr.Longitude)">
+                                        محاسبه قیمت
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a href="/UserPanel/Address/Edit/@addr.Id" class="btn btn-warning btn-sm w-100 mt-2">
+                                        تکمیل مختصات
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="card-footer text-center">
+            <div id="priceResult" class="fw-bold text-success mb-3"></div>
+            <button id="btnPayOrder" class="btn btn-success btn-lg px-4 fw-bold" style="display:none;"
+                    onclick="payAndCreateOrder()">
+                <i class="fa fa-credit-card"></i> پرداخت و ثبت سفارش
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const originLat = 35.6892; // مختصات ثابت مبدا (مطب تهران)
+        const originLng = 51.3890;
+
+        function calculateAloPeykPrice(destLat, destLng) {
+            $.post('/UserPanel/Shop/GetDeliveryPrice', {
+                originLat: originLat,
+                originLng: originLng,
+                destLat: destLat,
+                destLng: destLng
+            }, function (res) {
+                if (res.success) {
+                    $("#priceResult").text(`هزینه ارسال: ${res.price} تومان`);
+                    $("#btnPayOrder").show();
+                } else {
+                    alert("خطا در دریافت قیمت الوپیک");
+                }
+            });
+        }
+
+        function payAndCreateOrder() {
+            // اینجا اکشن پرداخت داخلی و سپس CreateOrderAsync الوپیک فراخوانی می‌شود
+            alert("پرداخت و ثبت سفارش اجرا شد");
+        }
+    </script>
+}
