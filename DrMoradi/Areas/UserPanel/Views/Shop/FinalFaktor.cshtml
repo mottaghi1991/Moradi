@@ -45,11 +45,10 @@
                                     <td>@item.Product.ProductName</td>
                                     <td>@item.Quantity</td>
                                     <td>@((item.UnitPrice/10).ToString("N0"))</td>
-<<<<<<< Updated upstream
-                                    <td>@((item.Quantity * (item.UnitPrice/10)).ToString("N0"))</td>
-=======
+
+
                                     <td>@((item.Quantity * item.UnitPrice/10).ToString("N0"))</td>
->>>>>>> Stashed changes
+
                                 </tr>
                             }
                             <tr>
@@ -61,11 +60,9 @@
                             <tr class="table-info fw-bold">
                                 <td colspan="4">مجموع</td>
                                 <td>
-<<<<<<< Updated upstream
-                                    @((Model.Items.Sum(i => i.Quantity * (i.UnitPrice/10))+(Model.SendPrice/10)).ToString("N0"))
-=======
+
                                     @((Model.Items.Sum(i => i.Quantity * i.UnitPrice/10)+(Model.SendPrice/10)).ToString("N0"))
->>>>>>> Stashed changes
+
                                 </td>
                             </tr>
                         }

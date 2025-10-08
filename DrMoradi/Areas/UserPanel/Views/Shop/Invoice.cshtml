@@ -45,21 +45,19 @@
                                     <td>@item.Product.ProductName</td>
                                     <td>@item.Quantity</td>
                                     <td>@((item.UnitPrice/10).ToString("N0"))</td>
-<<<<<<< Updated upstream
-                                    <td>@((item.Quantity* (item.UnitPrice/10)).ToString("N0"))</td>
-=======
+
+
                                     <td>@((item.Quantity* item.UnitPrice/10).ToString("N0"))</td>
->>>>>>> Stashed changes
+
                                 </tr>
                             }
                             <tr class="table-info fw-bold">
                                 <td colspan="4">مجموع</td>
                                 <td>
-<<<<<<< Updated upstream
-                                    @Model.Items.Sum(i => i.Quantity * (i.UnitPrice/10)).ToString("N0")
-=======
+
+
                                     @Model.Items.Sum(i => i.Quantity * i.UnitPrice/10).ToString("N0")
->>>>>>> Stashed changes
+
                                 </td>
                             </tr>
                         }
@@ -83,11 +81,10 @@
                                      class="mb-2" style="width:80px;height:80px;object-fit:cover;border-radius:5px;" />
                                 <h5 class="card-title fw-bold">@item.Product.ProductName</h5>
                                 <p class="mb-1">تعداد: @item.Quantity</p>
-<<<<<<< Updated upstream
+
                                 <p class="mb-1">قیمت واحد: @((item.UnitPrice/10).ToString("N0"))</p>
-=======
-                                <p class="mb-1">قیمت واحد: @item.UnitPrice.ToString("N0")</p>
->>>>>>> Stashed changes
+
+
                                 <p class="text-success fw-bold">جمع کل: @((item.Quantity* item.UnitPrice/10).ToString("N0"))</p>
                             </div>
                         </div>

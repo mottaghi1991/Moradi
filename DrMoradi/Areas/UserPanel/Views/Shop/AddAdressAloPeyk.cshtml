@@ -1,0 +1,64 @@
+﻿@model Domain.Shop.ShippingAddres
+@{
+    ViewData["Title"] = "افزودن آدرس جدید برای الوپیک";
+}
+@section style
+{
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+}
+<div class="col-12 col-md-8 mx-auto">
+    <div class="card border-primary shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">ثبت مقصد جدید (استان: تهران)</h3>
+        </div>
+
+        <div id="map" style="height:400px;width:100%"></div>
+        <form asp-action="AddAdressAloPeyk">
+        <input type="hidden" id="lat" name="Latitude"  />
+        <input type="hidden" id="lng" name="Longitude" />
+       
+        <div class="m-3">
+            <label class="form-label">کد پستی</label>
+            <input type="text" asp-for="PostalCode" class="form-control" placeholder="کد 10 رقمی" />
+            <span asp-validation-for="PostalCode" class="text-danger"></span>
+        </div>
+
+        <div class="m-3">
+            <label class="form-label">آدرس کامل</label>
+            <textarea asp-for="AddressLine" class="form-control" rows="3" placeholder="شهر -...."></textarea>
+            <span asp-validation-for="AddressLine" class="text-danger"></span>
+
+        </div>
+        <input type="submit"  class="btn btn-success" value="ثبت آدرس"/>
+        </form>
+ 
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+    // ایجاد نقشه با لایه OSM
+    var map = L.map('map').setView([35.6892, 51.389], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // رویداد کلیک روی نقشه
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+
+        document.getElementById('lat').value = lat;
+        document.getElementById('lng').value = lng;
+        console.log(lat);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lng]).addTo(map);
+    });
+</script>
+
+
+}

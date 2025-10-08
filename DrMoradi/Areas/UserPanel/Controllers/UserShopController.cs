@@ -136,11 +136,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 {
                     productId = c.ProductId,
                     productName = c.Product.ProductName,
-<<<<<<< Updated upstream
-                    price = (c.UnitPrice/10),
-=======
-                    price = c.UnitPrice/10,
->>>>>>> Stashed changes
+                    price = c.UnitPrice,
                     quantity = c.Quantity
                 });
 

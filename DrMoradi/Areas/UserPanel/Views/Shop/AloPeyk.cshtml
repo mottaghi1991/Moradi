@@ -1,4 +1,4 @@
-﻿@model List<Domain.Shop.ShippingAddres>
+﻿@model IEnumerable<Domain.Shop.ShippingAddres>
 @{
     ViewData["Title"] = "ارسال با الوپیک";
 }
@@ -16,7 +16,7 @@
                 <div class="p-3 text-center">
                     <span class="badge bg-danger">هیچ آدرسی ثبت نشده است</span>
                     <br />
-                    <a href="/UserPanel/Address/Add" class="btn btn-success mt-3">
+                    <a href="/UserPanel/Shop/AddAdressAloPeyk" class="btn btn-success mt-3">
                         <i class="fa fa-plus"></i> افزودن آدرس جدید
                     </a>
                 </div>

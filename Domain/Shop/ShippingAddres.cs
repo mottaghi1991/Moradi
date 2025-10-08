@@ -16,11 +16,13 @@ namespace Domain.Shop
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
 
         public int provinceId { get; set; }
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
+  
         [DisplayName("آدرس")]
-        public string AddressLine { get; set; }
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
+        public string AddressLine { get; set; }
         [DisplayName("کد پستی")]
+        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
+   
         public string PostalCode { get; set; }
         [ForeignKey("provinceId")]
         public Province  province{ get; set; }
