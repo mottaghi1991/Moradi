@@ -30,12 +30,9 @@ namespace DrMoradi.Controllers
         }
         public async Task<IActionResult> ProductDetail(int ProductId)
         {
-            return View(await _product.GetProductById(ProductId));
+            return View(await _product.GetShowProductDetailVmByProductId(ProductId));
         }
-        public IActionResult Add()
-        {
-         return View(); 
-        }
+       
         [HttpGet]
         public async Task<JsonResult> GetCityByProvinceId(int ProId)
         {

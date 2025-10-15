@@ -29,7 +29,7 @@ namespace Core.Service.Services.Payment
             _Order = order;
         }
 
-        public async Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile, StoreType type)
+        public async Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile, StoreType type, bool IsSanbox)
         {
             var requestData = new PaymentRequest()
             {
@@ -48,10 +48,18 @@ namespace Core.Service.Services.Payment
 
             var json = JsonConvert.SerializeObject(requestData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
+            var response =new HttpResponseMessage();
             using var client = new HttpClient();
-            //var response = await _httpClient.PostAsync("https://api.zarinpal.com/pg/v4/payment/request.json", content);
-            var response = await _httpClient.PostAsync("https://sandbox.zarinpal.com/pg/v4/payment/request.json", content);
+            if (IsSanbox)
+            {
+                response = await _httpClient.PostAsync("https://sandbox.zarinpal.com/pg/v4/payment/request.json", content);
+
+            }
+            else
+            {
+                 response = await _httpClient.PostAsync("https://api.zarinpal.com/pg/v4/payment/request.json", content);
+
+            }
             var result = await response.Content.ReadAsStringAsync();
 
             dynamic FInalresult = JsonConvert.DeserializeObject<dynamic>(result);
@@ -88,7 +96,7 @@ namespace Core.Service.Services.Payment
             throw new Exception("خطا در ارتباط با درگاه پرداخت");
         }
 
-        public async Task<PaymentFinalResponse> VerifyPayment(string authority, int amount,StoreType type)
+        public async Task<PaymentFinalResponse> VerifyPayment(string authority, int amount,StoreType type, bool IsSanbox)
         {
             var requestData = new
             {
@@ -98,9 +106,16 @@ namespace Core.Service.Services.Payment
             };
             var json = JsonConvert.SerializeObject(requestData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = new HttpResponseMessage();
+            if (IsSanbox)
+            {
+                 response = await _httpClient.PostAsync("https://sandbox.zarinpal.com/pg/v4/payment/verify.json", content);
+            }
+            else
+            {
+             response = await _httpClient.PostAsync("https://api.zarinpal.com/pg/v4/payment/verify.json", content);
 
-            //var response = await _httpClient.PostAsync("https://api.zarinpal.com/pg/v4/payment/verify.json", content);
-            var response = await _httpClient.PostAsync("https://sandbox.zarinpal.com/pg/v4/payment/verify.json", content);
+            }
             var responseContent = await response.Content.ReadAsStringAsync();
             dynamic result = JsonConvert.DeserializeObject<PaymentFinalResponse>(responseContent);
 

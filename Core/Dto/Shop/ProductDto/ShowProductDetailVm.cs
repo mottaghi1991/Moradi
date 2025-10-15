@@ -8,6 +8,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
 {
     public class ShowProductDetailVm
     {
+        public int Id { get; set; }
         [DisplayName("نام محصول")]
         [MaxLength(100, ErrorMessage = "طول نام محصول بیشتر از 100 کاراکتر است")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
@@ -17,6 +18,8 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [DisplayName("قیمت")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
         public decimal Price { get; set; }
+        [DisplayName("موجودی")]
+        public int Stock { get; set; }
         [DisplayName("درصد تخفیف")]
         public int OffPricePercent { get; set; }
         [DisplayName("تصویر محصول")]

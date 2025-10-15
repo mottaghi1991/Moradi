@@ -25,6 +25,7 @@ namespace Core.Service.Services.Shop
         {
             return await _master.GetAllAsQueryable()
                   .Include(ci => ci.Product)
+                  .ThenInclude(a=>a.ProductBatches)
                   .Where(ci => ci.Cart.UserId == userId)
                   .ToListAsync();
         }

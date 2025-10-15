@@ -61,7 +61,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                 return RedirectToAction("Index");
             }
             string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/UserPanel/verify";
-            var First = await _payment.FirstRequestPayment(UserDietId, (int)userdiet.Amount, callbackUrl, userdiet.diet.Name, "", User.Identity?.Name,Core.Enums.StoreType.Diet);
+            var First = await _payment.FirstRequestPayment(UserDietId, (int)userdiet.Amount, callbackUrl, userdiet.diet.Name, "", User.Identity?.Name,Core.Enums.StoreType.Diet,false);
             if (First.data != null)
             {
                 _logger.LogInformation("درخواست اولیه پرداخت موفق. Authority={Authority}, Amount={Amount}, UserId={UserId}", First.data.authority, userdiet.Amount, User.GetUserId());
@@ -93,7 +93,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                     TempData[Error] = "پرداخت پیدا نشد";
                     return RedirectToAction("Index");
                 }
-                var payevent = await _payment.VerifyPayment(authority: Authority, (int)userdiet.Amount,StoreType.Diet);
+                var payevent = await _payment.VerifyPayment(authority: Authority, (int)userdiet.Amount,StoreType.Diet,false);
                 var myuser =await _user.GetUserByUserId(User.GetUserId());
                 if (payevent.Error==null)
                 {

@@ -113,7 +113,7 @@
 
         <!-- دکمه ادامه -->
         <div class="card-footer text-center">
-            <a asp-action="AddtoOrder" asp-controller="shop" asp-area="UserPanel" asp-route-AddressId="@Model.Address.Id"
+            <a asp-action="AddtoOrder" asp-controller="shop" asp-area="UserPanel" asp-route-AddressId="@Model.Address.Id" asp-route-sendprice="0"
                class="btn btn-success btn-lg px-4 fw-bold">
                 <i class="fa fa-credit-card"></i> پرداخت
             </a>

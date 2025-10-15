@@ -4,12 +4,14 @@ using Core.Interface.Admin;
 using Core.Interface.Sms;
 using Core.Interface.Store;
 using Core.Service.Interface.Admin;
+using Core.Service.Interface.Deliverd;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
 using Core.Service.Interface.Payment;
 using Core.Service.Interface.Shop;
 using Core.Service.Interface.Users;
 using Core.Service.Services.Admin;
+using Core.Service.Services.Delivery;
 using Core.Service.Services.Dr;
 using Core.Service.Services.MainPage;
 using Core.Service.Services.Payment;
@@ -108,6 +110,8 @@ namespace IOC
             Services.AddScoped<IMaster<City>, MasterServices<City>>();
             Services.AddScoped<IMaster<PostPrice>, MasterServices<PostPrice>>();
             Services.AddScoped<IMaster<Order>, MasterServices<Order>>();
+            Services.AddScoped<IMaster<OrderItem>, MasterServices<OrderItem>>();
+            Services.AddScoped<IMaster<ProductBatch>, MasterServices<ProductBatch>>();
 
 
 
@@ -119,6 +123,7 @@ namespace IOC
             Services.AddScoped<IAddress, AddressServices>();
             Services.AddScoped<IProvince, ProvinceServices>();
             Services.AddScoped<IOrder, OrderServices>();
+            Services.AddScoped<IOrderItem, OrderItemServices>();
 
             #endregion
             #region Sms
@@ -145,6 +150,15 @@ namespace IOC
 
             #region Payment
             Services.AddScoped<IPayment, PaymentServices>();
+
+            #endregion
+
+
+            #region Delivery
+
+            Services.AddScoped<IDelivery, AloPeylServices>();
+
+
 
             #endregion
         }

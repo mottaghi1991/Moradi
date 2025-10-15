@@ -10,7 +10,7 @@ namespace Core.Service.Interface.Payment
 {
     public interface IPayment
     {
-        public Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile, StoreType type);
-        public Task<PaymentFinalResponse> VerifyPayment(string authority,int amount,StoreType type);
+        public Task<PaymentFirstResponse> FirstRequestPayment(int userDietId, int amount, string callbackUrl, string description, string email, string mobile, StoreType type,bool IsSanbox);
+        public Task<PaymentFinalResponse> VerifyPayment(string authority,int amount,StoreType type, bool IsSanbox);
     }
 }

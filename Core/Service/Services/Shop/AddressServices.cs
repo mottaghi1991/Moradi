@@ -17,6 +17,11 @@ namespace Core.Service.Services.Shop
             _master = master;
         }
 
+        public async Task<IEnumerable<ShippingAddres>> GetAloPeykAddressOfUser(int UserId)
+        {
+            return await _master.GetAllEfAsync(a => a.UserId == UserId&&a.Latitude != null);
+        }
+
         public async Task<bool> Add(ShippingAddres shippingAddres)
         {
             var obj = await _master.InsertAsync(shippingAddres);
@@ -37,7 +42,7 @@ namespace Core.Service.Services.Shop
 
         public async Task<IEnumerable<ShippingAddres>> GetAddressOfUser(int UserId)
         {
-            return await _master.GetAllEfAsync(a => a.UserId == UserId);
+            return await _master.GetAllEfAsync(a => a.UserId == UserId&&a.Latitude==null);
         }
     }
 }

@@ -16,7 +16,8 @@
                 <thead>
                     <tr>
                         <th>
-شماره سفارش                        </th>
+                            شماره سفارش
+                        </th>
                         <th>
                             @Html.DisplayNameFor(model => model.SendPrice)
                         </th>
@@ -27,11 +28,15 @@
                             @Html.DisplayNameFor(model => model.PaymentDate)
                         </th>
                         <th>
+                            @Html.DisplayNameFor(model => model.DeliveryMethod)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.ShippingAddress.AddressLine)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.Status)
                         </th>
+                      
                         <th></th>
                     </tr>
                 </thead>
@@ -46,38 +51,56 @@
                                 @((item.SendPrice / 10).ToString("N0"))
                             </td>
                             <td>
-                                @((item.TotalAmount/10).ToString("N0"))
+                                @((item.TotalAmount / 10).ToString("N0"))
                             </td>
                             <td>
-                                @(item.PaymentDate.HasValue?item.PaymentDate.Value.ToPersian():"")
-                            
+                                @(item.PaymentDate.HasValue? item.PaymentDate.Value.ToPersian():"")
+
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ShippingAddress.province.Title)
                             </td>
-                             <td>
+                            <td>
+                            @if (item.DeliveryMethod == DeliveryMethod.Post)
+                            {
+                                <label>پست</label>
+                            }else if (item.DeliveryMethod == DeliveryMethod.AloPeyk)
+                            {
+                                <label>الو پیک</label>
+                            }
+                            </td>
+                            <td>
                                 @if (item.Status == OrderStatus.Pending)
                                 {
                                     <label class="badge badge-danger">در انتظار پرداخت</label>
 
                                 }
-                                else if(item.Status==OrderStatus.Paid)
+                                else if (item.Status == OrderStatus.Paid)
                                 {
                                     <label class="badge badge-warning">پرداخت شده</label>
                                 }
-                                else if (item.Status ==OrderStatus.Shipped)
+                                else if (item.Status == OrderStatus.Shipped)
                                 {
                                     <label class="badge badge-success">ارسال شده</label>
 
                                 }
 
                             </td>
-                            <td> <a class="badge btn-primary" >ارسال مرسوله</a>  </td>
+
+                            <td>
+                                @if (item.Status == OrderStatus.Paid && item.DeliveryMethod == DeliveryMethod.AloPeyk && item.AloPeykStatus == null)
+                                {
+                                    <a class="badge btn-primary">ثبت درخواست الوپیک به مشکل خورده است</a>
+                                    <a asp-action="createAlopeyk" asp-route-OrderId="@item.Id">ثبت درخواست</a>
+                                    
+                                }
+                  
+                            </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            </div>
-            </div>
-            </div>
+        </div>
+    </div>
+</div>
 

@@ -16,23 +16,13 @@ namespace Domain.Shop
         [MaxLength(100, ErrorMessage = "طول نام محصول بیشتر از 100 کاراکتر است")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
-
-        [DisplayName("قیمت(ریال)")]
-        [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
-        public decimal Price { get; set; }
-
-        [DisplayName("موجودی")]
-        public int Stock { get; set; }
-        [DisplayName("درصد تخفیف")]
-        public int OffPricePercent { get; set; }
      
         [DisplayName("ویژگی ها")]
         public string Attrib { get; set; }
      
         [DisplayName("تصویر محصول")]
         public string ImageUrl { get; set; }
-        [DisplayName("وضعیت")]
-        public bool IsActive { get; set; }
+
         [DisplayName("وزن محصول")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         [Column(TypeName = "decimal(18,2)")]
@@ -44,6 +34,7 @@ namespace Domain.Shop
         public Category Category { get; set; }
         public virtual ICollection<ProductImage> ProductImages{ get; set; }
         public virtual ICollection<CartItem> CartItems{ get; set; }
+        public virtual ICollection<ProductBatch> ProductBatches{ get; set; }
 
 
     }

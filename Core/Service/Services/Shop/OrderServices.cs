@@ -1,5 +1,8 @@
-﻿using Core.Service.Interface.Shop;
+﻿using Core.Interface.Store;
+using Core.Service.Interface.Shop;
+using Data;
 using Data.MasterInterface;
+using Domain;
 using Domain.Dr;
 using Domain.Shop;
 using Microsoft.EntityFrameworkCore;
@@ -16,31 +19,34 @@ namespace Core.Service.Services.Shop
     {
         private readonly IMaster<Order> _master;
         private readonly ICart _cart;
+        private readonly IProduct _product;
 
-        public OrderServices(IMaster<Order> master, ICart cart)
+        public OrderServices(IMaster<Order> master, ICart cart, IProduct product)
         {
             _master = master;
             _cart = cart;
+            _product = product;
         }
 
-        public async Task<bool> FillOrder(Cart cart, int UserId, int AddressId, int sendPrice)
+        public async Task<Order> FillOrder(Cart cart, int UserId, int AddressId, int sendPrice, DeliveryMethod method)
         {
          var action=  await _master.BeginTransactionAsync();
+
             try
             {
                 var order = new Order()
                 {
                     UserId = UserId,
                     OrderDate = DateTime.UtcNow,
-                    Amount = cart.Items.Sum(a => a.Product.Price*a.Quantity),
-
+                    Amount = cart.Items.Sum(a => a.Product.ProductBatches.FirstOrDefault(a=>a.IsActive==true).Price*a.Quantity),
+                    DeliveryMethod = method,
                     Status = Domain.OrderStatus.Pending,
                     ShippingAddressId = AddressId,
                     PaymentAuthority = null,
                     PaymentDate = null,
                     PaymentRefId = null,
                     SendPrice = sendPrice,
-                    TotalAmount = (cart.Items.Sum(a => a.Product.Price*a.Quantity) + sendPrice),
+                    TotalAmount = (cart.Items.Sum(a => a.Product.ProductBatches.FirstOrDefault(a=>a.IsActive).Price*a.Quantity) + sendPrice),
                     OrderItems = new List<OrderItem>()
                 };
 
@@ -51,6 +57,7 @@ namespace Core.Service.Services.Shop
                         ProductId = cartitem.ProductId,
                         Quantity = cartitem.Quantity,
                         UnitPrice = cartitem.UnitPrice,
+                        ProductBatchId = cartitem.ProductBatchId,
 
                     };
                     order.OrderItems.Add(orderitem);
@@ -59,20 +66,49 @@ namespace Core.Service.Services.Shop
                 if (!result)
                 {
                     await action.RollbackAsync();
-                    return false;
+                    return null;
                 }
-               var removeredult=await _cart.RemoveUserCart(UserId);
+
+                // ➋ بررسی تمام شدن موجودی برای هر Batch (بدون تغییر Stock)
+                foreach (var item in order.OrderItems)
+                {
+                    // استفاده از سرویس گزارش‌گیری برای محاسبه RemainingCount
+                    var report = await _product.GetBatchUsageAsync(item.ProductBatchId);
+                    if (report == null) continue;
+
+                    // اگر موجودی تموم شد فقط Batch غیر فعال بشه
+                    if (report.RemainingCount <= 0)
+                    {
+                        var batch = await _product.GetProductBatchById(item.ProductBatchId);
+                            
+
+                        if (batch != null && batch.IsActive)
+                        {
+                            batch.IsActive = false;
+                           var updateres=await _product.UpdateBatchId(batch);
+                           if (!updateres)
+                           {
+                               await action.RollbackAsync();
+                               return null;
+                            }
+                        }
+                    }
+                }
+
+               
+
+                var removeredult=await _cart.RemoveUserCart(UserId);
                 if(!removeredult)
                 {
                     await action.RollbackAsync();
-                    return false;
+                    return null;
                 }
                 await action.CommitAsync();
-                return true;
+                return order;
             }
             catch (Exception ex) {
                 await action.RollbackAsync();
-                return false;
+                return null;
             }
            
                  
@@ -80,7 +116,10 @@ namespace Core.Service.Services.Shop
 
         public async Task<IEnumerable<Order>> GetAllOrder()
         {
-            return await _master.GetAllAsQueryable().Include(a=>a.ShippingAddress).ThenInclude(a=>a.province).Include(a => a.OrderItems).ThenInclude(i => i.Product)
+            return await _master.GetAllAsQueryable().Include(a=>a.ShippingAddress)
+                .ThenInclude(a=>a.province)
+                .Include(a => a.OrderItems)
+                .ThenInclude(i => i.Product).OrderByDescending(a=>a.PaymentDate)
                              .ToListAsync();
         }
 
@@ -92,13 +131,19 @@ namespace Core.Service.Services.Shop
 
         public async Task<Order> GetOrderByAutority(string Autority)
         {
-            var obj = await _master.GetAllEfAsync(a => a.PaymentAuthority == Autority);
+            var obj =  _master.GetAllAsQueryable(a => a.PaymentAuthority == Autority)
+                .Include(a=>a.ShippingAddress)
+                .Include(a=>a.User);
             return obj.FirstOrDefault();
         }
 
         public async Task<Order> GetOrderById(int orderId)
         {
-            var obj = await _master.GetAllAsQueryable().Include(a=>a.ShippingAddress).Include(a => a.OrderItems).ThenInclude(i => i.Product)
+            var obj = await _master.GetAllAsQueryable()
+                .Include(a=>a.ShippingAddress)
+                .Include(a => a.User)
+                .Include(a => a.OrderItems)
+                .ThenInclude(i => i.Product)
               .Where(c => c.Id == orderId).ToListAsync();
             return obj.FirstOrDefault();
         }

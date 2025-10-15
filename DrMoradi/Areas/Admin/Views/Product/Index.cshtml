@@ -22,13 +22,8 @@
                             @Html.DisplayNameFor(model => model.ImageUrl)
                         </th>
                        
-                        <th>
-                            @Html.DisplayNameFor(model => model.Price)
-                        </th>
+                   
                       
-                        <th>
-                            @Html.DisplayNameFor(model => model.IsActive)
-                        </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -44,15 +39,11 @@
                                 <img src="@item.ImageUrl" style="width:50px" />
                             </td>
                       
-                            <td>
-                                @((item.Price/10).ToString("N0"))
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.IsActive)
-                            </td>
+                           
                             <td>
                                 <a class="btn btn-info" asp-action="Edit" asp-route-ProductId="@item.Id">ویرایش</a>
                                 <a class="btn btn-primary" asp-action="ProductImageList" asp-route-ProductId="@item.Id">تصاویر محصول</a>
+                                <a class="btn btn-warning" asp-action="ListBatch" asp-route-ProductId="@item.Id">ورود کالا</a>
 
 
                             </td>

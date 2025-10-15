@@ -23,14 +23,14 @@
             }
             else
             {
-                <!-- دسکتاپ -->
+                <!-- 🖥 دسکتاپ -->
                 <div class="table-responsive d-none d-md-block">
                     <table class="table table-hover text-center mb-0">
                         <thead class="table-dark">
                             <tr>
-                                <th>استان</th>
                                 <th>نشانی دقیق</th>
                                 <th>کد پستی</th>
+                                <th id="trprice" style="display:none">قیمت</th>
                                 <th>عملیات</th>
                             </tr>
                         </thead>
@@ -38,23 +38,23 @@
                             @foreach (var addr in Model)
                             {
                                 <tr>
-                                    <td>@addr.province?.Title</td>
                                     <td>@addr.AddressLine</td>
                                     <td>@addr.PostalCode</td>
+                                    <td id="sendPrice_@addr.Id" style="display:none"></td>
                                     <td>
-                                        @if (addr.Latitude.HasValue && addr.Longitude.HasValue)
-                                        {
-                                            <button class="btn btn-sm btn-primary"
-                                                    onclick="calculateAloPeykPrice(@addr.Latitude, @addr.Longitude)">
-                                                محاسبه قیمت
-                                            </button>
-                                        }
-                                        else
-                                        {
-                                            <a href="/UserPanel/Address/Edit/@addr.Id" class="btn btn-warning btn-sm">
-                                                تکمیل مختصات
-                                            </a>
-                                        }
+                                        <button class="btn btn-sm btn-primary"
+                                                id="btnCalc_@addr.Id"
+                                                onclick="calculateAloPeykPrice(@addr.Latitude, @addr.Longitude, @addr.Id)">
+                                            محاسبه قیمت
+                                        </button>
+
+                                        <button type="button"
+                                                id="btnSelect_@addr.Id"
+                                                class="btn btn-success"
+                                                style="display:none"
+                                                onclick="selectAloPeykAddress(@addr.Id)">
+                                            انتخاب
+                                        </button>
                                     </td>
                                 </tr>
                             }
@@ -62,7 +62,7 @@
                     </table>
                 </div>
 
-                <!-- موبایل -->
+                <!-- 📱 موبایل -->
                 <div class="d-md-none p-2">
                     @foreach (var addr in Model)
                     {
@@ -71,19 +71,25 @@
                                 <h5 class="card-title fw-bold">@addr.province?.Title</h5>
                                 <p class="mb-1"><strong>نشانی:</strong> @addr.AddressLine</p>
                                 <p class="mb-1"><strong>کد پستی:</strong> @addr.PostalCode</p>
-                                @if (addr.Latitude.HasValue && addr.Longitude.HasValue)
-                                {
-                                    <button class="btn btn-primary btn-sm w-100 mt-2"
-                                            onclick="calculateAloPeykPrice(@addr.Latitude, @addr.Longitude)">
-                                        محاسبه قیمت
-                                    </button>
-                                }
-                                else
-                                {
-                                    <a href="/UserPanel/Address/Edit/@addr.Id" class="btn btn-warning btn-sm w-100 mt-2">
-                                        تکمیل مختصات
-                                    </a>
-                                }
+
+                                <button type="button"
+                                        class="btn btn-primary btn-sm w-100 mt-2"
+                                        id="btnCalc_M_@addr.Id"
+                                        onclick="calculateAloPeykPrice(@addr.Latitude, @addr.Longitude, 'M_@addr.Id')">
+                                    محاسبه قیمت
+                                </button>
+
+                                <button type="button"
+                                        id="btnSelect_M_@addr.Id"
+                                        class="btn btn-success btn-sm w-100 mt-2"
+                                        style="display:none"
+                                        onclick="selectAloPeykAddress('M_@addr.Id')">
+                                    انتخاب
+                                </button>
+
+                                <div id="sendPrice_M_@addr.Id"
+                                     class="mt-2 text-center fw-bold text-success"
+                                     style="display:none"></div>
                             </div>
                         </div>
                     }
@@ -91,40 +97,86 @@
             }
         </div>
 
-        <div class="card-footer text-center">
-            <div id="priceResult" class="fw-bold text-success mb-3"></div>
-            <button id="btnPayOrder" class="btn btn-success btn-lg px-4 fw-bold" style="display:none;"
-                    onclick="payAndCreateOrder()">
-                <i class="fa fa-credit-card"></i> پرداخت و ثبت سفارش
-            </button>
-        </div>
+        <!-- 🧾 فرم پنهان -->
+        <form id="aloForm" asp-action="FinalFaktorAlopeyk"
+              asp-controller="Shop" asp-area="UserPanel" method="post">
+            <input type="hidden" name="addressId" id="hiddenAddressId" />
+            <input type="hidden" name="price" id="hiddenPrice" />
+        </form>
+
+        <a href="/UserPanel/Shop/AddAdressAloPeyk" class="btn btn-success mt-3">
+            <i class="fa fa-plus"></i> افزودن آدرس جدید
+        </a>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        const originLat = 35.6892; // مختصات ثابت مبدا (مطب تهران)
-        const originLng = 51.3890;
+        function calculateAloPeykPrice(toLat, toLng, addrId) {
+            const requestBody = {
+                fromLat: 35.731768884459136,
+                fromLng: 51.378562075983545,
+                toLat: toLat,
+                toLng: toLng,
+                transportType: 'motorbike'
+            };
 
-        function calculateAloPeykPrice(destLat, destLng) {
-            $.post('/UserPanel/Shop/GetDeliveryPrice', {
-                originLat: originLat,
-                originLng: originLng,
-                destLat: destLat,
-                destLng: destLng
-            }, function (res) {
-                if (res.success) {
-                    $("#priceResult").text(`هزینه ارسال: ${res.price} تومان`);
-                    $("#btnPayOrder").show();
-                } else {
-                    alert("خطا در دریافت قیمت الوپیک");
+            $.ajax({
+                url: '@Url.Action("GetDeliveryPrice", "Shop", new { area = "UserPanel" })',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(requestBody),
+                success: function (res) {
+                    if (res.status === "success") {
+                        const finalPrice = res.price * 10;
+                        const priceText = finalPrice.toLocaleString() + ' تومان';
+                        const distanceText = (res.distance / 1000).toFixed(2) + ' km';
+
+                        // ✅ نرمال‌سازی آیدی در هر حالت
+                        const numericAddrId = addrId.toString().replace('M_', '');
+
+                        // نمایش قیمت و فاصله
+                        $('#sendPrice_' + addrId)
+                            .css('display', '')
+                            .html(`${priceText}<br><small>${distanceText}</small>`);
+
+                        $('#trprice').show();
+
+                        // دکمه انتخاب را نمایش بده و قیمت را در آن ذخیره کن
+                        $('#btnSelect_' + addrId)
+                            .data('price', finalPrice)
+                            .show();
+
+                        // دکمه محاسبه را مخفی کن
+                        $('#btnCalc_' + addrId).hide();
+
+                        // فرم پنهان با مقدار عددی تنظیم شود
+                        $('#hiddenAddressId').val(numericAddrId);
+                        $('#hiddenPrice').val(finalPrice);
+
+                        // 🔁 کلیک روی انتخاب = ارسال فرم
+                        $('#btnSelect_' + addrId).off('click').on('click', function () {
+                            $('#hiddenAddressId').val(numericAddrId);
+                            $('#hiddenPrice').val(finalPrice);
+                            $('#aloForm').submit();
+                        });
+                    } else {
+                        alert('قیمت‌گیری از الوپیک ناموفق بود.');
+                    }
+                },
+                error: function () {
+                    alert('خطا در ارتباط با سرویس الوپیک.');
                 }
             });
         }
 
-        function payAndCreateOrder() {
-            // اینجا اکشن پرداخت داخلی و سپس CreateOrderAsync الوپیک فراخوانی می‌شود
-            alert("پرداخت و ثبت سفارش اجرا شد");
+        // تابع عمومی انتخاب، برای هر دو حالت دسکتاپ و موبایل
+        function selectAloPeykAddress(addrId) {
+            const price = $('#btnSelect_' + addrId).data('price');
+            const numericAddrId = addrId.toString().replace('M_', ''); // عدد خالص برای فرم
+            $('#hiddenAddressId').val(numericAddrId);
+            $('#hiddenPrice').val(price);
+            $('#aloForm').submit();
         }
     </script>
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Dto.Shop.Batch;
 using Core.Dto.ViewModel.Admin;
 using Core.Dto.ViewModel.Dr.DietVm;
 using Core.Dto.ViewModel.Dr.DietVM;
@@ -30,6 +31,8 @@ namespace Core.Mapper
 
             CreateMap<Product, ProductAddVM>().ReverseMap();
             CreateMap<Product, ProductEditVm>().ReverseMap();
+
+            CreateMap<ProductBatch, BatchAddVM>().ReverseMap();
 
         }
     }

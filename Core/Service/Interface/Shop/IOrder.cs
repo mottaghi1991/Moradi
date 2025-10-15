@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Domain;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Core.Service.Interface.Shop
 {
     public interface IOrder
     {
-        Task<bool> FillOrder(Cart cart, int UserId, int AddressId, int sendPrice);
+        Task<Order> FillOrder(Cart cart, int UserId, int AddressId, int sendPrice,DeliveryMethod method);
         Task<bool> Insert(Order order);
         Task<bool> Update(Order order);
         Task<Order> GetOrderByUserId(int userId);
@@ -20,5 +21,6 @@ namespace Core.Service.Interface.Shop
         Task<Order> GetOrderByAutority(string Autority);
         Task<bool> UpdateToFinaltPay(Order order);
         Task<IEnumerable<Order>> GetAllOrder();
+      
     }
 }

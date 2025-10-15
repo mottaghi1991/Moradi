@@ -18,20 +18,6 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [DisplayName("وزن محصول")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public decimal Weight { get; set; }
-
-
-        [DisplayName("قیمت(ریال)")]
-        [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
-        public decimal Price { get; set; }
-
-        [DisplayName("موجودی")]
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
-        public int Stock { get; set; }
-        [DisplayName("درصد تخفیف")]
-
-        public int OffPricePercent { get; set; } = 0;
-
         [DisplayName("ویژگی ها")]
         public string Attrib { get; set; }
 
@@ -40,8 +26,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
      
         public IFormFile ImageFile{ get; set; }
-        [DisplayName("وضعیت")]
-        public bool IsActive { get; set; }
+   
         [DisplayName("دسته بندی")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public int CategoryId { get; set; }

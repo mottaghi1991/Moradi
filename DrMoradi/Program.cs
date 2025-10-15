@@ -16,6 +16,7 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using System.Xml.Linq;
+using Domain.Delivery;
 using Mapper = Core.Mapper.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -83,7 +84,8 @@ builder.Services.AddAuthentication(option =>
 
 builder.Services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All, }));
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddSingleton<AloPeykSettings>(
+    builder.Configuration.GetSection("AloPeyk").Get<AloPeykSettings>());
 RegisterServices(builder.Services);
 
 // بارگذاری تنظیمات سایت از دیتابیس

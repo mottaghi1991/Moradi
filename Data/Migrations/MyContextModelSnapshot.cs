@@ -639,6 +639,12 @@ namespace Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<int>("ProductBatchId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductBatchId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -651,6 +657,10 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
+
+                    b.HasIndex("ProductBatchId");
+
+                    b.HasIndex("ProductBatchId1");
 
                     b.HasIndex("ProductId");
 
@@ -726,11 +736,26 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("AloPeykOrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AloPeykOrderToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AloPeykStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AloPeykTrackingUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("DeliveryMethod")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -792,6 +817,9 @@ namespace Data.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductBatchId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -804,6 +832,8 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductBatchId");
 
                     b.HasIndex("ProductId");
 
@@ -862,6 +892,40 @@ namespace Data.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Products", "dbo");
+                });
+
+            modelBuilder.Entity("Domain.Shop.ProductBatch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -876,22 +940,17 @@ namespace Data.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("ProductID");
 
-                    b.ToTable("Products", "dbo");
+                    b.ToTable("ProductBatches", "dbo");
                 });
 
             modelBuilder.Entity("Domain.Shop.ProductImage", b =>
@@ -1298,6 +1357,16 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Shop.ProductBatch", "ProductBatch")
+                        .WithMany()
+                        .HasForeignKey("ProductBatchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Shop.ProductBatch", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductBatchId1");
+
                     b.HasOne("Domain.Shop.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
@@ -1307,6 +1376,8 @@ namespace Data.Migrations
                     b.Navigation("Cart");
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductBatch");
                 });
 
             modelBuilder.Entity("Domain.Shop.City", b =>
@@ -1347,6 +1418,12 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Shop.ProductBatch", "ProductBatch")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductBatchId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Domain.Shop.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -1356,6 +1433,8 @@ namespace Data.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+
+                    b.Navigation("ProductBatch");
                 });
 
             modelBuilder.Entity("Domain.Shop.PostPrice", b =>
@@ -1378,6 +1457,17 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Domain.Shop.ProductBatch", b =>
+                {
+                    b.HasOne("Domain.Shop.Product", "Product")
+                        .WithMany("ProductBatches")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Shop.ProductImage", b =>
@@ -1491,7 +1581,16 @@ namespace Data.Migrations
                 {
                     b.Navigation("CartItems");
 
+                    b.Navigation("ProductBatches");
+
                     b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("Domain.Shop.ProductBatch", b =>
+                {
+                    b.Navigation("CartItems");
+
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("Domain.Shop.Province", b =>

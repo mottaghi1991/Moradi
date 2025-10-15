@@ -42,6 +42,7 @@
     <div class="row justify-content-center text-center">
         @foreach (var item in Model)
         {
+            var activePrice = (item.ProductBatches.FirstOrDefault(b => b.IsActive)?.Price ?? 0) / 10;
             <div class="col-md-3">
                 <div class="card mt-4">
                     <div style="border:none">
@@ -51,9 +52,8 @@
                     <div class="card-body">
                         <h5 class="text-center"><a class="unstyled-link" asp-action="ProductDetail" asp-route-ProductId="@item.Id">@item.ProductName</a></h5>
                         <p class="plan-price text-center">
-                            <span>@((item.Price/10).ToString("N0"))</span> تومان
-                        </p>
-                    </div>
+                        @(activePrice > 0 ? activePrice.ToString("N0") : "ناموجود")
+                        </div>
                 </div>
             </div>
         }

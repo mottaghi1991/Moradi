@@ -1,11 +1,15 @@
-﻿using Core.Dto.Shop.Address;
+﻿using Azure;
+using Core.Dto.Shop.Address;
 using Core.Enums;
 using Core.Extention;
 using Core.Interface.Sms;
+using Core.Service.Interface.Deliverd;
 using Core.Service.Interface.Payment;
 using Core.Service.Interface.Shop;
 using Core.Service.Interface.Users;
 using Core.Service.Services.Shop;
+using Domain;
+using Domain.Delivery;
 using Domain.Shop;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +30,9 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         private readonly IPayment _payment;
         private readonly ILogger<ShopController> _logger;
         private readonly IUser _user;
+        private readonly IDelivery _Delivery;
 
-        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user)
+        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery)
         {
             _cart = cart;
             _address = address;
@@ -36,6 +41,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             _logger = logger;
             _order = order;
             _user = user;
+            _Delivery = delivery;
         }
         public async Task<IActionResult> Index()
         {
@@ -44,16 +50,16 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         public async Task<IActionResult> orderDetail(int OrderId)
         {
 
-            var order =await _order.GetOrderById(OrderId);
-            
-            
+            var order = await _order.GetOrderById(OrderId);
+
+
 
             return View(order);
         }
         [HttpGet]
         public async Task<IActionResult> Invoice()
         {
-            
+
             var cart = await _cart.GetCartByUserId(User.GetUserId());
             return View(cart); // ویوی فاکتور که با بوت‌استرپ 5 ساختیم
         }
@@ -72,14 +78,14 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         [HttpGet]
         public async Task<IActionResult> AloPeyk()
         {
-          var obj = await _address.GetAddressOfUser(User.GetUserId());
+            var obj = await _address.GetAloPeykAddressOfUser(User.GetUserId());
             return View(obj);
 
         }
         [HttpGet]
         public IActionResult AddAdressAloPeyk()
         {
-      
+
             return View();
 
         }
@@ -91,37 +97,80 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 return View(addres);
             }
 
-           var result=await _address.Add(addres);
-           if (result)
-           {
-               TempData[Success] = SuccessMessage;
-               return RedirectToAction("AloPeyk");
-           }
-           return View(addres);
+            addres.provinceId = 8;
+            addres.UserId = User.GetUserId();
+            var result = await _address.Add(addres);
+            if (result)
+            {
+                TempData[Success] = SuccessMessage;
+                return RedirectToAction("AloPeyk");
+            }
+            return View(addres);
 
         }
-        [HttpGet]
-        public async Task<IActionResult> FinalFaktor(int AddressId)
+
+
+        public async Task<IActionResult> GetDeliveryPrice([FromBody] AloPeykPriceRequest request)
         {
-            var address = await _address.GetAddresById(AddressId);
+
+            try
+            {
+                // مدل درخواست برای سرویس الوپیک
+
+                // صدا زدن سرویس الوپیک از لایه سرویس
+                var priceResult = await _Delivery.GetPriceAsync(request);
+
+                if (priceResult == null || priceResult.Status != "success" || priceResult.Object == null)
+                {
+                    return Json(new
+                    {
+                        status = "error",
+                        message = priceResult?.Message ?? "Failed to get price from AloPeyk."
+                    });
+                }
+
+
+                return Json(new
+                {
+                    status = "success",
+                    price = priceResult.Object.Final_Price,  // قیمت نهایی
+                    distance = priceResult.Object.Distance,  // فاصله (متر)
+                    duration = priceResult.Object.Duration   // مدت (ثانیه)
+                    // می‌تونی فیلدهای دیگر هم اضافه کنی در صورت نیاز
+                });
+            }
+            catch (Exception ex)
+            {
+                // برای عیب‌یابی
+                return StatusCode(500, new
+                {
+                    status = "error",
+                    message = ex?.Message ?? "Failed to get price from AloPeyk."
+                });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> FinalFaktorAlopeyk(int addressId, int price)
+        {
+            var address = await _address.GetAddresById(addressId);
             var cart = await _cart.GetCartByUserId(User.GetUserId());
-            decimal price =await _cart.CalculatePrice(User.GetUserId(), address.provinceId);
-            if (address==null || price==0)
+
+            if (address == null || price == 0)
             {
                 return NotFound();
             }
             var obj = new FinalInvoiceVM()
             {
                 Address = address,
-                Items=cart.Items,
-                SendPrice=(int) price
+                Items = cart.Items,
+                SendPrice = (int)price
 
             };
 
-            return View(obj); // ویوی فاکتور که با بوت‌استرپ 5 ساختیم
+            return View(obj);
         }
         [HttpGet]
-        public async Task<IActionResult> AddtoOrder(int AddressId)
+        public async Task<IActionResult> FinalFaktor(int AddressId)
         {
             var address = await _address.GetAddresById(AddressId);
             var cart = await _cart.GetCartByUserId(User.GetUserId());
@@ -130,10 +179,42 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             {
                 return NotFound();
             }
-          
-          var merg= await _order.FillOrder(cart, User.GetUserId(),AddressId,(int)price);
-            if(merg)
-                return RedirectToAction("StartPaymentShop");
+            var obj = new FinalInvoiceVM()
+            {
+                Address = address,
+                Items = cart.Items,
+                SendPrice = (int)price
+
+            };
+
+            return View(obj); // ویوی فاکتور که با بوت‌استرپ 5 ساختیم
+        }
+        [HttpGet]
+        public async Task<IActionResult> AddtoOrder(int AddressId,int sendprice)
+        {
+            DeliveryMethod method;
+            decimal price = 0;
+            var address = await _address.GetAddresById(AddressId);
+            var cart = await _cart.GetCartByUserId(User.GetUserId());
+            if (sendprice==0)
+            {
+                 price = await _cart.CalculatePrice(User.GetUserId(), address.provinceId);
+                 method = DeliveryMethod.Post;
+            }
+            else
+            {
+                price = sendprice;
+                method = DeliveryMethod.AloPeyk;
+
+            }
+            if (address == null || price == 0)
+            {
+                return NotFound();
+            }
+
+            var Order = await _order.FillOrder(cart, User.GetUserId(), AddressId, (int)price,method);
+            if (Order != null)
+                return RedirectToAction("StartPaymentShop", new { orderId = Order.Id });
             else
             {
                 TempData[warning] = "انتقال به فاکتور نهایی با مشکل مواجه شد";
@@ -146,14 +227,14 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         {
             _logger.LogInformation("شروع فرایند پرداخت برای فروشگاه orderId={orderId}, UserId={UserId}", orderId, User.GetUserId());
             Order? Order = null;
-          if (orderId==0)
+            if (orderId == 0)
             {
-                 Order = await _order.GetOrderByUserId(User.GetUserId());
+                Order = await _order.GetOrderByUserId(User.GetUserId());
 
             }
             else
             {
-                 Order = await _order.GetOrderById(orderId);
+                Order = await _order.GetOrderById(orderId);
             }
 
             if (Order == null)
@@ -163,7 +244,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 return RedirectToAction("Index");
             }
             string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/Shop/verify";
-            var First = await _payment.FirstRequestPayment(Order.Id, (int)Order.TotalAmount, callbackUrl,"خرید اقلام","" , User.Identity?.Name,Core.Enums.StoreType.Shop);
+            var First = await _payment.FirstRequestPayment(Order.Id, (int)Order.TotalAmount, callbackUrl, "خرید اقلام", "", User.Identity?.Name, Core.Enums.StoreType.Shop, true);
             if (First.data != null)
             {
                 _logger.LogInformation("درخواست اولیه پرداخت موفق. Authority={Authority}, Amount={Amount}, UserId={UserId}", First.data.authority, Order.TotalAmount, User.GetUserId());
@@ -195,12 +276,22 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     TempData[Error] = "پرداخت پیدا نشد";
                     return RedirectToAction("Index");
                 }
-                var payevent = await _payment.VerifyPayment(authority: Authority, (int)Order.TotalAmount,StoreType.Shop);
-                var myuser = await _user.GetUserByUserId(User.GetUserId());
+                var payevent = await _payment.VerifyPayment(authority: Authority, (int)Order.TotalAmount, StoreType.Shop, true);
+
                 if (payevent.Error == null)
                 {
                     _logger.LogInformation("پرداخت موفق. UserId={UserId}, Amount={Amount}, order={orderId}, Authority={Authority}",
                  User.GetUserId(), Order.TotalAmount, Order.Id, Authority);
+
+                    // علامت‌گذاری سفارش به‌عنوان پرداخت شده
+
+
+                   await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
+
+
+
+
+
                     //await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
                     //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
                     TempData[Success] = " پرداخت شما با موفقیت انجام شد :" + payevent.data.ref_id;
@@ -209,8 +300,6 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 }
                 else
                 {
-
-
                     _logger.LogWarning("پرداخت تایید نشد. UserId={UserId}, Amount={Amount}, Authority={Authority}",
                     User.GetUserId(), Order.TotalAmount, Authority);
                     TempData[Error] = " پرداخت با مشکل مواجه گردیده است";
@@ -248,16 +337,16 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
                 return Json(new { success = false, errors });
             }
-             ShippingAddres obj=new ShippingAddres()
-             {
-                 UserId = User.GetUserId(),
-                 AddressLine=model.AddressLine,
-                 PostalCode=model.PostalCode,
-                 provinceId=model.provinceId.Value,
-                 
-                 
-             };
-          
+            ShippingAddres obj = new ShippingAddres()
+            {
+                UserId = User.GetUserId(),
+                AddressLine = model.AddressLine,
+                PostalCode = model.PostalCode,
+                provinceId = model.provinceId.Value,
+
+
+            };
+
             var result = await _address.Add(obj);
             if (result)
             {

@@ -66,7 +66,9 @@ namespace Core.Service.Services.Shop
                         CartId = cart.Id,
                         ProductId = productId,
                         Quantity = quantity,
-                        UnitPrice = product.Price
+                        UnitPrice = product.ProductBatches.OrderBy(a=>a.CreateDate).ThenBy(a=>a.Id).FirstOrDefault(a=>a.IsActive==true).Price,
+                        ProductBatchId = product.ProductBatches.OrderBy(a => a.CreateDate).ThenBy(a => a.Id).FirstOrDefault(a => a.IsActive == true).Id
+
                     });
 
                 }
@@ -92,7 +94,7 @@ namespace Core.Service.Services.Shop
 
         public async Task<Cart> GetCartByUserId(int UserId)
         {
-            var obj = await _master.GetAllAsQueryable().Include(a => a.Items).ThenInclude(i => i.Product)
+            var obj = await _master.GetAllAsQueryable().Include(a => a.Items).ThenInclude(i => i.Product).ThenInclude(a=>a.ProductBatches)
              .Where(c => c.UserId == UserId).ToListAsync();
                return obj.FirstOrDefault();
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Dto.Shop.Batch;
 using Core.Dto.ViewModel.Store.ProductDto;
 using Core.Dto.ViewModel.Store.ProductImageDto;
 using Core.Extention;
@@ -7,6 +8,7 @@ using Core.Service.Interface.Shop;
 using Domain.Shop;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using WebStore.Base;
@@ -271,6 +273,89 @@ namespace DrMoradi.Areas.Admin.Controllers
           
       
         }
-    
+        public async Task<IActionResult> ListBatch(int ProductId)
+        {
+            var obj = await _Product.GetProductById(ProductId);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View( new BatchListVm()
+            {
+                ProductId = ProductId,
+                ProductName = obj.ProductName,
+                Batches = await _Product.GetAllBatchForProduct(ProductId)
+            });
+        }
+        public async Task<IActionResult> AddBatch(int ProductId)
+        {
+            var obj = await _Product.GetProductById(ProductId);
+            if (obj==null)
+            {
+                return NotFound();
+            }
+            return View(new BatchAddVM()
+            {
+                ProductID = ProductId
+            });
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddBatch(BatchAddVM productBatch)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(productBatch);
+
+            }
+
+            productBatch.CreateDate = productBatch.CreateDate.ToMiladi().ToString();
+            var result = await _Product.InsertBatchId(_mapper.Map<ProductBatch>(productBatch));
+            if (result)
+            {
+                TempData[Success] = SuccessMessage;
+                return RedirectToAction("ListBatch", new { ProductId = productBatch.ProductID });
+            }
+            else
+            {
+                TempData[Error] = ErrorMessage;
+                return View(productBatch);
+            }
+        }
+        public async Task<IActionResult> EditBatch(int BatchId)
+        {
+            var obj = await _Product.GetProductBatchById(BatchId);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            var vm = _mapper.Map<BatchAddVM>(obj);
+            vm.CreateDate =obj.CreateDate.ToPersian();
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditBatch(BatchAddVM batch)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(batch);
+
+            }
+
+            batch.CreateDate = batch.CreateDate.ToMiladi().ToString();
+            var result = await _Product.UpdateBatchId(_mapper.Map<ProductBatch>(batch));
+            if (result)
+            {
+                TempData[Success] = SuccessMessage;
+                return RedirectToAction("ListBatch", new { ProductId = batch.ProductID });
+            }
+            else
+            {
+                TempData[Error] = ErrorMessage;
+                return View(batch);
+            }
+        }
+
     }
 }

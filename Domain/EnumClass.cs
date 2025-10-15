@@ -67,4 +67,9 @@ namespace Domain
         Delivered,    // تحویل داده شده
         Cancelled     // لغو شده
     }
+    public enum DeliveryMethod
+    {
+        Post = 1,
+        AloPeyk = 2
+    }
 }

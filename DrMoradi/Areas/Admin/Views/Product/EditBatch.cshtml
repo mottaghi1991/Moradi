@@ -1,0 +1,83 @@
+﻿@model Core.Dto.Shop.Batch.BatchAddVM
+@{
+    ViewData["Title"] = "AddBatch";
+}
+
+
+<div class="col-md-12">
+    <div class="card card-success">
+        <div class="card-header">
+            <h3 class="card-title">ورود کالا </h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="EditBatch" class="m-3" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ProductID" />
+                <input type="hidden" asp-for="Id" />
+                <div class="form-row">
+                    <!-- فیلدهای کوچکتر در ردیف اول -->
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+
+                    <!-- فیلدهای تصویر و فعال بودن -->
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="Stock" class="control-label"></label>
+                        <input asp-for="Stock" class="form-control" />
+                        <span asp-validation-for="Stock" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 col-12 form-group">
+                        <label asp-for="OffPricePercent" class="control-label"></label>
+                        <input asp-for="OffPricePercent" class="form-control" />
+                        <span asp-validation-for="OffPricePercent" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-3 col-12 form-group">
+                        <label asp-for="CreateDate" class="control-label"></label>
+                        <input name="CreateDate" value="@Model.CreateDate" id="txtDate" class="form-control" />
+                        <span asp-validation-for="CreateDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3 col-12 form-group">
+                        <label asp-for="IsActive" class="control-label"></label>
+                        <input asp-for="IsActive" class="form-control" />
+                        <span asp-validation-for="IsActive" class="text-danger"></span>
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+                <!-- دکمه ارسال -->
+                <div class="form-group">
+                    <input type="submit" value="ثبت" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        kamaDatepicker('txtDate', {
+            nextButtonIcon: "fa fa-arrow-circle-right",
+            previousButtonIcon: "fa fa-arrow-circle-left",
+            forceFarsiDigits: true,     // نمایش اعداد فارسی
+            markToday: true,            // مشخص‌کردن امروز
+            highlightSelectedDay: true, // رنگ زدن روز انتخاب‌شده
+            sync: true,                 // ثبت مقدار انتخاب‌شده داخل input
+            gotoToday: true             // دکمهٔ رفتن به امروز
+        });
+    </script>
+
+}

@@ -18,46 +18,47 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class MyContext:DbContext
+    public class MyContext : DbContext
     {
-        public MyContext(DbContextOptions<MyContext> options):base(options)
+        public MyContext(DbContextOptions<MyContext> options) : base(options)
         {
-            
+
         }
         public virtual DbSet<MyUser> MyUser { get; set; }
         public virtual DbSet<PermissionList> PermissionList { get; set; }
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<RolePermission> RolePermission { get; set; }
-        public virtual DbSet<PopUp> PopUps{ get; set; }
+        public virtual DbSet<PopUp> PopUps { get; set; }
 
         #region Dr
-        public virtual DbSet<Diet> Diets{ get; set; }
-        public virtual DbSet<Question> Questions{ get; set; }
+        public virtual DbSet<Diet> Diets { get; set; }
+        public virtual DbSet<Question> Questions { get; set; }
         public DbSet<DietQuestion> DietQuestions { get; set; }
-        public DbSet<UserDiet> UserDiet{ get; set; }
-        public DbSet<UserAnswer> userAnswers{ get; set; }
-        public DbSet<QuestionOption> questionOptions{ get; set; }
-        public DbSet<Post>  posts{ get; set; }
+        public DbSet<UserDiet> UserDiet { get; set; }
+        public DbSet<UserAnswer> userAnswers { get; set; }
+        public DbSet<QuestionOption> questionOptions { get; set; }
+        public DbSet<Post> posts { get; set; }
 
 
         #endregion
 
 
         #region Shop
-        public virtual DbSet<Category> Categories{ get; set; }
-        public virtual DbSet<Product> Products{ get; set; }
-        public virtual DbSet<Cart> Carts{ get; set; }
-        public virtual DbSet<CartItem> CartItems{ get; set; }
-        public virtual DbSet<City> Cities{ get; set; }
-        public virtual DbSet<Province> Provinces{ get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Cart> Carts { get; set; }
+        public virtual DbSet<CartItem> CartItems { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
+        public virtual DbSet<Province> Provinces { get; set; }
         public virtual DbSet<ShippingAddres> ShippingAddres { get; set; }
-        public virtual DbSet<PostPrice> PostPrices{ get; set; }
+        public virtual DbSet<PostPrice> PostPrices { get; set; }
+        public virtual DbSet<ProductBatch> ProductBatches { get; set; }
 
 
         #endregion
-        public virtual DbSet<Setting> Settings{ get; set; }
-        public virtual DbSet<Slider> Sliders{ get; set; }
-        public virtual DbSet<Comment> Comments{ get; set; }
+        public virtual DbSet<Setting> Settings { get; set; }
+        public virtual DbSet<Slider> Sliders { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
 
         #region SMS
         public virtual DbSet<UserOtp> UserOtps { get; set; }
@@ -96,10 +97,23 @@ namespace Data
        .HasForeignKey(ud => ud.ParentId) // کلید خارجی برای Parent
        .OnDelete(DeleteBehavior.Restrict); // حذف پدر، بچه‌ها رو حذف نکن
 
-        
 
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(o => o.ProductBatch)
+                .WithMany()
+                .HasForeignKey(o => o.ProductBatchId)
+                .OnDelete(DeleteBehavior.NoAction); // 🚀 جلوگیری از multiple cascade path
 
-
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.ProductBatch)
+                .WithMany(pb => pb.OrderItems)
+                .HasForeignKey(oi => oi.ProductBatchId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.ProductBatch)
+                .WithMany()
+                .HasForeignKey(ci => ci.ProductBatchId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
 
     }

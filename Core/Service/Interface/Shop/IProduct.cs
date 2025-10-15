@@ -1,4 +1,5 @@
 ﻿
+using Core.Dto.Shop.ProductDto;
 using Core.Dto.ViewModel.Store.ProductDto;
 using Domain.Shop;
 using System;
@@ -24,6 +25,13 @@ namespace Core.Interface.Store
         public Task<ProductImage> GetProductImageById(int productImageId);
         public Task<int> GetStockAsync(int productId);
         public Task<IEnumerable<Product>> getByFilter(int? categoryId, string sort);
+        public Task<ShowProductDetailVm> GetShowProductDetailVmByProductId(int ProductId);
+        Task<ProductBatchUsageDto> GetBatchUsageAsync(int productBatchId);
+        Task<ProductBatch> GetProductBatchById(int BatchId);
+        Task<bool> UpdateBatchId(ProductBatch productBatch);
+        Task<bool> InsertBatchId(ProductBatch productBatch);
+        Task<ProductBatch> GetActiveBatchForProduct(int productId);
+        Task<IEnumerable<ProductBatch>> GetAllBatchForProduct(int productId);
 
     }
 }

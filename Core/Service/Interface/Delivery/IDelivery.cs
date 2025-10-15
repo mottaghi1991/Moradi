@@ -1,4 +1,6 @@
 ﻿using Domain.Delivery;
+using Domain.Shop;
+using Domain.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +11,10 @@ namespace Core.Service.Interface.Deliverd
 {
     public interface IDelivery
     {
-        Task<decimal> GetPriceAsync(double originLat, double originLng, double destLat, double destLng);
-        Task<string> CreateOrderAsync(OrderRequest orderRequest);
-        Task<OrderStatus> TrackOrderAsync(string orderId);
+        Task<AloPeykPriceResponse> GetPriceAsync(AloPeykPriceRequest request);
+        Task<AloPeykOrderResponse> CreateOrderAsync(AloPeykOrderRequest request);
+        Task<AloPeykOrderResponse?> GetOrderDetailAsync(int orderId);
+        Task<bool> CreateAloPeykOrderAsync(Order order, ShippingAddres Destination, MyUser ReciveUser);
+
     }
 }

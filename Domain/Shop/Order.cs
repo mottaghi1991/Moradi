@@ -36,5 +36,11 @@ namespace Domain.Shop
         public int ShippingAddressId { get; set; }
         [ForeignKey("ShippingAddressId")]
         public ShippingAddres ShippingAddress { get; set; }
+        public int? AloPeykOrderId { get; set; }
+        public string AloPeykOrderToken { get; set; }
+        public string AloPeykTrackingUrl { get; set; }
+        public string AloPeykStatus { get; set; } // new → accepted → delivering → finished
+        [DisplayName("نوع ارسال")]
+        public DeliveryMethod DeliveryMethod { get; set; }
     }
 }
