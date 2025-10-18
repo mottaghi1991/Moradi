@@ -72,4 +72,5 @@ namespace Domain
         Post = 1,
         AloPeyk = 2
     }
+ 
 }

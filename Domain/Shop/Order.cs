@@ -42,5 +42,7 @@ namespace Domain.Shop
         public string AloPeykStatus { get; set; } // new → accepted → delivering → finished
         [DisplayName("نوع ارسال")]
         public DeliveryMethod DeliveryMethod { get; set; }
+        public DateTime? SendDate { get; set; }
+        public string PostIdentity { get; set; }
     }
 }

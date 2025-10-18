@@ -100,7 +100,22 @@
                                     <a asp-action="createAlopeyk" asp-route-OrderId="@item.Id">ثبت درخواست</a>
                                     
                                 }
-                  
+                                @if(item.Status==OrderStatus.Paid &&item.DeliveryMethod==DeliveryMethod.Post&&item.PostIdentity==null)
+                                {
+                                    <a class="badge btn-danger" asp-action="sendPostOrder" asp-route-OrderId="@item.Id">ارسال مرسوله</a>
+
+                                }
+                                @if (item.Status == OrderStatus.Shipped)
+                                {
+                                    <a class="badge btn-success" asp-action="sendPostOrder" asp-route-OrderId="@item.Id">ارسال شده</a>
+
+                                }
+                                @if (item.Status == OrderStatus.Paid && item.DeliveryMethod == DeliveryMethod.AloPeyk && item.AloPeykStatus != null)
+                                {
+                                    <a class="badge btn-danger" >درجتجوی پیک</a>
+
+                                }
+        
                             </td>
                         </tr>
                     }
