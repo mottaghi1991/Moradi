@@ -229,8 +229,29 @@ return  _masterBach.GetAllAsQueryable(b => b.ProductID == productId && b.IsActiv
             return await _master.UpdateAsync(product);
         }
 
+        public async Task<bool> deActiveBatch(int BatchId)
+        {
 
+            var usage = await GetBatchUsageAsync(BatchId);
+            if (usage == null)
+                return false;
 
+            // اگر موجودی تموم شده، غیرفعال کن
+            if (usage.RemainingCount == 0)
+            {
+                var batch = await _masterBach.GetAllAsQueryable()
+                    .FirstOrDefaultAsync(b => b.Id == BatchId);
 
+                if (batch != null)
+                {
+                 
+                    batch.IsActive = false;
+                   await UpdateBatchId(batch);
+                    return true;
+                }
+
+            }
+            return false;
+        }
     }
 }

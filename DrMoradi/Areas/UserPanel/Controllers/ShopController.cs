@@ -3,6 +3,7 @@ using Core.Dto.Shop.Address;
 using Core.Enums;
 using Core.Extention;
 using Core.Interface.Sms;
+using Core.Interface.Store;
 using Core.Service.Interface.Deliverd;
 using Core.Service.Interface.Payment;
 using Core.Service.Interface.Shop;
@@ -31,8 +32,9 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         private readonly ILogger<ShopController> _logger;
         private readonly IUser _user;
         private readonly IDelivery _Delivery;
+        private readonly IProduct _product;
 
-        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery)
+        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery, IProduct product)
         {
             _cart = cart;
             _address = address;
@@ -42,6 +44,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             _order = order;
             _user = user;
             _Delivery = delivery;
+            _product = product;
         }
         public async Task<IActionResult> Index()
         {
@@ -203,7 +206,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             }
             else
             {
-                price = sendprice;
+                price = sendprice*10;
                 method = DeliveryMethod.AloPeyk;
 
             }
@@ -284,19 +287,26 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                  User.GetUserId(), Order.TotalAmount, Order.Id, Authority);
 
                     // علامت‌گذاری سفارش به‌عنوان پرداخت شده
+                    await _product.deActiveBatch(Order.OrderItems.First().ProductBatchId);
+                
+                        if(Order.DeliveryMethod==DeliveryMethod.AloPeyk)
+                        {
+                            await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
+
+                        }
+
+                
+                        //await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
+                        //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
+                        TempData[Success] = " پرداخت شما با موفقیت انجام شد :" + payevent.data.ref_id;
+                        // نمایش خطا
+                        return RedirectToAction("Index", "Shop", "UserPanel");
+                    
 
 
-                   await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
 
 
-
-
-
-                    //await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
-                    //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
-                    TempData[Success] = " پرداخت شما با موفقیت انجام شد :" + payevent.data.ref_id;
-                    // نمایش خطا
-                    return RedirectToAction("Index", "Shop", "UserPanel");
+                 
                 }
                 else
                 {
@@ -355,7 +365,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     success = true,
                     newAddress = new
                     {
-                        Id = obj.provinceId,
+                        Id = obj.Id,
                         AddressLine = obj.AddressLine,
                         PostalCode = obj.PostalCode
                     }

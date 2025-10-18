@@ -32,6 +32,7 @@ namespace Core.Interface.Store
         Task<bool> InsertBatchId(ProductBatch productBatch);
         Task<ProductBatch> GetActiveBatchForProduct(int productId);
         Task<IEnumerable<ProductBatch>> GetAllBatchForProduct(int productId);
+        Task<bool> deActiveBatch(int BatchId);
 
     }
 }

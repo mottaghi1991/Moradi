@@ -1,0 +1,132 @@
+2025-10-18 09:44:35.555 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:44:35.832 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:44:43.937 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Query.) Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-10-18 09:45:05.391 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:45:05.969 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:48:32.781 +03:30 [Warning] (PersonalSite.MiddleWare.PermissionCheckMiddleware.GET) ⚠️ کاربر ناشناس تلاش دسترسی داشت -> Path="/admin", Method="GET", IP="127.0.0.1"
+2025-10-18 09:49:35.596 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:49:36.359 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:49:53.101 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:49:53.744 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:19.934 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:20.315 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:22.983 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:23.331 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:26.562 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:26.912 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:42.016 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:50:42.688 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:51:04.163 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:51:04.241 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:51:25.609 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:51:26.038 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:52:25.527 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:52:25.851 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:52:33.926 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:52:34.545 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:53:20.346 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:53:20.427 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:53:39.580 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:53:40.029 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:55:18.276 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:18.568 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:22.091 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:22.465 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:25.748 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:26.075 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:44.523 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:45.072 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 09:55:59.109 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:55:59.588 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 09:56:42.216 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 10:05:19.531 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Query.) Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2025-10-18 10:10:40.825 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 10:10:41.659 +03:30 [Warning] (Microsoft.EntityFrameworkCore.Database.Transaction.) Savepoints are disabled because Multiple Active Result Sets (MARS) is enabled. If 'SaveChanges' fails, then the transaction cannot be automatically rolled back to a known clean state. Instead, the transaction should be rolled back by the application before retrying 'SaveChanges'. See https://go.microsoft.com/fwlink/?linkid=2149338 for more information and examples. To identify the code which triggers this warning, call 'ConfigureWarnings(w => w.Throw(SqlServerEventId.SavepointsDisabledBecauseOfMARS))'.
+2025-10-18 10:11:12.223 +03:30 [Error] (Error.) (Exceptions)User=14 with Ip="127.0.0.1" Request="/UserPanel/shop/AddtoOrder" with TraceId="0HNGE21GUING0:00000045" get Exception
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Core.Service.Services.Shop.CartServices.CalculatePrice(Int32 UserId, Int32 proviceId) in D:\Moradi\Core\Service\Services\Shop\CartServices.cs:line 91
+   at DrMoradi.Areas.UserPanel.Controllers.ShopController.AddtoOrder(Int32 AddressId, Int32 sendprice)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Logged|12_1(ControllerActionInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeNextResourceFilter>g__Awaited|25_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Rethrow(ResourceExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at DrMoradi.MiddleWare.CheckFullNameMiddleware.Invoke(HttpContext httpContext)
+   at PersonalSite.MiddleWare.PermissionCheckMiddleware.Invoke(HttpContext httpContext)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Session.SessionMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)
+   at PersonalSite.MiddleWare.ExeptionMiddleware.InvokeAsync(HttpContext httpContext)
+2025-10-18 10:12:39.259 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:12:39.989 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:34:15.899 +03:30 [Warning] (PersonalSite.MiddleWare.PermissionCheckMiddleware.) ⚠️ کاربر 14 ("علی متقی") دسترسی غیرمجاز -> Area="Admin", Controller="AdminHome", Action="Index", Path="/Admin"
+2025-10-18 10:35:11.723 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:35:11.723 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:35:18.137 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:35:18.225 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:35:23.553 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:35:23.592 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:05.552 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:05.663 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:10.213 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:10.287 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:29.028 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:29.119 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:59.134 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:38:59.252 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:39:06.757 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 10:39:06.822 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:04:12.768 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:04:12.768 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:04:28.518 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:04:28.608 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:04:33.364 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:04:33.389 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:05:14.022 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:05:14.079 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:05:22.712 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:06:09.634 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:06:09.698 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:06:15.677 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:06:15.771 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:07:08.157 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:07:08.157 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:07:20.042 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:07:20.103 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:07:31.895 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:08:26.642 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:08:26.684 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:08:44.682 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:08:52.552 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:08:52.616 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:09:06.604 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:09:06.629 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:09:47.100 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:09:47.120 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:10:09.441 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:10:09.466 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:16:54.837 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:16:54.943 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:18:23.787 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:18:23.787 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:18:31.727 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:18:31.727 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:19:30.318 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:19:30.371 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:04.486 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:04.520 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:08.882 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:08.930 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:18.398 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:18.423 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:30.610 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 
+2025-10-18 11:20:30.644 +03:30 [Warning] (DrMoradi.Controllers.HomeController.) (Not Found)UserId=8 with Path=null 

@@ -34,5 +34,9 @@ namespace DrMoradi.Areas.Admin.Controllers
             var result = await _Delivery.CreateAloPeykOrderAsync(obj, obj.ShippingAddress, obj.User);
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> OrderDetail(int OrderId)
+        {
+            return View(await _order.GetOrderById(OrderId));
+        }
     }
 }

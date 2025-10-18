@@ -116,7 +116,7 @@ namespace Core.Service.Services.Shop
 
         public async Task<IEnumerable<Order>> GetAllOrder()
         {
-            return await _master.GetAllAsQueryable().Include(a=>a.ShippingAddress)
+            return await _master.GetAllAsQueryable().Include(a=>a.User).Include(a=>a.ShippingAddress)
                 .ThenInclude(a=>a.province)
                 .Include(a => a.OrderItems)
                 .ThenInclude(i => i.Product).OrderByDescending(a=>a.PaymentDate)
@@ -125,13 +125,14 @@ namespace Core.Service.Services.Shop
 
         public async Task<IEnumerable<Order>> GetAllOrderByUserId(int userId)
         {
-            return await _master.GetAllAsQueryable().Include(a => a.OrderItems).ThenInclude(i => i.Product)
+            return await _master.GetAllAsQueryable().Include(a=>a.User).Include(a => a.OrderItems).ThenInclude(i => i.Product)
                    .Where(c => c.UserId == userId).ToListAsync();
         }
 
         public async Task<Order> GetOrderByAutority(string Autority)
         {
             var obj =  _master.GetAllAsQueryable(a => a.PaymentAuthority == Autority)
+                .Include(a=>a.OrderItems)
                 .Include(a=>a.ShippingAddress)
                 .Include(a=>a.User);
             return obj.FirstOrDefault();

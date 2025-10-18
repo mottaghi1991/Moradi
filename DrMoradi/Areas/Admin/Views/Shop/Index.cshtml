@@ -18,6 +18,8 @@
                         <th>
                             شماره سفارش
                         </th>
+                        <th>@Html.DisplayNameFor(model => model.User.FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.User.UserName)</th>
                         <th>
                             @Html.DisplayNameFor(model => model.SendPrice)
                         </th>
@@ -47,6 +49,8 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Id)
                             </td>
+                            <td>@item.User.FullName</td>
+                            <td>@item.User.UserName</td>
                             <td>
                                 @((item.SendPrice / 10).ToString("N0"))
                             </td>
@@ -86,7 +90,9 @@
                                 }
 
                             </td>
-
+                            <td>
+                                <a class="badge btn-warning" asp-route-OrderId="@item.Id" asp-action="orderdetail">جزئیات سفارش</a>
+                            </td>
                             <td>
                                 @if (item.Status == OrderStatus.Paid && item.DeliveryMethod == DeliveryMethod.AloPeyk && item.AloPeykStatus == null)
                                 {

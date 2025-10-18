@@ -24,6 +24,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th>شماره سفارش</th>
+                        
                             <th>@Html.DisplayNameFor(model => model.TotalAmount)</th>
                             <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
                             <th>@Html.DisplayNameFor(model => model.Status)</th>
@@ -45,6 +46,7 @@
                         {
                             <tr>
                                 <td>@item.Id</td>
+                             
                                 <td>@((item.TotalAmount/10).ToString("N0"))</td>
                                 <td>@(item.PaymentDate?.ToPersian() ?? "")</td>
                                 <td>
