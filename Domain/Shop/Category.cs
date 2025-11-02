@@ -16,5 +16,6 @@ namespace Domain.Shop
         public string CategoryName { get; set; }
         public string Image { get; set; }
         public bool IsActive { get; set; }
+        public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
     }
 }

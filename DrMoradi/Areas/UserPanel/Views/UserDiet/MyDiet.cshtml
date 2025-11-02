@@ -48,7 +48,7 @@
                                 <td>@item.DietName</td>
                                 <td>@item.UserPanelName</td>
                                 <td>@item.UserDiteName</td>
-                                <td>@item.CreateAt.ToPersian()</td>
+                                <td>@item.CreateAt?.ToPersian()</td>
                                 <td>
                                     @if (item.status == Domain.UserDietstatus.FillForm)
                                     {
@@ -115,7 +115,7 @@
                             <h5 class="card-title fw-bold">@item.DietName</h5>
                             <p class="mb-1">کاربر: @item.UserPanelName</p>
                             <p class="mb-1">گیرنده: @item.UserDiteName</p>
-                            <p class="text-muted mb-1">@item.CreateAt.ToPersian()</p>
+                            <p class="text-muted mb-1">@item.CreateAt?.ToPersian()</p>
 
                             @if (item.status == Domain.UserDietstatus.FillForm)
                             {

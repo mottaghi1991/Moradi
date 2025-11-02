@@ -1,10 +1,11 @@
-﻿using Domain.Shop;
+﻿using Core.Dto.ViewModel.main;
+using Domain;
+using Domain.Shop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Domain;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Core.Service.Interface.Shop
@@ -21,6 +22,8 @@ namespace Core.Service.Interface.Shop
         Task<Order> GetOrderByAutority(string Autority);
         Task<bool> UpdateToFinaltPay(Order order);
         Task<IEnumerable<Order>> GetAllOrder();
-      
+        Task<Paging<Order>> GetPagedOrdersAsync(int? userId, string paymentStatus, string fullName, string mobile, int pageNumber, int pageSize);
+
+
     }
 }

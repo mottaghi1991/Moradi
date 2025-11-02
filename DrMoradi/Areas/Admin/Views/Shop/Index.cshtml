@@ -1,6 +1,9 @@
-﻿@using Core.Extention
+﻿@using Core.Dto.ViewModel.main
+@using Core.Extention
 @using Domain
-@model IEnumerable<Domain.Shop.Order>
+@using Domain.Shop
+
+@model Paging<Order>
 @{
     ViewData["Title"] = "Index";
 }
@@ -11,39 +14,62 @@
             <h3 class="card-title"> لیست سفارشات</h3>
         </div>
         <div class="card-body">
-
+            <form method="get">
+                <div class="row">
+                    <div class="col-md-3">
+                        <input type="text" name="fullName" value="@Model.fullName" class="form-control" placeholder="نام کاربر" />
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" name="mobile" value="@Model.mobile" class="form-control" placeholder="شماره موبایل" />
+                    </div>
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(m => m.paymentStatus, new List<SelectListItem>
+                        {
+                            new SelectListItem { Value = "", Text = "همه وضعیت‌ها" },
+                                                new SelectListItem { Value = ((int)OrderStatus.Pending).ToString(), Text = "پرداخت نشده" },
+                                                new SelectListItem { Value = ((int)OrderStatus.Paid).ToString(), Text = "پرداخت شده" },
+                                                new SelectListItem { Value = ((int)OrderStatus.Shipped).ToString(), Text = "ارسال شده" },
+                                                new SelectListItem { Value = ((int)OrderStatus.Delivered).ToString(), Text = "تحویل شده" },
+                                                new SelectListItem { Value = ((int)OrderStatus.Cancelled).ToString(), Text = "لغو شده" }
+                                                }, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary" type="submit">جستجو</button>
+                    </div>
+                </div>
+            </form>
             <table class="table table-responsive table-hover">
                 <thead>
                     <tr>
                         <th>
                             شماره سفارش
                         </th>
-                        <th>@Html.DisplayNameFor(model => model.User.FullName)</th>
-                        <th>@Html.DisplayNameFor(model => model.User.UserName)</th>
+                        <th>@Html.DisplayNameFor(model => model.bjects.First().User.FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.bjects.First().User.UserName)</th>
                         <th>
-                            @Html.DisplayNameFor(model => model.SendPrice)
+                            @Html.DisplayNameFor(model => model.bjects.First().SendPrice)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.TotalAmount)
+                            @Html.DisplayNameFor(model => model.bjects.First().TotalAmount)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.PaymentDate)
+                            @Html.DisplayNameFor(model => model.bjects.First().PaymentDate)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.DeliveryMethod)
+                            @Html.DisplayNameFor(model => model.bjects.First().DeliveryMethod)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.ShippingAddress.AddressLine)
+                            @Html.DisplayNameFor(model => model.bjects.First().ShippingAddress.AddressLine)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.Status)
+                            @Html.DisplayNameFor(model => model.bjects.First().Status)
                         </th>
                       
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
+                    @foreach (var item in Model.bjects)
                     {
                         <tr>
                             <td>
@@ -94,28 +120,22 @@
                                 <a class="badge btn-warning" asp-route-OrderId="@item.Id" asp-action="orderdetail">جزئیات سفارش</a>
                             </td>
                             <td>
-                                @if (item.Status == OrderStatus.Paid && item.DeliveryMethod == DeliveryMethod.AloPeyk && item.AloPeykStatus == null)
+                             
+                                @if (item.Status == OrderStatus.Shipped)
                                 {
-                                    <a class="badge btn-primary">ثبت درخواست الوپیک به مشکل خورده است</a>
-                                    <a asp-action="createAlopeyk" asp-route-OrderId="@item.Id">ثبت درخواست</a>
-                                    
+                                    <a class="badge btn-primary" asp-action="sendPostOrder" asp-route-OrderId="@item.Id">ارسال شده</a>
+
                                 }
-                                @if(item.Status==OrderStatus.Paid &&item.DeliveryMethod==DeliveryMethod.Post&&item.PostIdentity==null)
+                                @if (item.Status == OrderStatus.Paid )
                                 {
                                     <a class="badge btn-danger" asp-action="sendPostOrder" asp-route-OrderId="@item.Id">ارسال مرسوله</a>
 
                                 }
-                                @if (item.Status == OrderStatus.Shipped)
+                                @if (item.Status == OrderStatus.Delivered)
                                 {
-                                    <a class="badge btn-success" asp-action="sendPostOrder" asp-route-OrderId="@item.Id">ارسال شده</a>
+                                    <a class="badge btn-success">تحویل شده</a>
 
                                 }
-                                @if (item.Status == OrderStatus.Paid && item.DeliveryMethod == DeliveryMethod.AloPeyk && item.AloPeykStatus != null)
-                                {
-                                    <a class="badge btn-danger" >درجتجوی پیک</a>
-
-                                }
-        
                             </td>
                         </tr>
                     }
@@ -124,4 +144,53 @@
         </div>
     </div>
 </div>
+<!-- Pagination -->
+@{
+    int totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.pageSize);
+}
 
+@if (totalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            <!-- Previous -->
+            <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new {
+                    pageNumber = Model.pageNumber - 1,
+                    pageSize = Model.pageSize,
+                    userId = Model.userId,
+                    fullName = Model.fullName,
+                    mobile = Model.mobile,
+                    paymentStatus = Model.paymentStatus
+                })">قبلی</a>
+            </li>
+
+            <!-- Numbers -->
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(i == Model.pageNumber ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new {
+                        pageNumber = i,
+                        pageSize = Model.pageSize,
+                        userId = Model.userId,
+                        fullName = Model.fullName,
+                        mobile = Model.mobile,
+                        paymentStatus = Model.paymentStatus
+                    })">@i</a>
+                </li>
+            }
+
+            <!-- Next -->
+            <li class="page-item @(Model.pageNumber == totalPages ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Index", new {
+                    pageNumber = Model.pageNumber + 1,
+                    pageSize = Model.pageSize,
+                    userId = Model.userId,
+                    fullName = Model.fullName,
+                    mobile = Model.mobile,
+                    paymentStatus = Model.paymentStatus
+                })">بعدی</a>
+            </li>
+        </ul>
+    </nav>
+}

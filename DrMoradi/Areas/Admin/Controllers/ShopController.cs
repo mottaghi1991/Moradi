@@ -2,7 +2,10 @@
 using Core.Extention;
 using Core.Service.Interface.Deliverd;
 using Core.Service.Interface.Shop;
+using Domain;
+using Domain.Shop;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebStore.Base;
 
 namespace DrMoradi.Areas.Admin.Controllers
@@ -19,10 +22,32 @@ namespace DrMoradi.Areas.Admin.Controllers
             _Delivery = delivery;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? userId, string fullName, string mobile, string paymentStatus , int pageNumber = 1, int pageSize = 5)
         {
-            var obj = await _order.GetAllOrder();
-            return View(obj);
+            string paymentStatusFilter = paymentStatus;
+            if (string.Equals(paymentStatus, "all", StringComparison.OrdinalIgnoreCase))
+            {
+                paymentStatusFilter = null;
+            }
+
+            var result = await _order.GetPagedOrdersAsync(
+            userId,           // همون ورودی کاربر
+            paymentStatus,    // بعد از تبدیل "all" به null
+            fullName,         // همون ورودی
+            mobile,           // همون ورودی
+            pageNumber,
+            pageSize
+        );
+            result.paymentStatus = paymentStatus;
+            return View(result);
+
+
+
+
+            //var result = await _order.GetPagedOrdersAsync(pageNumber: pageNumber, pageSize: 20, userName: fullName, paymentType: Domain.OrderStatus.Paid);
+            //return View(result);
+
+
         }
 
         public async Task<IActionResult> createAlopeyk(int OrderId)
@@ -74,6 +99,28 @@ namespace DrMoradi.Areas.Admin.Controllers
             }
             TempData[Error] = ErrorMessage;
             return View(postVm);
+        }
+        public async Task<IActionResult> Deliverd(int OrderId)
+        {
+            var order = await _order.GetOrderById(OrderId);
+            if(order==null)
+            {
+                return NotFound();
+            }
+            if(order.Status!=Domain.OrderStatus.Shipped)
+            {
+                TempData[Error] = "بسته ارسال نگردیده است";
+                return RedirectToAction("SendPostOrder", new { Orderid = OrderId });
+            }
+            order.Status = Domain.OrderStatus.Delivered;
+            var result = await _order.Update(order);
+            if (result)
+            {
+                TempData[Success] = SuccessMessage;
+                return RedirectToAction("Index");
+            }
+            TempData[Error] = ErrorMessage;
+            return RedirectToAction("SendPostOrder", new { Orderid = OrderId });
         }
     }
 }

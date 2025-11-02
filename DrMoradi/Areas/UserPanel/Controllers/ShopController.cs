@@ -289,16 +289,16 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     // علامت‌گذاری سفارش به‌عنوان پرداخت شده
                     await _product.deActiveBatch(Order.OrderItems.First().ProductBatchId);
                 
-                        if(Order.DeliveryMethod==DeliveryMethod.AloPeyk)
-                        {
-                            await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
+                        //if(Order.DeliveryMethod==DeliveryMethod.AloPeyk)
+                        //{
+                        //    await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
 
-                        }
+                        //}
 
                 
                         //await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
                         //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
-                        TempData[Success] = " پرداخت شما با موفقیت انجام شد :" + payevent.data.ref_id;
+                        TempData[Success] = "  پرداخت شما با موفقیت انجام شد اقلام دو تا چهار روز کاری حویل می گردد . :" + payevent.data.ref_id;
                         // نمایش خطا
                         return RedirectToAction("Index", "Shop", "UserPanel");
                     

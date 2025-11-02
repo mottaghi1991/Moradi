@@ -53,7 +53,7 @@ namespace Data
         public virtual DbSet<ShippingAddres> ShippingAddres { get; set; }
         public virtual DbSet<PostPrice> PostPrices { get; set; }
         public virtual DbSet<ProductBatch> ProductBatches { get; set; }
-
+        public virtual DbSet<ProductCategory> ProductCategories{ get; set; }
 
         #endregion
         public virtual DbSet<Setting> Settings { get; set; }

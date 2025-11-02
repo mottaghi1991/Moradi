@@ -1,4 +1,5 @@
 ﻿
+using Core.Dto.Shop.Batch;
 using Core.Dto.Shop.ProductDto;
 using Core.Dto.ViewModel.Store.ProductDto;
 using Domain.Shop;
@@ -31,7 +32,7 @@ namespace Core.Interface.Store
         Task<bool> UpdateBatchId(ProductBatch productBatch);
         Task<bool> InsertBatchId(ProductBatch productBatch);
         Task<ProductBatch> GetActiveBatchForProduct(int productId);
-        Task<IEnumerable<ProductBatch>> GetAllBatchForProduct(int productId);
+        Task<IEnumerable<BtachDetailListVm>> GetAllBatchForProduct(int productId);
         Task<bool> deActiveBatch(int BatchId);
 
     }

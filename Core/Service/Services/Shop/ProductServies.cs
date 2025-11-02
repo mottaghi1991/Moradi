@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Core.Dto.Shop.ProductDto;
 using Core.Service.Interface.Shop;
+using Core.Dto.Shop.Batch;
 
 namespace Core.Services.Store
 {
@@ -51,11 +52,11 @@ namespace Core.Services.Store
         public async Task<IEnumerable<Product>> getByFilter(int? categoryId, string sort)
         {
 
-            IQueryable<Product> obj = _master.GetAllAsQueryable()
+            IQueryable<Product> obj = _master.GetAllAsQueryable(a=>a.IsDeleted==false).Include(a=>a.ProductCategories).ThenInclude(a=>a.Category)
                 .Include(p => p.ProductBatches);
 
             if (categoryId.HasValue)
-                obj = obj.Where(p => p.CategoryId == categoryId.Value);
+                obj = obj.Where(p => p.ProductCategories.Any(pc => pc.CategoryId == categoryId.Value));            //    obj = obj.Where(p => p == categoryId.Value);
 
             if (!string.IsNullOrEmpty(sort))
             {
@@ -85,7 +86,7 @@ namespace Core.Services.Store
         {
             var product = await _master.GetAllAsQueryable()
                 .Include(a => a.ProductBatches)
-                .Include(a => a.Category)
+                //.Include(a => a.Category)
                 .FirstOrDefaultAsync(a => a.Id == ProductId);
 
         
@@ -107,7 +108,7 @@ namespace Core.Services.Store
         {
             var product = await _master.GetAllAsQueryable()
                 .Include(a => a.ProductBatches)
-                .Include(a => a.Category)
+                //.Include(a => a.Category)
                 .FirstOrDefaultAsync(a => a.Id == ProductId);
 
             var batch = product?.ProductBatches
@@ -117,7 +118,17 @@ namespace Core.Services.Store
                 .FirstOrDefault();
 
             if (batch == null)
-                return new ShowProductDetailVm();
+                return new ShowProductDetailVm()
+                {
+                    Id = ProductId,
+                    ProductName = product?.ProductName ?? "",
+                    //CategoryName = product?.Category?.CategoryName,
+                    Attrib = product?.Attrib,
+                    Price = 0,
+                    Stock = 0,
+                    ImageUrl = product.ImageUrl,
+                    productImages = await GetAllImageOfProductById(ProductId)
+                };
               
             // 🔹 محاسبه تعداد فروخته‌شده از همان Batch
             var soldCount = await _orderItem.GetSumOrderItembyBatchId(batch.Id);
@@ -130,10 +141,12 @@ namespace Core.Services.Store
             {
                 Id = ProductId,
                 ProductName = product?.ProductName ?? "",
-                CategoryName = product?.Category?.CategoryName,
+                //CategoryName = product?.Category?.CategoryName,
                 Attrib = product?.Attrib,
                 Price = batch.Price ,
-                Stock = realStock
+                Stock = realStock,
+                ImageUrl=product.ImageUrl,
+                productImages=await GetAllImageOfProductById(ProductId)
             };
 
             return vm;
@@ -189,12 +202,34 @@ return  _masterBach.GetAllAsQueryable(b => b.ProductID == productId && b.IsActiv
     .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<ProductBatch>> GetAllBatchForProduct(int productId)
+        public async Task<IEnumerable<BtachDetailListVm>> GetAllBatchForProduct(int productId)
         {
-            return _masterBach.GetAllAsQueryable(a => a.ProductID == productId)
+            // مرحله ۱: دریافت لیست Batchها برای محصول مورد نظر
+            var batches = await _masterBach.GetAllAsQueryable(a => a.ProductID == productId)
                 .Include(a => a.Product)
-                .OrderBy(a=>a.CreateDate)
-                .ToList();
+                .OrderBy(a => a.CreateDate)
+                .ToListAsync();
+
+            // مرحله ۲: محاسبه‌ی usage برای هر batch
+            var result = new List<BtachDetailListVm>();
+            foreach (var batch in batches)
+            {
+                var usage = await GetBatchUsageAsync(batch.Id);
+                result.Add(new BtachDetailListVm
+                {
+                    ProductID = batch.ProductID,
+                    CreateDate = batch.CreateDate,
+                    IsActive = batch.IsActive,
+                    OffPricePercent = batch.OffPricePercent,
+                    Price = batch.Price,
+                    Stock = batch.Stock,
+                    Product = batch.Product,
+                    Sold = usage?.SoldCount ?? 0,
+                    Remain = usage?.RemainingCount ?? batch.Stock
+                });
+            }
+
+            return result;
         }
 
         public async Task<int> GetStockAsync(int productId)

@@ -112,7 +112,7 @@ namespace IOC
             Services.AddScoped<IMaster<Order>, MasterServices<Order>>();
             Services.AddScoped<IMaster<OrderItem>, MasterServices<OrderItem>>();
             Services.AddScoped<IMaster<ProductBatch>, MasterServices<ProductBatch>>();
-
+            Services.AddScoped<IMaster<ProductCategory>, MasterServices<ProductCategory>>();
 
 
 

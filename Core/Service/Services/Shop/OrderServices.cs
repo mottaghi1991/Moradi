@@ -1,4 +1,7 @@
-﻿using Core.Interface.Store;
+﻿using Core.Dto.ViewModel.Dr.DietVM;
+using Core.Dto.ViewModel.main;
+using Core.Interface.Sms;
+using Core.Interface.Store;
 using Core.Service.Interface.Shop;
 using Data;
 using Data.MasterInterface;
@@ -122,11 +125,52 @@ namespace Core.Service.Services.Shop
                 .ThenInclude(i => i.Product).OrderByDescending(a=>a.PaymentDate)
                              .ToListAsync();
         }
+        public async Task<Paging<Order>> GetPagedOrdersAsync(int? userId, string paymentStatus, string fullName, string mobile, int pageNumber, int pageSize)
+        {
+            var query = _master.GetAllAsQueryable()
+                .Include(a => a.User)
+                .Include(a => a.ShippingAddress)
+                    .ThenInclude(a => a.province)
+                .Include(a => a.OrderItems)
+                    .ThenInclude(i => i.Product)
+                .OrderByDescending(a => a.PaymentDate)
+                .AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(paymentStatus) && int.TryParse(paymentStatus, out var statusValue))
+            {
+                var status = (OrderStatus)statusValue;
+                query = query.Where(a => a.Status == status);
+            }
+
+            // 🔸 فیلتر بر اساس نام کاربر (Case-insensitive)
+            if (!string.IsNullOrWhiteSpace(fullName))
+                query = query.Where(a => a.User.FullName.Contains(fullName));
+            if (!string.IsNullOrWhiteSpace(mobile))
+                query = query.Where(a => a.User.UserName.Contains(mobile));
+            // 🔸 پیجینگ
+            var totalCount = await query.CountAsync();
+            var data = await query.Skip((pageNumber - 1) * pageSize)
+                                   .Take(pageSize)
+                                   .ToListAsync();
+            return new Paging<Order>
+            {
+                bjects = data,
+                TotalCount = totalCount,
+                pageNumber = pageNumber,
+                pageSize = pageSize,
+                fullName = fullName,
+                mobile = mobile,
+                paymentStatus = paymentStatus,
+                userId = userId
+
+            };
+          
+        }
 
         public async Task<IEnumerable<Order>> GetAllOrderByUserId(int userId)
         {
             return await _master.GetAllAsQueryable().Include(a=>a.User).Include(a => a.OrderItems).ThenInclude(i => i.Product)
-                   .Where(c => c.UserId == userId).ToListAsync();
+                   .Where(c => c.UserId == userId).OrderByDescending(a=>a.PaymentDate).ToListAsync();
         }
 
         public async Task<Order> GetOrderByAutority(string Autority)

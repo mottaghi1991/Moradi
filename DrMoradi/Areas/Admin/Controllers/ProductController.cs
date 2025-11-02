@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Core.Dto.Shop.Batch;
+using Core.Dto.Shop.ProductDto;
+using Core.Dto.ViewModel.Admin.Role;
 using Core.Dto.ViewModel.Store.ProductDto;
 using Core.Dto.ViewModel.Store.ProductImageDto;
 using Core.Extention;
 using Core.Interface.Store;
 using Core.Service.Interface.Shop;
 using Domain.Shop;
+using Domain.User.Permission;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
@@ -109,7 +112,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewBag.subcategory = new SelectList(await _category. GetAllCategory(), "Id", "CategoryName", product.CategoryId);
+            ViewBag.subcategory = new SelectList(await _category. GetAllCategory(), "Id", "CategoryName");
 
             return View(_mapper.Map<ProductEditVm>(product));
         }
@@ -129,7 +132,7 @@ namespace DrMoradi.Areas.Admin.Controllers
                 var ext = Path.GetExtension(editVm.ImageFile.FileName).ToLowerInvariant();
                 if (!allowedExtensions.Contains(ext))
                 {
-                    ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName", oldproduct.CategoryId);
+                    ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName");
                     ModelState.AddModelError("ImageFile", "فرمت فایل تصویر مجاز نیست.");
                     return View(editVm);
                 }
@@ -140,7 +143,7 @@ namespace DrMoradi.Areas.Admin.Controllers
                 }
                 catch
                 {
-                    ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName", oldproduct.CategoryId);
+                    ViewBag.subcategory = new SelectList(await _category.GetAllCategory(), "Id", "CategoryName");
                     ModelState.AddModelError("ImageFile", "حجم فایل نمیتواند بیشتر از 1M باشد");
                     return View(editVm);
                 }
@@ -356,6 +359,63 @@ namespace DrMoradi.Areas.Admin.Controllers
                 return View(batch);
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> ProductCategory(int ProductId)
+        {
 
+            var Product = await _Product.GetProductById(ProductId);
+            if (Product == null)
+            {
+                return BadRequest();
+            }
+            ViewBag.Category = await _category.GetAllByActive(true);
+            var obj = new EditProductCategoryVm()
+            {
+                ProductId = ProductId,
+                ProductName = Product.ProductName,
+                SelectCategory = await _category.GetCateoryOfProduct(ProductId)
+            };
+            return View(obj);
+
+
+     
+       
+        }
+        [HttpPost]
+        public async Task<IActionResult> ProductCategory(List<int> CategoryList, int ProductId)
+        {
+            var deletedata = await _category.GetCateoryOfProduct(ProductId);
+            if (deletedata.Any())
+            {
+                if (await _category.BulkDeletePC(deletedata.ToList()) != true)
+                {
+                    TempData["Error"] = "خطایی رخ داده است";
+                    return RedirectToAction("ProductCategory", new { ProductId = ProductId });
+                }
+
+            }
+            List<ProductCategory> list = new List<ProductCategory>();
+            foreach (int i in CategoryList)
+            {
+                list.Add(new ProductCategory()
+                {
+                    ProductId = ProductId,
+                    CategoryId = i
+                });
+            }
+         
+
+            var obj = await _category.BulkInsertPC(list);
+            if (obj)
+            {
+                TempData["Success"] = "عملیات با موفقیت انجام گردید";
+                return RedirectToAction("Index", "Product");
+            }
+            else
+            {
+                TempData["Error"] = "خطایی رخ داده است";
+                return RedirectToAction("ProductCategory", new { ProductId = ProductId });
+            }
+        }
     }
 }

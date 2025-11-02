@@ -61,10 +61,10 @@ namespace Domain
     }
     public enum OrderStatus
     {
-        Pending,      // در انتظار پرداخت
-        Paid,         // پرداخت شده
-        Shipped,      // ارسال شده
-        Delivered,    // تحویل داده شده
+        Pending=0,      // در انتظار پرداخت
+        Paid=1,         // پرداخت شده
+        Shipped=2,      // ارسال شده
+        Delivered=3,    // تحویل داده شده
         Cancelled     // لغو شده
     }
     public enum DeliveryMethod

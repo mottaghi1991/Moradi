@@ -53,27 +53,47 @@
         <div class="col-lg-6 product-column shadow-strong d-flex flex-column">
             <div id="productCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
+                    <!-- تصویر اصلی (اول) -->
                     <div class="carousel-item active">
-                        <img src="/FileUpload/Product/fe519349_ebf36d5e.jpg" class="d-block w-100" alt="کینوا">
+                        <img src="@Model.ImageUrl" class="d-block w-100" alt="کینوا">
                     </div>
-                    <div class="carousel-item">
-                        <img src="/FileUpload/Product/c402822b_83a04de9.jpg" class="d-block w-100" alt="کینوا 2">
-                    </div>
+
+                    @if (Model.productImages.Any())
+                    {
+                        foreach (var item in Model.productImages)
+                        {
+                            <div class="carousel-item">
+                                <img src="@item.ImageUrl" class="d-block w-100" alt="کینوا">
+                            </div>
+                        }
+                    }
                 </div>
-                <!-- دکمه "عقب" در سمت راست -->
+
+                <!-- دکمه "عقب" -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
 
-                <!-- دکمه "جلو" در سمت چپ -->
+                <!-- دکمه "جلو" -->
                 <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </button>
             </div>
 
+            <!-- تصاویر کوچک (Thumbnails) -->
             <div class="d-flex justify-content-center gap-2 mt-3 thumbnail-images">
-                <img src="/FileUpload/Product/fe519349_ebf36d5e.jpg" class="active" width="80" alt="">
-                <img src="/FileUpload/Product/c402822b_83a04de9.jpg" width="80" alt="">
+                <img src="@Model.ImageUrl" data-bs-slide-to="0" class="active" width="80" alt="">
+                @{
+                    int index = 1;
+                    if (Model.productImages.Any())
+                    {
+                        foreach (var item in Model.productImages)
+                        {
+                            <img src="@item.ImageUrl" data-bs-slide-to="@index" width="80" alt="">
+                            index++;
+                        }
+                    }
+                }
             </div>
         </div>
 
@@ -116,3 +136,25 @@
 
 
 
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const carouselElement = document.querySelector('#productCarousel');
+            const carousel = new bootstrap.Carousel(carouselElement);
+            const thumbnails = document.querySelectorAll('.thumbnail-images img');
+
+            // وقتی روی thumbnail کلیک بشه → اسلاید تغییر کنه
+            thumbnails.forEach((thumb, index) => {
+                thumb.addEventListener('click', () => {
+                    carousel.to(index);
+                });
+            });
+
+            // وقتی اسلاید عوض می‌شه → active thumbnail عوض بشه
+            carouselElement.addEventListener('slide.bs.carousel', function (event) {
+                thumbnails.forEach(t => t.classList.remove('active'));
+                thumbnails[event.to].classList.add('active');
+            });
+        });
+    </script>
+}

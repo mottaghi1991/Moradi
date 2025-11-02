@@ -10,14 +10,13 @@ using System.Threading.Tasks;
 
 namespace Core.Dto.Shop.Batch
 {
-    public class BatchAddVM
+    public class BtachDetailListVm
     {
         public int Id { get; set; }
         [DisplayName("قیمت(ریال)")]
         [Range(0, double.MaxValue, ErrorMessage = "قیمت نمی‌تواند منفی باشد")]
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public decimal Price { get; set; }
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
+
         [DisplayName("موجودی")]
         public int Stock { get; set; }
         [DisplayName("درصد تخفیف")]
@@ -26,9 +25,13 @@ namespace Core.Dto.Shop.Batch
         public bool IsActive { get; set; }
 
         public int ProductID { get; set; }
-     
+        [ForeignKey("ProductID")]
+        public Product Product { get; set; }
         [DisplayName("تاریخ ورود")]
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
-        public string CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
+        [DisplayName("باقی مانده")]
+        public int Remain { get; set; }
+        [DisplayName("فروخته شده")]
+        public int Sold { get; set; }
     }
 }

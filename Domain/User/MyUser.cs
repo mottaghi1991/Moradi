@@ -32,6 +32,7 @@ namespace Domain.User
         public DateTime RegisterDate { get; set; }
         public string UserAvatar { get; set; }
         public bool IsAdmin { get; set; }
+        [Display(Name = "کاربر")]
         public string FullName { get; set; }
         public string? Job{ get; set; }
         public Gender gender { get; set; }

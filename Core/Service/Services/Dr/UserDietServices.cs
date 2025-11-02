@@ -106,15 +106,10 @@ namespace Core.Service.Services.Dr
 
         public async Task<IEnumerable<UserDiet>> GetAllParentAndChild(int userDietId)
         {
-          
-            var p =await GetUserDietById(userDietId);
-       
-            var all = p?.ParentId ?? 0;
-        var  obj = await _master.GetAllEfAsync(a =>
-       a.Id == userDietId ||
-       a.ParentId == userDietId ||
-       (all != 0 && (a.Id == all || a.ParentId == all)));
-            return obj;
+
+            DynamicParameters p = new DynamicParameters();
+            p.Add("UserDietId", userDietId, DbType.Int32);
+            return await  _master.GetAllAsync("GetAllParentAndChild", p);
         }
 
         public async Task<IEnumerable<UserDiet>> GetAllUserDiets()

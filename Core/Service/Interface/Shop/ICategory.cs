@@ -18,5 +18,8 @@ namespace Core.Service.Interface.Shop
         public Task<Category> Update(Category Category);
         public Task<bool> Delete(int QuestionId);
         public Task<Category> GetCategoryById(int CategoryId);
+        public Task<IEnumerable<ProductCategory>> GetCateoryOfProduct(int ProductId);
+        Task<bool> BulkDeletePC(List<ProductCategory> productCategories);
+        Task<bool> BulkInsertPC(List<ProductCategory> productCategories);
     }
 }

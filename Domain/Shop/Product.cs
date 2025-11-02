@@ -28,14 +28,11 @@ namespace Domain.Shop
         [Column(TypeName = "decimal(18,2)")]
         public decimal Weight { get; set; }
         [DisplayName("دسته بندی")]
-        public int CategoryId { get; set; }
 
-        [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
         public virtual ICollection<ProductImage> ProductImages{ get; set; }
         public virtual ICollection<CartItem> CartItems{ get; set; }
         public virtual ICollection<ProductBatch> ProductBatches{ get; set; }
-
+        public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
 
     }
 }

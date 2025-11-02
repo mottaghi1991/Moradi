@@ -1,0 +1,35 @@
+﻿@using Core.Dto.ViewModel.Admin.Role
+@using Domain.User.Permission
+@model Core.Dto.Shop.ProductDto.EditProductCategoryVm
+@{
+    IEnumerable<Domain.Shop.Category> Permissions = ViewBag.Category as IEnumerable<Domain.Shop.Category>;
+}
+<div class="card card-primary">
+    <div class="card-header">
+        @Model.ProductName
+    </div>
+    <div class="card-body">
+        <form asp-action="ProductCategory" method="post">
+            <input type="hidden" asp-for="ProductId" />
+            <div class="row m-3">
+                <ul>
+                @foreach (var item in Permissions)
+            
+                {
+                    <li style="font-weight: 500">
+                            <input type="checkbox" name="CategoryList" value="@item.Id" @((Model.SelectCategory.Any(r => r.CategoryId == item.Id) ? "checked" : "")) />
+                        @item.CategoryName
+                    </li>
+                    <br />
+
+                }
+                </ul>
+
+
+
+            </div>
+            <input type="submit" class="btn btn-success" value="ثبت">
+        </form>
+
+    </div>
+</div>
