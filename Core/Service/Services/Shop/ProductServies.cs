@@ -225,7 +225,10 @@ return  _masterBach.GetAllAsQueryable(b => b.ProductID == productId && b.IsActiv
                     Stock = batch.Stock,
                     Product = batch.Product,
                     Sold = usage?.SoldCount ?? 0,
-                    Remain = usage?.RemainingCount ?? batch.Stock
+                    Remain = usage?.RemainingCount ?? batch.Stock,
+                    Id=batch.Id
+                   
+
                 });
             }
 
