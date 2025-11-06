@@ -15,7 +15,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [MaxLength(100, ErrorMessage = "طول نام محصول بیشتر از 100 کاراکتر است")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public string ProductName { get; set; }
-        [DisplayName("وزن محصول")]
+        [DisplayName("وزن محصول گرم")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public decimal Weight { get; set; }
         [DisplayName("ویژگی ها")]
@@ -30,5 +30,8 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         [DisplayName("دسته بندی")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public int CategoryId { get; set; }
+        [DisplayName("ویدئو")]
+        public string? Video { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

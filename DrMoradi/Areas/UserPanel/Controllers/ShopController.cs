@@ -190,7 +190,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
             };
 
-            return View(obj); // ویوی فاکتور که با بوت‌استرپ 5 ساختیم
+            return View(obj); 
         }
         [HttpGet]
         public async Task<IActionResult> AddtoOrder(int AddressId,int sendprice)
@@ -298,7 +298,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 
                         //await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
                         //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
-                        TempData[Success] = "  پرداخت شما با موفقیت انجام شد اقلام دو تا چهار روز کاری حویل می گردد . :" + payevent.data.ref_id;
+                        TempData[Success] = "  پرداخت شما با موفقیت انجام شد اقلام سه تا هفت روز کاری تحویل می گردد . :" + payevent.data.ref_id;
                         // نمایش خطا
                         return RedirectToAction("Index", "Shop", "UserPanel");
                     

@@ -105,6 +105,7 @@
                             <textarea name="message" class="form-control" rows="6" required oninvalid="this.setCustomValidity('لطفاً پیام خود را وارد کنید')"
                                   oninput="this.setCustomValidity('')"></textarea>
                                   <input type="hidden" name="Id" value="@Model.diet.Id" />
+                        <input type="hidden" name="type" value="@((int)EntityType.Diet)" />
                             <input type="submit" class="btn btn-outline-success mt-3" value="ثبت" />
 
                         </form>

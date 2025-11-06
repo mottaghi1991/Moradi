@@ -106,40 +106,43 @@
                         if (res.success) {
                                 console.log("📦 پاسخ سرور:", res);
                             $("#newAddressMessages").html("<p class='text-success'>✅ آدرس با موفقیت ثبت شد.</p>");
-                            $("#newAddressFormAjax")[0].reset();
-                            $("#newAddressFormWrapper").slideUp();
+                              setTimeout(() => {
+            location.reload(); // 🔁 رفرش کامل صفحه بعد از 1.5 ثانیه
+        }, 1500);
+                        //     $("#newAddressFormAjax")[0].reset();
+                        //     $("#newAddressFormWrapper").slideUp();
 
-                            // ساخت HTML برای دسکتاپ و موبایل
-                            let newRowDesktop = `
-                                <tr>
-                                    <td>${res.newAddress.addressLine}</td>
-                                    <td>${res.newAddress.postalCode}</td>
-                                    <td><a href="/UserPanel/Shop/FinalFaktor?AddressId=${res.newAddress.id}" class="btn btn-success btn-sm">انتخاب</a></td>
-                                </tr>
-                            `;
-                            let newCardMobile = `
-                                <div class="card mb-3 shadow-sm">
-                                    <div class="card-body">
-                                        <p class="mb-1">آدرس: ${res.newAddress.addressLine}</p>
-                                        <p class="mb-1">کدپستی: ${res.newAddress.postalCode}</p>
-                                        <button class="btn btn-success btn-sm mt-2 w-100" onclick="selectAddress('${res.newAddress.id}')">انتخاب این آدرس</button>
-                                    </div>
-                                </div>
-                            `;
+                        //     // ساخت HTML برای دسکتاپ و موبایل
+                        //     let newRowDesktop = `
+                        //         <tr>
+                        //             <td>${res.newAddress.addressLine}</td>
+                        //             <td>${res.newAddress.postalCode}</td>
+                        //             <td><a href="/UserPanel/Shop/FinalFaktor?AddressId=${res.newAddress.id}" class="btn btn-success btn-sm">انتخاب</a></td>
+                        //         </tr>
+                        //     `;
+                        //     let newCardMobile = `
+                        //         <div class="card mb-3 shadow-sm">
+                        //             <div class="card-body">
+                        //                 <p class="mb-1">آدرس: ${res.newAddress.addressLine}</p>
+                        //                 <p class="mb-1">کدپستی: ${res.newAddress.postalCode}</p>
+                        //                 <button class="btn btn-success btn-sm mt-2 w-100" onclick="selectAddress('${res.newAddress.id}')">انتخاب این آدرس</button>
+                        //             </div>
+                        //         </div>
+                        //     `;
 
-                            // اضافه کردن به هر دو لیست
-                            $("#addressesListDesktop").append(newRowDesktop);
-                            $("#addressesListMobile").append(newCardMobile);
+                        //     // اضافه کردن به هر دو لیست
+                        //     $("#addressesListDesktop").append(newRowDesktop);
+                        //     $("#addressesListMobile").append(newCardMobile);
 
-                        } else {
-                            let errorHtml = "<ul class='text-danger'>";
-                            for (let field in res.errors) {
-                                res.errors[field].forEach(msg => {
-                                    errorHtml += `<li>${msg}</li>`;
-                                });
-                            }
-                            errorHtml += "</ul>";
-                            $("#newAddressMessages").html(errorHtml);
+                        // } else {
+                        //     let errorHtml = "<ul class='text-danger'>";
+                        //     for (let field in res.errors) {
+                        //         res.errors[field].forEach(msg => {
+                        //             errorHtml += `<li>${msg}</li>`;
+                        //         });
+                        //     }
+                        //     errorHtml += "</ul>";
+                        //     $("#newAddressMessages").html(errorHtml);
                         }
                     },
                     error: function () {

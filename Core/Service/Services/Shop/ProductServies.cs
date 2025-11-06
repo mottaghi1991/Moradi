@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Core.Dto.Shop.ProductDto;
 using Core.Service.Interface.Shop;
 using Core.Dto.Shop.Batch;
+using Data.Migrations;
 
 namespace Core.Services.Store
 {
@@ -77,9 +78,14 @@ namespace Core.Services.Store
             return await obj.ToListAsync();
         }
 
-        public Task<IEnumerable<Product>> GetProductBybcategory(int CategoryId)
+        public async Task<IEnumerable<Product>> GetProductBybcategory(int CategoryId)
         {
-            throw new NotImplementedException();
+            IQueryable<Product> obj = _master.GetAllAsQueryable(a => a.IsDeleted == false).Include(a => a.ProductCategories).ThenInclude(a => a.Category)
+              .Include(p => p.ProductBatches);
+
+        
+                obj = obj.Where(p => p.ProductCategories.Any(pc => pc.CategoryId == CategoryId));
+            return obj;
         }
 
         public async Task<Product> GetProductById(int ProductId)
@@ -146,7 +152,8 @@ namespace Core.Services.Store
                 Price = batch.Price ,
                 Stock = realStock,
                 ImageUrl=product.ImageUrl,
-                productImages=await GetAllImageOfProductById(ProductId)
+                productImages=await GetAllImageOfProductById(ProductId),
+                Video=product.Video
             };
 
             return vm;
@@ -225,7 +232,8 @@ return  _masterBach.GetAllAsQueryable(b => b.ProductID == productId && b.IsActiv
                     Stock = batch.Stock,
                     Product = batch.Product,
                     Sold = usage?.SoldCount ?? 0,
-                    Remain = usage?.RemainingCount ?? batch.Stock
+                    Remain = usage?.RemainingCount ?? batch.Stock,
+                    Id=batch.Id
                 });
             }
 

@@ -30,6 +30,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         public string Attrib { get; set; }
         [DisplayName("مشخصات")]
         public string Proper { get; set; }
+        public string? Video { get; set; }
         public IEnumerable<ProductImage> productImages { get; set; }
         public IEnumerable<ShowProductListToUserVM> SimilarProduct{ get; set; }
     }

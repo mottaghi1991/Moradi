@@ -46,7 +46,7 @@
             <div class="col-md-3">
                 <div class="card mt-4">
                     <div style="border:none">
-                        <img src="@item.ImageUrl" class="img-fluid" style="border-radius:50px;width:250px;max-width:100%;height:auto" alt="@item.ProductName">
+                      <a class="unstyled-link" asp-action="ProductDetail" asp-route-ProductId="@item.Id">  <img src="@item.ImageUrl" class="img-fluid" style="border-radius:50px;width:250px;max-width:100%;height:auto" alt="@item.ProductName"></a>
                     </div>
                     <!-- بخش متن و دکمه -->
                     <div class="card-body">

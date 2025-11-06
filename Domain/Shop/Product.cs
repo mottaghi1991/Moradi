@@ -23,12 +23,12 @@ namespace Domain.Shop
         [DisplayName("تصویر محصول")]
         public string ImageUrl { get; set; }
 
-        [DisplayName("وزن محصول")]
+        [DisplayName("وزن محصول گرم")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Weight { get; set; }
-        [DisplayName("دسته بندی")]
-
+        [DisplayName("ویدئو")]
+        public string? Video{ get; set; }
         public virtual ICollection<ProductImage> ProductImages{ get; set; }
         public virtual ICollection<CartItem> CartItems{ get; set; }
         public virtual ICollection<ProductBatch> ProductBatches{ get; set; }

@@ -19,7 +19,6 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="Id" />
                 <div class="form-row">
-                    <!-- فیلدهای کوچکتر در ردیف اول -->
                     <div class="col-md-4 col-12 form-group">
                         <label asp-for="ProductName" class="control-label"></label>
                         <input asp-for="ProductName" class="form-control" />
@@ -27,7 +26,6 @@
                     </div>
 
                  
-                    <!-- فیلدهای تصویر و فعال بودن -->
                     <div class="col-md-4 col-12 form-group">
                         <label asp-for="ImageUrl" class="control-label"></label>
                         <input type="file" asp-for="ImageFile" class="form-control" />
@@ -54,12 +52,15 @@
                         <input asp-for="IsDeleted" class="form-control" />
                         <span asp-validation-for="IsDeleted" class="text-danger"></span>
                     </div>
-                  
+                    <div class="col-md-3 col-12 form-group">
+                        <label asp-for="Video" class="control-label"></label>
+                        <input asp-for="Video" class="form-control" />
+                        <span asp-validation-for="Video" class="text-danger"></span>
+                    </div>
                  
                 </div>
 
                 <div class="form-row">
-                    <!-- textarea ها که فضای بیشتری نیاز دارند -->
                     <div class="col-md-12 col-12 form-group">
                         <label asp-for="Attrib" class="control-label"></label>
                         <textarea asp-for="Attrib" class="form-control" rows="7"></textarea>

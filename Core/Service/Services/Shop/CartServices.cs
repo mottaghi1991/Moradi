@@ -88,7 +88,7 @@ namespace Core.Service.Services.Shop
         public async Task<int> CalculatePrice(int UserId, int proviceId)
         {
             var cart =await GetCartByUserId(UserId);
-            var itemWeights = cart.Items.Sum(a => a.Product.Weight)*1000;
+            var itemWeights = cart.Items.Sum(a => a.Product.Weight)/**1000*/;
           return await _province.PriceValue(proviceId, itemWeights);
         }
 
