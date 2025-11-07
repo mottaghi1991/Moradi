@@ -222,42 +222,49 @@ namespace DrMoradi.Areas.Admin.Controllers
 
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Delete(string fileName)
         {
-            _logger.LogInformation(EventIdList.DeleteId, "حذف فایل {FileName}", fileName);
+            _logger.LogInformation(EventIdList.DeleteId, "درخواست حذف فایل دریافت شد FileName={FileName}", fileName);
+
             try
             {
-                if (await _fileList.deleteFile("/FileUpload/Attachment/" + fileName))
+                bool dbDeleted = await _fileList.deleteFile("/FileUpload/Attachment/" + fileName);
+                if (!dbDeleted)
                 {
-                    if (FileTools.DeleteFile("/FileUpload/Attachment/" + fileName))
+                    var vm = new FileUploadResult
                     {
-                        _logger.LogInformation(EventIdList.DeleteId, "فایل {FileName} با موفقیت حذف شد", fileName);
-                        return Json(new { success = true, message = "فایل با موفقیت حذف شد" });
-                    }
-                    else
-                    {
-                        _logger.LogWarning(EventIdList.Error, "حذف فیزیکی فایل {FileName} ناموفق بود", fileName);
-                        return Json(new { success = false, message = "حذف فیزیکی فایل ناموفق بود" });
-                    }
+                        Success = false,
+                        ErrorMessage = "حذف از دیتابیس انجام نشد"
+                    };
+                    ModelState.AddModelError("", vm.ErrorMessage);
+                    return StatusCode(StatusCodes.Status500InternalServerError, vm);
+                }
 
-                }
-                else
+                var fileResult = FileTools.DeleteFile("/FileUpload/Attachment/" + fileName);
+
+                if (!fileResult.Success)
                 {
-                    _logger.LogInformation(EventIdList.Info, "حذف رکورد فایل {FileName} از دیتابیس ناموفق بود", fileName);
-                    return Json(new { success = false, message = "حذف از دیتابیس انجام نشد" });
+                    ModelState.AddModelError("", fileResult.ErrorMessage);
+                    return StatusCode(StatusCodes.Status500InternalServerError, fileResult);
                 }
+
+                return Json(fileResult);
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.LogWarning(EventIdList.Error, "حذف رکورد فایل {FileName} از دیتابیس ناموفق بود", fileName);
-                return Json(new { success = false, message = "خطای غیرمنتظره در حذف فایل" });
+                var vm = new FileUploadResult
+                {
+                    Success = false,
+                    ErrorMessage = "خطای غیرمنتظره در حذف فایل"
+                };
+                _logger.LogError(EventIdList.Error, "(Controller.) خطا در حذف فایل {FileName}. Msg={Message}", fileName, ex.Message);
+                ModelState.AddModelError("", vm.ErrorMessage);
+
+                return StatusCode(StatusCodes.Status500InternalServerError, vm);
             }
-
-
-
         }
+
         [HttpGet]
         public async Task<IActionResult> UserInfo(int UserId)
         {
