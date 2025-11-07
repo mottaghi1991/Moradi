@@ -2,9 +2,11 @@
 using Core.Dto.ViewModel.Dr.DietVm;
 using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Dto.ViewModel.main;
+using Core.Dto.ViewModel.User;
 using Core.Extention;
 using Core.Interface.Sms;
 using Core.Service.Interface.Dr;
+using Core.Service.Interface.Users;
 using Domain;
 using Domain.Dr;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +25,8 @@ namespace DrMoradi.Areas.Admin.Controllers
         private readonly IFileList _fileList;
         private readonly ILogger<DietOrderController> _logger;
         private readonly ISms _sms;
-        public DietOrderController(IUserDiet userDiet, IQuestion question, IUserAnswer userAnswer, ISendDiet sendDiet, IFileList fileList, ILogger<DietOrderController> logger, ISms sms)
+        private readonly IUser _user;
+        public DietOrderController(IUserDiet userDiet, IQuestion question, IUserAnswer userAnswer, ISendDiet sendDiet, IFileList fileList, ILogger<DietOrderController> logger, ISms sms, IUser user)
         {
             _userDiet = userDiet;
             _question = question;
@@ -32,6 +35,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             _fileList = fileList;
             _logger = logger;
             _sms = sms;
+            _user = user;
         }
 
         public async Task<IActionResult> Index(int? userId, string fullName, string mobile, string paymentStatus = "Pay",int pageNumber = 1,int pageSize = 10)
@@ -252,6 +256,23 @@ namespace DrMoradi.Areas.Admin.Controllers
             }
 
 
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> UserInfo(int UserId)
+        {
+           var user=await _user.GetUserByUserId(UserId);
+            if(user==null)
+            {
+                return NotFound();
+            }
+            return View(new FillFromVm()
+            {
+                City=user.City,
+                FullName=user.FullName, 
+                gender=user.gender,
+                Job = user.Job
+            });
 
         }
 

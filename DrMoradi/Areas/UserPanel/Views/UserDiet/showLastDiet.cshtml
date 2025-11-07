@@ -1,0 +1,92 @@
+﻿@using Domain
+@using Domain.Dr
+@model IEnumerable<UserDiet>
+
+@{
+    ViewData["Title"] = "showLastDiet";
+    var send = Model.Where(a => a.ParentId == 0 && a.Status == UserDietstatus.send).FirstOrDefault();
+    var last = Model.Where(a => a.Status == UserDietstatus.FillForm).OrderByDescending(a => a.CreateAt).FirstOrDefault();
+}
+
+<div class="container my-4">
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-4">
+
+            <h5 class="fw-bold text-primary">با سلام و خسته نباشید 🌿</h5>
+            <hr />
+
+            @* --- حالت رژیم ارسال‌شده (send) --- *@
+            @if (send != null)
+            {
+                <div class="alert alert-success d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                    <div>
+                        شما قبلاً این رژیم را دریافت نموده‌اید.
+                        در صورتی که قصد ادامه همان رژیم را دارید از دکمه ذیل استفاده کنید:
+                    </div>
+                    <a class="btn btn-success fw-bold"
+                       asp-action="Index"
+                       asp-route-DietId="@send.DietId"
+                       asp-route-ParentId="@send.Id">
+                        <i class="bi bi-arrow-repeat me-1"></i> رژیم بعدی
+                    </a>
+                </div>
+            }
+
+            @* --- حالت فرم پرشده (FillForm) --- *@
+            @if (last != null)
+            {
+                <div class="alert alert-warning d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                    <div>
+                        شما قبلاً این فرم را پر کرده‌اید و فقط کافیست مرحله پرداخت را انجام دهید:
+                    </div>
+                    <a class="btn btn-danger fw-bold"
+                       asp-action="StartPayment"
+                       asp-controller="UserPanel"
+                       asp-route-UserDietId="@last.Id">
+                        <i class="bi bi-credit-card-fill me-1"></i> پرداخت
+                    </a>
+                </div>
+            }
+
+            @* --- حالت در انتظار پرداخت (Pay) --- *@
+            @if (Model.Any(a => a.Status == UserDietstatus.Pay))
+            {
+                <div class="alert alert-info d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                    <div>
+                        شما یک رژیم در انتظار پرداخت دارید، لطفاً منتظر دریافت پیامک باشید.
+                    </div>
+                    <a class="btn btn-outline-success fw-bold"
+                       asp-action="MyDiet"
+                       asp-controller="UserDiet">
+                        <i class="bi bi-journal-medical me-1"></i> رژیم‌های من
+                    </a>
+                </div>
+            }
+
+            <hr class="my-3" />
+
+            @* --- حالت رژیم برای شخص دیگر --- *@
+            <div class="alert alert-secondary d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                <div>
+                    در صورتی که قصد دارید این رژیم را برای شخصی غیر از خودتان دریافت نمایید، از دکمه ذیل استفاده کنید:
+                </div>
+                <a asp-action="Index"
+                   asp-route-DietId="@Model.First().DietId"
+                   class="btn btn-primary fw-bold">
+                    <i class="bi bi-person-plus-fill me-1"></i> نمایش فرم
+                </a>
+            </div>
+
+            @* --- بخش پایانی: لیست رژیم‌ها --- *@
+            <div class="mt-4 text-center">
+                <label class="fw-bold mb-2 d-block">📋 لیست رژیم‌های شما</label>
+                <a class="btn btn-success btn-sm fw-bold"
+                   asp-action="MyDiet"
+                   asp-controller="UserDiet">
+                    <i class="bi bi-list-check me-1"></i> مشاهده رژیم‌های من
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -146,6 +146,7 @@ namespace Core.Service.Services.Dr
 
             try
             {
+            
                 var userDiet = await InsertUserDiet(new UserDiet
                 {
                     DietId = vm.DietId,
@@ -155,6 +156,7 @@ namespace Core.Service.Services.Dr
                     ParentId=vm.parentId.Value,
                     CreateAt=DateTime.UtcNow
                 });
+
                 foreach (var q in vm.Questions)
                 {
                     if (q.Attachments != null)

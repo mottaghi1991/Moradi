@@ -31,5 +31,7 @@ namespace Core.Dto.ViewModel.Dr.DietVM
         public int Price { get; set; }
         [DisplayName("موبایل")]
         public string Mobile { get; set; }
+        public int UserId { get; set; }
+
     }
 }
