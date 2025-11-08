@@ -7,10 +7,12 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EventId = Domain.EventIdList;
@@ -146,21 +148,18 @@ namespace Data.MasterServices
         {
             try
             {
-                // مقدار Id رو با Reflection می‌گیریم
-                var idProperty = typeof(T).GetProperty("Id");
-                if (idProperty == null)
+                var keyProperty = typeof(T).GetProperties()
+        .FirstOrDefault(p =>
+            p.GetCustomAttribute<KeyAttribute>() != null ||
+            p.Name.Equals("Id", StringComparison.OrdinalIgnoreCase) ||
+            p.Name.Equals("ItUserId", StringComparison.OrdinalIgnoreCase));
+
+                if (keyProperty == null)
                 {
-                    throw new InvalidOperationException($"{typeof(T).Name} must have an 'Id' property.");
-                    //_ctx.Attach(Obj);
-                    //_ctx.Entry(Obj).State = EntityState.Modified;
-                    //await _ctx.SaveChangesAsync();
-
-                    return Obj;
-                    //throw new InvalidOperationException("Entity must have an Id property");
-
+                    throw new InvalidOperationException($"{typeof(T).Name} must have a [Key] or Id property.");
                 }
 
-                var idValue = idProperty.GetValue(Obj);
+                var idValue = keyProperty.GetValue(Obj);
                 if (idValue == null)
                     throw new InvalidOperationException("Id value cannot be null.");
 
