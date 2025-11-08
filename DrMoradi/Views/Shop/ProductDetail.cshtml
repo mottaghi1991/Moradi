@@ -55,17 +55,19 @@
             <div id="productCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     <!-- تصویر اصلی (اول) -->
-                    <div class="carousel-item active">
+               @*      <div class="carousel-item active">
                         <img src="@Model.ImageUrl" class="d-block w-100" alt="کینوا">
-                    </div>
+                    </div> *@
 
                     @if (Model.productImages.Any())
                     {
+                        var first = true;
                         foreach (var item in Model.productImages)
                         {
-                            <div class="carousel-item">
+                            <div class="carousel-item @(first ? "active" : "")">
                                 <img src="@item.ImageUrl" class="d-block w-100" alt="کینوا">
                             </div>
+                            first = false;
                         }
                     }
                 </div>
@@ -83,7 +85,7 @@
 
             <!-- تصاویر کوچک (Thumbnails) -->
             <div class="d-flex justify-content-center gap-2 mt-3 thumbnail-images">
-                <img src="@Model.ImageUrl" data-bs-slide-to="0" class="active" width="80" alt="">
+                @* <img src="@Model.ImageUrl" data-bs-slide-to="0" class="active" width="80" alt=""> *@
                 @{
                     int index = 1;
                     if (Model.productImages.Any())

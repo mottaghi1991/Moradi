@@ -30,9 +30,12 @@ namespace Core.Service.Services.Shop
             return _PCmaster.BulkeInsertAsync(productCategories);
         }
 
-        public async Task<bool> Delete(int QuestionId)
+        public async Task<bool> Delete(int CategoryId)
         {
-            throw new NotImplementedException();
+            var obj = await GetCategoryById(CategoryId);
+            obj.IsDeleted = true;
+            obj.DeleteTime = DateTime.Now;
+            return await _master.UpdateAsync(obj) != null;
         }
 
         public async Task<IEnumerable<Category>> GetAllByActive(bool active)

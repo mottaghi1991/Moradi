@@ -18,11 +18,11 @@
 
                             <div class="card" style="background-color:#F9F9F9;border:none">
                                 <div class="card-header" style="border:none;background-color:#F9F9F9">
-                                    <img src="@item.ImageUrl" class="img-fluid" style="border-radius:50px;width:250px;max-width:100%;height:auto" alt="@item.ProductName">
+                                    <a asp-action="ProductDetail" asp-area="" asp-controller="Shop" asp-route-ProductId="@item.Id">      <img src="@item.ImageUrl" class="img-fluid" style="border-radius:50px;width:250px;max-width:100%;height:auto" alt="@item.ProductName"></a>
                                 </div>
                                 <!-- بخش متن و دکمه -->
                                 <div class="card-body">
-                                    <h5 class="text-center card-title-fixed">@item.ProductName</h5>
+                                    <a asp-action="ProductDetail" asp-area="" asp-controller="Shop" asp-route-ProductId="@item.Id"><h5 class="text-center card-title-fixed">@item.ProductName</h5></a>
                                     <p class="plan-price text-center">
                                  @*        <span>
                                             @(
@@ -32,7 +32,7 @@
                                                 )
                                         </span> تومان *@
                                     </p>
-                                    <a asp-action="DietDetail" asp-area="" asp-controller="Home" asp-route-DietId="@item.Id" class="plan-btn" style="background-color:#506180">ثبت سفارش</a>
+                                    <a asp-action="ProductDetail" asp-area="" asp-controller="Shop" asp-route-ProductId="@item.Id" class="plan-btn" style="background-color:#506180">ثبت سفارش</a>
                                     @* <a asp-action="NotFound" asp-area="" asp-controller="Home" asp-route-DietId="@item.Id" class="plan-btn" style="background-color:#506180">ثبت سفارش</a> *@
                                 </div>
                             </div>

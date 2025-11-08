@@ -181,24 +181,20 @@ namespace Personal.Areas.Admin.Controllers
         }
 
         // GET: RoleController/Delete/5
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(int CategoryId)
         {
 
 
 
-            var obj =await _Category.GetCategoryById(id);
+            var obj =await _Category.GetCategoryById(CategoryId);
             if (obj == null)
             {
                 return NotFound();
             }
 
-            if (_Category.GetCategoryById(id) != null)
-            {
-                TempData["Error"] = "منو دارای مجموعه می باشد لطفا ابتدا آنها را پاک کنید";
-                return RedirectToAction("Index");
-            }
+         
 
-            var result =await _Category.Delete(id);
+            var result =await _Category.Delete(CategoryId);
             if (result)
             {
                 TempData[Success] = SuccessMessage;

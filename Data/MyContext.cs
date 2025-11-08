@@ -80,6 +80,11 @@ namespace Data
                     }
                 }
             }
+
+            modelBuilder.Entity<Category>()
+    .HasQueryFilter(c => !c.IsDeleted);
+
+
             modelBuilder.Entity<Question>().Property(a => a.FieldType).HasConversion<string>();
             modelBuilder.Entity<UserDiet>().Property(a => a.Status).HasConversion<string>();
             modelBuilder.Entity<Comment>().Property(a => a.EntityType).HasConversion<string>();
@@ -114,6 +119,7 @@ namespace Data
                 .WithMany()
                 .HasForeignKey(ci => ci.ProductBatchId)
                 .OnDelete(DeleteBehavior.NoAction);
+
         }
 
     }
