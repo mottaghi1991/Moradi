@@ -150,9 +150,10 @@ namespace Data.MasterServices
                 var idProperty = typeof(T).GetProperty("Id");
                 if (idProperty == null)
                 {
-                    _ctx.Attach(Obj);
-                    _ctx.Entry(Obj).State = EntityState.Modified;
-                    await _ctx.SaveChangesAsync();
+                    throw new InvalidOperationException($"{typeof(T).Name} must have an 'Id' property.");
+                    //_ctx.Attach(Obj);
+                    //_ctx.Entry(Obj).State = EntityState.Modified;
+                    //await _ctx.SaveChangesAsync();
 
                     return Obj;
                     //throw new InvalidOperationException("Entity must have an Id property");
@@ -162,24 +163,41 @@ namespace Data.MasterServices
                 var idValue = idProperty.GetValue(Obj);
                 if (idValue == null)
                     throw new InvalidOperationException("Id value cannot be null.");
-                // بررسی اینکه آیا entity مشابه در حال track شدن هست
-                var tracked = _ctx.ChangeTracker.Entries<T>()
-                    .FirstOrDefault(e =>
-                        e.State != EntityState.Detached &&
-                        e.Property("Id").CurrentValue.Equals(idValue));
 
-                // اگر entity مشابهی track شده، detachش کن
-                if (tracked != null)
+
+                var dbEntity = await _ctx.Set<T>().FindAsync(idValue);
+
+                if (dbEntity == null)
                 {
-                    tracked.State = EntityState.Detached;
+                    _logger.LogWarning(
+                        "(Data Warn) Update requested but entity {EntityName} with id={EntityId} not found.",
+                        typeof(T).Name, idValue);
+                    return null;
                 }
+                // مقادیر جدید را روی entity موجود اعمال می‌کنیم
+                _ctx.Entry(dbEntity).CurrentValues.SetValues(Obj);
 
-                // حالا entity رو attach و update می‌کنیم
-                _ctx.Attach(Obj);
-                _ctx.Entry(Obj).State = EntityState.Modified;
-               await _ctx.SaveChangesAsync();
+                await _ctx.SaveChangesAsync();
 
-                return Obj;
+                return dbEntity;
+               // // بررسی اینکه آیا entity مشابه در حال track شدن هست
+               // var tracked = _ctx.ChangeTracker.Entries<T>()
+               //     .FirstOrDefault(e =>
+               //         e.State != EntityState.Detached &&
+               //         e.Property("Id").CurrentValue.Equals(idValue));
+
+               // // اگر entity مشابهی track شده، detachش کن
+               // if (tracked != null)
+               // {
+               //     tracked.State = EntityState.Detached;
+               // }
+
+               // // حالا entity رو attach و update می‌کنیم
+               // _ctx.Attach(Obj);
+               // _ctx.Entry(Obj).State = EntityState.Modified;
+               //await _ctx.SaveChangesAsync();
+
+               // return Obj;
 
             }
             catch (Exception e)

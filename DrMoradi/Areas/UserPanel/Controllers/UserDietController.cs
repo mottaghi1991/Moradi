@@ -44,6 +44,29 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             var obj = await _userDiet.GetAllDietsByUserId(User.GetUserId());
             return View(obj);
         }
+     public async Task<IActionResult> showLastDiet(int DietId, int ParentId = 0)
+        {
+            if (DietId <= 0)
+            {
+                _logger.LogWarning("شناسه رژیم نامعتبر: {DietId}", DietId);
+
+                return BadRequest("شناسه رژیم نامعتبر است.");
+            }
+            var diet = await _diet.GetDietById(DietId);
+            if (diet == null)
+            {
+                _logger.LogWarning("رژیمی با شناسه {DietId} یافت نشد", DietId);
+                return NotFound();
+            }
+
+            var HasDiet = await _userDiet.UserHasDiet(User.GetUserId(), DietId);
+            if (HasDiet)
+            {
+                var obj = await _userDiet.GetAllDietsByUserIdAndDietId(User.GetUserId(),DietId);
+                return View(obj);
+            }
+            return RedirectToAction("Index",new { DietId = DietId , ParentId = ParentId });
+        }
         public async Task<IActionResult> Index(int DietId, int ParentId = 0)
         {
             _logger.LogInformation(EventIdList.Read,
@@ -106,6 +129,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             };
             if (HasDiet && ParentId == 0)
             {
+                //return RedirectToAction("showLastDiet", new { DietId = DietId });
                 _logger.LogInformation("کاربر {UserId} قبلاً این رژیم را داشته است.", User.GetUserId());
                 TempData["Double"] =
                     "شما قبلا این رژیم را تهیه نموده‌اید. در صورت درخواست تکرار، از پنل خود قسمت " +

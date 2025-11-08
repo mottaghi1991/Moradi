@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Core.Dto.ViewModel.main;
+using Domain;
 using Microsoft.AspNetCore.Http;
 
 
@@ -49,57 +50,90 @@ namespace Core.Extention
     
         public static FileUploadResult UploadFile(IFormFile FileAttach, string FileName,string FolderName)
         {
+            var result = new FileUploadResult();
+
             try
             {
-                
-                var p = Directory.GetCurrentDirectory() + "/wwwroot/FileUpload/" + FolderName;
-                if (!Directory.Exists(p))
+                // استفاده از مسیر ایمن‌تر در ویندوز
+                var basePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "FileUpload", FolderName);
+                if (!Directory.Exists(basePath))
                 {
-                    Directory.CreateDirectory(p);
+                    Directory.CreateDirectory(basePath);
                 }
 
-               
-                string path  =p+"/"+FileName;
-                using (var stream=new  FileStream(path,FileMode.Create))
+                var fullPath = Path.Combine(basePath, FileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     FileAttach.CopyTo(stream);
                 }
-                return new FileUploadResult()
-                {
-                    Success = true,
-                    FilePath = "/FileUpload/" + FolderName + "/" + FileName,
-                };
-             
+
+                result.Success = true;
+                result.FilePath = $"/FileUpload/{FolderName}/{FileName}";
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                // دسترسی نوشتن وجود ندارد
+                result.Success = false;
+                result.ErrorMessage = "عدم دسترسی برای ذخیره‌سازی فایل در مسیر سرور.";
+                result.ErrorMessage = ex.Message;
+            }
+            catch (IOException ex)
+            {
+                // خطای فیزیکی IO
+                result.Success = false;
+                result.ErrorMessage = "خطا در عملیات ورودی/خروجی هنگام ذخیره فایل.";
+                result.ErrorMessage = ex.Message;
             }
             catch (Exception ex)
             {
-                return new FileUploadResult()
-                {
-                    Success = false,
-                    ErrorMessage = ex.Message,
-                };
+                // سایر خطاهای کلی
+                result.Success = false;
+                result.ErrorMessage = "خطای غیرمنتظره در بارگذاری فایل رخ داد.";
+                result.ErrorMessage = ex.Message;
             }
-          
+
+            return result;
+
         }
-        public static bool DeleteFile( string Path)
+        public static FileUploadResult DeleteFile(string Path)
         {
+            var result = new FileUploadResult();
+
             try
             {
-                var p = Directory.GetCurrentDirectory() + "/wwwroot/"+Path;
+                var p = Directory.GetCurrentDirectory() + "/wwwroot/" + Path;
                 if (File.Exists(p))
                 {
                     File.Delete(p);
+                    result.Success = true;
+                    result.ErrorMessage = "فایل با موفقیت حذف شد";
                 }
-
-              
-                return true;
+                else
+                {
+                    result.Success = false;
+                    result.ErrorMessage = "فایل یافت نشد";
+                }
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                result.Success = false;
+                result.ErrorMessage = "عدم دسترسی به فایل";
+            }
+            catch (IOException ex)
+            {
+                result.Success = false;
+                result.ErrorMessage = "خطای فایل در زمان حذف";
             }
             catch (Exception ex)
             {
-                return false;
+                result.Success = false;
+                result.ErrorMessage = "خطای غیرمنتظره در حذف فایل";
             }
 
+            return result;
         }
+
         public static void ChechSize(this IFormFile file,int maxsizeMb)
         {
             if(file==null)

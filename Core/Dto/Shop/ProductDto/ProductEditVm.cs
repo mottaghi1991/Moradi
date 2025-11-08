@@ -23,7 +23,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
 
         [DisplayName("تصویر محصول")]
         public string ImageUrl { get; set; }
-        [DisplayName("وزن محصول")]
+        [DisplayName("وزن محصول گرم")]
         [Required(ErrorMessage = "وارد کردن {0} الزامی است")]
         public decimal Weight { get; set; }
         public IFormFile ImageFile { get; set; }
@@ -33,5 +33,7 @@ namespace Core.Dto.ViewModel.Store.ProductDto
         public int CategoryId { get; set; }
         [DisplayName("وضعیت")]
         public bool IsDeleted { get; set; }
+        [DisplayName("ویدئو")]
+        public string? Video { get; set; }
     }
 }

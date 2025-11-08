@@ -217,7 +217,7 @@ namespace DrMoradi.Controllers
             return ViewComponent("CommentComponent", new { model = comment });
         }
         [HttpPost]
-        public async Task<IActionResult> SubmitComment(string message, int Id)
+        public async Task<IActionResult> SubmitComment(string message, int Id,EntityType type)
         {
             if (string.IsNullOrWhiteSpace(message))
             {
@@ -229,7 +229,7 @@ namespace DrMoradi.Controllers
                 var result = await _comment.Insert(new Comment()
                 {
                     CreateDate = DateTime.Now,
-                    EntityType = EntityType.Diet,
+                    EntityType = type,
                     EntityId = Id,
                     IsApproved = false,
                     UserId = User.GetUserId(),

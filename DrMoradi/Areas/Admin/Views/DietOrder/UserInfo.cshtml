@@ -1,0 +1,62 @@
+﻿@using Core.Dto.ViewModel.User
+@using Domain
+@model FillFromVm
+@{
+    ViewData["Title"] = "FillForm";
+}
+
+
+
+<div class="card card-success container">
+    <div class="card-header">
+        <h3 class="card-title"> اطلاعات کاربر</h3>
+    </div>
+    <div class="card-body m-3">
+        <div class="row">
+            <div class="col-md-12">
+            
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="col-md-5 m-2">
+                            <div class="form-group">
+                                <label asp-for="FullName" class="control-label"></label>
+                                <input asp-for="FullName" class="form-control" readonly />
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 m-2">
+                            <div class="form-group">
+                                <label asp-for="Job" class="control-label"></label>
+                            <input asp-for="Job" class="form-control" readonly />
+                                <span asp-validation-for="Job" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 m-2">
+                            <div class="form-group">
+                                <label asp-for="City" class="control-label"></label>
+                            <input asp-for="City" class="form-control" readonly />
+                                <span asp-validation-for="City" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                        <div class="col-md-5 m-2">
+                            <div class="form-group">
+                                <label asp-for="gender" class="control-label"></label>
+                            <select asp-for="gender" class="form-control" readonly>
+                                    <option value="@(Gender.man)">مرد</option>
+                                    <option value="@(Gender.woman)">زن</option>
+                                </select>
+                                <span asp-validation-for="gender" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                   
+            
+            </div>
+        </div>
+    </div>
+</div>
