@@ -173,9 +173,19 @@ namespace Data.MasterServices
                         typeof(T).Name, idValue);
                     return null;
                 }
+
+                var navProperties = _ctx.Model.FindEntityType(typeof(T))?
+        .GetNavigations()
+        .Select(n => n.Name)
+        .ToHashSet() ?? new HashSet<string>();
+                foreach (var prop in typeof(T).GetProperties())
+                {
+                    if (navProperties.Contains(prop.Name))
+                        prop.SetValue(Obj, null); // حذف navigation reference
+                }
                 // مقادیر جدید را روی entity موجود اعمال می‌کنیم
                 _ctx.Entry(dbEntity).CurrentValues.SetValues(Obj);
-
+                _ctx.Entry(dbEntity).State = EntityState.Modified;
                 await _ctx.SaveChangesAsync();
 
                 return dbEntity;

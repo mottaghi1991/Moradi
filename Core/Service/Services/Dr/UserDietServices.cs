@@ -129,6 +129,11 @@ namespace Core.Service.Services.Dr
             return obj;
         }
 
+        public async Task<UserDiet> GetUserDietByIdUpdate(int UserDietId)
+        {
+            return await _master.GetAllAsQueryable().AsTracking().FirstOrDefaultAsync(a => a.Id == UserDietId);
+        }
+
         public async Task<UserInfoVm> GetUserInfoByuserDietId(int UserDietId)
         {
             DynamicParameters p = new DynamicParameters();
