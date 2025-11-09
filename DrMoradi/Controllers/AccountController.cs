@@ -84,7 +84,12 @@ namespace DrMoradi.Controllers
             //await _userOtp.UseCodeAsync(phoneNumber, acceptCode.SendCode);
             _logger.LogInformation(EventIdList.Login, "User {UserId} with phone {PhoneNumber} signed in via SMS", user.ItUserId, phoneNumber); var obj=await _user.GetUserByUserNameAsync(user.UserName);
 
-
+            if (!string.IsNullOrEmpty(acceptCode.ReturnUrl) &&
+    (acceptCode.ReturnUrl.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase) ||
+     acceptCode.ReturnUrl.StartsWith("/Account", StringComparison.OrdinalIgnoreCase)))
+            {
+                acceptCode.ReturnUrl = "/UserPanel/UserDiet/MyDiet"; // مسیر ثابت کاربران عادی
+            }
 
             var redirectUrl = !string.IsNullOrEmpty(acceptCode.ReturnUrl) && Url.IsLocalUrl(acceptCode.ReturnUrl)
      ? acceptCode.ReturnUrl
