@@ -23,12 +23,15 @@ namespace Core.Service.Services.Shop
         private readonly IMaster<Order> _master;
         private readonly ICart _cart;
         private readonly IProduct _product;
+        protected MyContext _ctx;
 
-        public OrderServices(IMaster<Order> master, ICart cart, IProduct product)
+
+        public OrderServices(IMaster<Order> master, ICart cart, IProduct product, MyContext ctx)
         {
             _master = master;
             _cart = cart;
             _product = product;
+            _ctx = ctx;
         }
 
         public async Task<Order> FillOrder(Cart cart, int UserId, int AddressId, int sendPrice, DeliveryMethod method)
@@ -224,8 +227,8 @@ namespace Core.Service.Services.Shop
         if(obj == null)
                 return false;
         obj.PaymentAuthority = Aauthority;
-            var result=await Update(obj);
-        if(!result)
+            var result= _ctx.SaveChanges();
+        if(result==0)
                 return false;
 
         return true;

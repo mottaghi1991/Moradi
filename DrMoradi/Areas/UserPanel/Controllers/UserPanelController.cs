@@ -101,7 +101,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                  User.GetUserId(), userdiet.Amount, userdiet, Authority);
                    await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
                     await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
-                    TempData[Success] = " درخواست رژیم شما در سایت دکتر مرادی ثبت شد و حداکثر تا ۴۸ ساعت کاری آینده رژیم برای شما ارسال می گردد شناسه پرداخت :"+ payevent.data.ref_id;
+                    TempData[Success] = " درخواست رژیم شما در سایت دکتر معصومه مرادی ثبت شد و حداکثر تا ۴۸ ساعت کاری آینده رژیم برای شما ارسال می گردد شناسه پرداخت :"+ payevent.data.ref_id;
                     // نمایش خطا
                     return RedirectToAction("Index", "UserPanel", "UserPanel");
                 }

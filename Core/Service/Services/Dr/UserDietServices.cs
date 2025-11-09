@@ -129,10 +129,7 @@ namespace Core.Service.Services.Dr
             return obj;
         }
 
-        public async Task<UserDiet> GetUserDietByIdUpdate(int UserDietId)
-        {
-            return await _master.GetAllAsQueryable().AsTracking().FirstOrDefaultAsync(a => a.Id == UserDietId);
-        }
+       
 
         public async Task<UserInfoVm> GetUserInfoByuserDietId(int UserDietId)
         {
@@ -228,7 +225,8 @@ namespace Core.Service.Services.Dr
 
         public async Task<bool> UpdateToFirstPay(int UserdietId, string Authority)
         {
-            var diet=await GetUserDietByIdUpdate(UserdietId);
+            var diet=await GetUserDietById(UserdietId);
+             _master.DetachEntity(diet);
             diet.PaymentAuthority = Authority;
            return await _master.UpdateAsync(diet)!=null;
 

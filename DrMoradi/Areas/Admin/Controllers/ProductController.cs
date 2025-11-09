@@ -417,5 +417,26 @@ namespace DrMoradi.Areas.Admin.Controllers
                 return RedirectToAction("ProductCategory", new { ProductId = ProductId });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int ProductId)
+        {
+            var obj = await _Product.GetProductById(ProductId);
+            if (obj == null)
+                return NotFound();
+            obj.IsDeleted = true;
+            obj.DeleteTime = DateTime.Now;
+            var result = await _Product.Update(obj);
+            if (result!=null)
+            {
+                TempData["Success"] = "عملیات با موفقیت انجام گردید";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["Error"] = "خطایی رخ داده است";
+                return RedirectToAction("Index");
+            }
+
+        }
     }
 }

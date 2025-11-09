@@ -28,5 +28,6 @@ namespace Data.MasterInterface
         Task<bool> BulkeInsertAsync(List<T> ListOfbulk);
         Task<bool> BulkeDeleteAsync(IEnumerable<T> ListOfbulk);
         Task<IDbContextTransaction> BeginTransactionAsync();
+        void DetachEntity<TEntity>(TEntity entity);
     }
 }

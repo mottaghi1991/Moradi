@@ -22,7 +22,7 @@ namespace Data
     {
         public MyContext(DbContextOptions<MyContext> options) : base(options)
         {
-
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll; 
         }
         public virtual DbSet<MyUser> MyUser { get; set; }
         public virtual DbSet<PermissionList> PermissionList { get; set; }
@@ -84,7 +84,8 @@ namespace Data
             modelBuilder.Entity<Category>()
     .HasQueryFilter(c => !c.IsDeleted);
 
-
+            modelBuilder.Entity<Product>()
+    .HasQueryFilter(c => !c.IsDeleted);
             modelBuilder.Entity<Question>().Property(a => a.FieldType).HasConversion<string>();
             modelBuilder.Entity<UserDiet>().Property(a => a.Status).HasConversion<string>();
             modelBuilder.Entity<Comment>().Property(a => a.EntityType).HasConversion<string>();

@@ -1,4 +1,5 @@
-﻿using Data.Migrations;
+﻿using Core.Dto.ViewModel.WP;
+using Data.Migrations;
 using Domain.Dr;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace Core.Service.Interface.Dr
         Task<IEnumerable<Post>> GetAllPostPaging(int pageid, int number);
         Task<IEnumerable<Post>> GetTopPost(int number);
         Task<int> PostCount();
+        Task<List<WordPressPost>> GetTopWordPressPost(int count);
     }
 }

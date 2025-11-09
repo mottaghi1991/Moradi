@@ -159,54 +159,35 @@ namespace Data.MasterServices
                     throw new InvalidOperationException($"{typeof(T).Name} must have a [Key] or Id property.");
                 }
 
-                var idValue = keyProperty.GetValue(Obj);
-                if (idValue == null)
-                    throw new InvalidOperationException("Id value cannot be null.");
+                var id = keyProperty.GetValue(Obj);
 
-
-                var dbEntity = await _ctx.Set<T>().FindAsync(idValue);
-
+                var dbEntity = await _ctx.Set<T>().FindAsync(id);
                 if (dbEntity == null)
-                {
-                    _logger.LogWarning(
-                        "(Data Warn) Update requested but entity {EntityName} with id={EntityId} not found.",
-                        typeof(T).Name, idValue);
                     return null;
-                }
 
-                var navProperties = _ctx.Model.FindEntityType(typeof(T))?
-        .GetNavigations()
-        .Select(n => n.Name)
-        .ToHashSet() ?? new HashSet<string>();
-                foreach (var prop in typeof(T).GetProperties())
-                {
-                    if (navProperties.Contains(prop.Name))
-                        prop.SetValue(Obj, null); // حذف navigation reference
-                }
-                // مقادیر جدید را روی entity موجود اعمال می‌کنیم
+                // ✅ فقط مقداردهی مستقیم به فیلدها (Navigationها حفظ می‌شن)
                 _ctx.Entry(dbEntity).CurrentValues.SetValues(Obj);
-                _ctx.Entry(dbEntity).State = EntityState.Modified;
+
                 await _ctx.SaveChangesAsync();
-
                 return dbEntity;
-               // // بررسی اینکه آیا entity مشابه در حال track شدن هست
-               // var tracked = _ctx.ChangeTracker.Entries<T>()
-               //     .FirstOrDefault(e =>
-               //         e.State != EntityState.Detached &&
-               //         e.Property("Id").CurrentValue.Equals(idValue));
+                // // بررسی اینکه آیا entity مشابه در حال track شدن هست
+                // var tracked = _ctx.ChangeTracker.Entries<T>()
+                //     .FirstOrDefault(e =>
+                //         e.State != EntityState.Detached &&
+                //         e.Property("Id").CurrentValue.Equals(idValue));
 
-               // // اگر entity مشابهی track شده، detachش کن
-               // if (tracked != null)
-               // {
-               //     tracked.State = EntityState.Detached;
-               // }
+                // // اگر entity مشابهی track شده، detachش کن
+                // if (tracked != null)
+                // {
+                //     tracked.State = EntityState.Detached;
+                // }
 
-               // // حالا entity رو attach و update می‌کنیم
-               // _ctx.Attach(Obj);
-               // _ctx.Entry(Obj).State = EntityState.Modified;
-               //await _ctx.SaveChangesAsync();
+                // // حالا entity رو attach و update می‌کنیم
+                // _ctx.Attach(Obj);
+                // _ctx.Entry(Obj).State = EntityState.Modified;
+                //await _ctx.SaveChangesAsync();
 
-               // return Obj;
+                // return Obj;
 
             }
             catch (Exception e)
@@ -347,6 +328,11 @@ namespace Data.MasterServices
             return await _ctx.Database.BeginTransactionAsync();
         }
 
-      
+        public void DetachEntity<TEntity>(TEntity entity)
+        {
+            var entry = _ctx.Entry(entity);
+            if (entry.State != EntityState.Detached)
+                entry.State = EntityState.Detached;
+        }
     }
 }

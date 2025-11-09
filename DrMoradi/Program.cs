@@ -3,12 +3,14 @@ using Core.Mapper;
 using Core.Service.Interface.Admin;
 using Data;
 using Domain;
+using Domain.Delivery;
 using DrMoradi.MiddleWare;
 using IOC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using PersonalSite.MiddleWare;
 using Serilog;
 using System.Reflection;
@@ -16,7 +18,6 @@ using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using System.Xml.Linq;
-using Domain.Delivery;
 using Mapper = Core.Mapper.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,7 @@ builder.Services.AddDbContext<MyContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connect"));
 });
+
 #endregion
 builder.Services.AddHttpClient();
 
