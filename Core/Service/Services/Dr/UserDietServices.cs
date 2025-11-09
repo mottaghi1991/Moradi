@@ -228,7 +228,7 @@ namespace Core.Service.Services.Dr
 
         public async Task<bool> UpdateToFirstPay(int UserdietId, string Authority)
         {
-            var diet=await GetUserDietById(UserdietId);
+            var diet=await GetUserDietByIdUpdate(UserdietId);
             diet.PaymentAuthority = Authority;
            return await _master.UpdateAsync(diet)!=null;
 
