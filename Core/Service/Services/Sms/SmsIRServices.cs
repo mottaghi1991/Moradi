@@ -19,7 +19,27 @@ namespace Core.Services.Sms
             throw new NotImplementedException();
         }
 
+        public Task<SmsResponse> AdminAlarmProduct(string mobile, int TemplateId, string OrderId, string UserName)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<SmsResponse> PaymentSucess(string mobile, int TemplateId, string code)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SmsResponse> PaymentSucessProductAloPeyk(string mobile, int TemplateId, string code, string UserName, string RefId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SmsResponse> PaymentSucessProductPost(string mobile, int TemplateId, string code, string UserName, string RefId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<SmsResponse> ProductSend(string mobile, int TemplateId, string code)
         {
             throw new NotImplementedException();
         }

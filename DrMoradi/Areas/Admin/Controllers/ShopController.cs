@@ -1,5 +1,6 @@
 ﻿using Core.Dto.Shop.Order;
 using Core.Extention;
+using Core.Interface.Sms;
 using Core.Service.Interface.Deliverd;
 using Core.Service.Interface.Shop;
 using Domain;
@@ -15,11 +16,13 @@ namespace DrMoradi.Areas.Admin.Controllers
     {
         private readonly IOrder _order;
         private readonly IDelivery _Delivery;
+        private readonly ISms _sms;
 
-        public ShopController(IOrder order, IDelivery delivery)
+        public ShopController(IOrder order, IDelivery delivery, ISms sms)
         {
             _order = order;
             _Delivery = delivery;
+            _sms = sms;
         }
 
         public async Task<IActionResult> Index(int? userId, string fullName, string mobile, string paymentStatus , int pageNumber = 1, int pageSize = 5)
@@ -94,6 +97,7 @@ namespace DrMoradi.Areas.Admin.Controllers
             var result = await _order.Update(order);
             if(result)
             {
+                await _sms.ProductSend(order.User.UserName, 1466234, ".");
                 TempData[Success] = SuccessMessage;
                 return RedirectToAction("Index");
             }

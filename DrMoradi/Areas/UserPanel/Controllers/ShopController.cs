@@ -11,7 +11,9 @@ using Core.Service.Interface.Users;
 using Core.Service.Services.Shop;
 using Domain;
 using Domain.Delivery;
+using Domain.Dr;
 using Domain.Shop;
+using Domain.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -33,8 +35,9 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         private readonly IUser _user;
         private readonly IDelivery _Delivery;
         private readonly IProduct _product;
+        private readonly ISms _sms;
 
-        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery, IProduct product)
+        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery, IProduct product, ISms sms)
         {
             _cart = cart;
             _address = address;
@@ -45,6 +48,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             _user = user;
             _Delivery = delivery;
             _product = product;
+            _sms = sms;
         }
         public async Task<IActionResult> Index()
         {
@@ -247,12 +251,12 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 return RedirectToAction("Index");
             }
             string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/Shop/verify";
-            var First = await _payment.FirstRequestPayment(Order.Id, (int)Order.TotalAmount, callbackUrl, "خرید اقلام", "", User.Identity?.Name, Core.Enums.StoreType.Shop, true);
+            var First = await _payment.FirstRequestPayment(Order.Id, (int)Order.TotalAmount, callbackUrl, "خرید اقلام", "", User.Identity?.Name, Core.Enums.StoreType.Shop, false);
             if (First.data != null)
             {
                 _logger.LogInformation("درخواست اولیه پرداخت موفق. Authority={Authority}, Amount={Amount}, UserId={UserId}", First.data.authority, Order.TotalAmount, User.GetUserId());
-                //return RedirectToAction("SendTOBank", new { Url = "https://zarinpal.com/pg/StartPay/" + First.data.authority });
-                return RedirectToAction("SendTOBank", new { Url = "https://sandbox.zarinpal.com/pg/StartPay/" + First.data.authority });
+                return RedirectToAction("SendTOBank", new { Url = "https://zarinpal.com/pg/StartPay/" + First.data.authority });
+                //return RedirectToAction("SendTOBank", new { Url = "https://sandbox.zarinpal.com/pg/StartPay/" + First.data.authority });
             }
             else
             {
@@ -279,7 +283,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                     TempData[Error] = "پرداخت پیدا نشد";
                     return RedirectToAction("Index");
                 }
-                var payevent = await _payment.VerifyPayment(authority: Authority, (int)Order.TotalAmount, StoreType.Shop, true);
+                var payevent = await _payment.VerifyPayment(authority: Authority, (int)Order.TotalAmount, StoreType.Shop, false);
 
                 if (payevent.Error == null)
                 {
@@ -288,19 +292,34 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
                     // علامت‌گذاری سفارش به‌عنوان پرداخت شده
                     await _product.deActiveBatch(Order.OrderItems.First().ProductBatchId);
-                
-                        //if(Order.DeliveryMethod==DeliveryMethod.AloPeyk)
-                        //{
-                        //    await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
 
-                        //}
+                    //if(Order.DeliveryMethod==DeliveryMethod.AloPeyk)
+                    //{
+                    //    await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
 
-                
-                        //await _sms.PaymentSucess(myuser.UserName, 502848, payevent.data.ref_id);
-                        //await _sms.AdminAlarm("09128390869", 502847, userdiet.Id.ToString(), myuser.FullName);
-                        TempData[Success] = "  پرداخت شما با موفقیت انجام شد اقلام سه تا هفت روز کاری تحویل می گردد . :" + payevent.data.ref_id;
-                        // نمایش خطا
-                        return RedirectToAction("Index", "Shop", "UserPanel");
+                    //}
+
+
+              
+
+                    var myUser=await _user.GetUserByUserId(User.GetUserId());
+                    if (Order.DeliveryMethod == DeliveryMethod.AloPeyk)
+                    {
+                        await _sms.PaymentSucessProductAloPeyk(myUser.UserName, 1466231,".", myUser.FullName, payevent.data.ref_id);
+                        await _sms.AdminAlarmProduct("09128390869", 1466233, Order.Id.ToString(), myUser.FullName);
+                        TempData[Success] = "  پرداخت شما با موفقیت انجام شد اقلام دو تا چهار روز کاری تحویل می گردد . :" + payevent.data.ref_id;
+
+                    }
+                    else
+                    {
+                        await _sms.PaymentSucessProductPost(myUser.UserName, 1466231, ".", myUser.FullName,payevent.data.ref_id);
+                        await _sms.AdminAlarmProduct("09128390869", 1466233, Order.Id.ToString(), myUser.FullName);
+                        TempData[Success] = "  پرداخت شما با موفقیت انجام شد اقلام چهار تا هفت روز کاری تحویل می گردد . :" + payevent.data.ref_id;
+
+                    }
+
+                    // نمایش خطا
+                    return RedirectToAction("Index", "Shop", "UserPanel");
                     
 
 

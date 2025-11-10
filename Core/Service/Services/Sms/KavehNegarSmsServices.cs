@@ -152,5 +152,145 @@ namespace Core.Service.Services.Sms
                 };
             }
         }
+
+        public async Task<SmsResponse> PaymentSucessProductPost(string mobile, int TemplateId, string code,string UserName, string RefId)
+        {
+            try
+            {
+                Kavenegar.KavenegarApi api = new Kavenegar.KavenegarApi(_Api);
+                var result =await api.VerifyLookup(mobile, code,RefId, "", UserName, "UserProductAccepPost", Kavenegar.Core.Models.Enums.VerifyLookupType.Sms);
+                result.Messageid.ToString();
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = result.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.ApiException ex)
+            {
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.HttpException ex)
+            {
+                // در زمانی که مشکلی در برقرای ارتباط با وب سرویس وجود داشته باشد این خطا رخ می دهد
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+        }
+
+        public async Task<SmsResponse> PaymentSucessProductAloPeyk(string mobile, int TemplateId, string code, string UserName, string RefId)
+        {
+            try
+            {
+                Kavenegar.KavenegarApi api = new Kavenegar.KavenegarApi(_Api);
+                var result = await api.VerifyLookup(mobile, code, RefId, "", UserName, "UserProductAccepAloPeyk", Kavenegar.Core.Models.Enums.VerifyLookupType.Sms);
+                result.Messageid.ToString();
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = result.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.ApiException ex)
+            {
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.HttpException ex)
+            {
+                // در زمانی که مشکلی در برقرای ارتباط با وب سرویس وجود داشته باشد این خطا رخ می دهد
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+        }
+
+        public async Task<SmsResponse> AdminAlarmProduct(string mobile, int TemplateId, string OrderId, string UserName)
+        {
+            try
+            {
+                Kavenegar.KavenegarApi api = new Kavenegar.KavenegarApi(_Api);
+                var result = await api.VerifyLookup(mobile, OrderId, "", "", UserName, "", "AdminProductAccept", Kavenegar.Core.Models.Enums.VerifyLookupType.Sms);
+                result.Messageid.ToString();
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = result.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.ApiException ex)
+            {
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.HttpException ex)
+            {
+                // در زمانی که مشکلی در برقرای ارتباط با وب سرویس وجود داشته باشد این خطا رخ می دهد
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+        }
+
+        public async Task<SmsResponse> ProductSend(string mobile, int TemplateId, string code)
+        {
+            try
+            {
+                Kavenegar.KavenegarApi api = new Kavenegar.KavenegarApi(_Api);
+                var result =await api.VerifyLookup(mobile, code, "ProductSend");
+                result.Messageid.ToString();
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = result.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.ApiException ex)
+            {
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+            catch (Kavenegar.Core.Exceptions.HttpException ex)
+            {
+                // در زمانی که مشکلی در برقرای ارتباط با وب سرویس وجود داشته باشد این خطا رخ می دهد
+                return new SmsResponse()
+                {
+                    Status = 500,
+                    Message = ex.Message,
+
+                };
+            }
+        }
     }
 }

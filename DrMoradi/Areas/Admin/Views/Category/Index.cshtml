@@ -37,7 +37,7 @@
                             </td>
                             <td>
                                 <a class="btn btn-info" asp-action="Edit" asp-route-CategoryId="@item.Id">ویرایش</a>
-                                <a class="btn btn-danger" asp-action="delete" asp-route-CategoryId="@item.Id">حذف</a>
+                                <a class="btn btn-danger" asp-action="delete" asp-route-CategoryId="@item.Id" onclick="return confirm('ایا از حذف اطمینان دارید؟')">حذف</a>
 
                             </td>
                         </tr>
