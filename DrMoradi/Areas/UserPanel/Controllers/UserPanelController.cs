@@ -60,7 +60,7 @@ namespace WebStore.Areas.UserPanel.Controllers
                 TempData[Error] = "اطلاعات رژیم پیدا نشد";
                 return RedirectToAction("Index");
             }
-            string callbackUrl = $"{Request.Scheme}://{Request.Host}/UserPanel/UserPanel/verify";
+            string callbackUrl = "https://www.drmoradi-diet.com/UserPanel/Shop/verify";
             var First = await _payment.FirstRequestPayment(UserDietId, (int)userdiet.Amount, callbackUrl, userdiet.diet.Name, "", User.Identity?.Name,Core.Enums.StoreType.Diet,false);
             if (First.data != null)
             {
