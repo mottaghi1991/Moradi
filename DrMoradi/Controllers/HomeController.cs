@@ -2,7 +2,7 @@
 using Core.Dto.ViewModel.main;
 using Core.Dto.ViewModel.User;
 using Core.Extention;
-using Core.Service.Interface.Admin;
+using Core.Interface.MainPage;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
 using Core.Service.Interface.Users;
@@ -42,8 +42,8 @@ namespace DrMoradi.Controllers
         public async Task<IActionResult> Index()
         {
             //var assemblyName = typeof(HomeController).Assembly.FullName;
-
-            return View();
+            var setting=await _setting.GetSettingAsync();
+            return View(setting);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -118,28 +118,32 @@ namespace DrMoradi.Controllers
                 // پاسخ خطا به صورت JSON و با وضعیت 400
                 return BadRequest(new { Success = false, Message = "اطلاعات کامل وارد نشده." });
             }
-            double ideal, health = 0;
+        
+            double idealBase,ideal, health = 0;
             if (model.Gender == Gender.man)
             {
-                ideal = (48.1 + 1.1 * (model.Height - 152));
+                idealBase = (48.1 + 1.1 * (model.Height - 152));
             }
             else
             {
-                ideal = (45.5 + 0.9 * (model.Height - 152));
+                idealBase = (45.5 + 0.9 * (model.Height - 152));
             }
-            health = ideal;
-            health = health * 1.10;
+             ideal = idealBase;
+             health = idealBase * 1.10;
             switch (model.Stone)
             {
                 case Stone.dorosht:
-                    health = ideal * 1.10;
+                    ideal = idealBase * 1.10;   
+                    health = idealBase * 1.10 * 1.10;
                     break;
                 case Stone.riz:
-                    health = ideal * 0.90;
-               
+                    ideal = idealBase * 0.90;   
+                    health = idealBase * 0.90 * 1.10;
+
                     break;
                 case Stone.motevaset:
-                    
+                    ideal = idealBase;
+                    health = idealBase * 1.10;
                     break;
 
             }

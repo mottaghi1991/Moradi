@@ -248,7 +248,7 @@ namespace DrMoradi.Controllers
                 {
                     IsPersistent = loginViewModel.IsRemember
                 };
-                HttpContext.SignInAsync(principal, Properties);
+               await HttpContext.SignInAsync(principal, Properties);
                 _logger.LogInformation(EventIdList.Login, "Admin user {UserId} logged in successfully", user.ItUserId);
                 return RedirectToAction("Index", "AdminHome", new { area = "Admin" });
             }

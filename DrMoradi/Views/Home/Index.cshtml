@@ -1,4 +1,4 @@
-﻿
+﻿@model Domain.Main.Setting
 @{
     ViewData["Title"] = "خانه";
 }
@@ -87,9 +87,9 @@
                             <!-- باکس بنر لاغری -->
                             <div>
                                 <div class="card service-card text-white h-100 shadow-sm position-relative overflow-hidden border-0">
-                                    <img src="/FileUpload/Slider/297b48dab4e0f159911593c8ae73c5506303cbe5b31ba.jpg"
+                                 <a href="@Model.MainBannerAddress">   <img src="@Model.MainBanner"
                                          class="card-img"
-                                         alt="لاغری موضعی با دستگاه">
+                                         alt="لاغری موضعی با دستگاه"></a>
                                     <div class="card-img-overlay d-flex flex-column justify-content-center align-items-center">
                                     </div>
                                 </div>

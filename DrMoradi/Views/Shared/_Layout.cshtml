@@ -10,9 +10,9 @@
     <!-- لینک به CSS بوت‌استرپ -->
 
     <link href="~/css/swiper.css" rel="stylesheet" />
-    <link href="~/myfile/dist/css/custom-style.css" rel="stylesheet" />
+    <link href="~/myfile/dist/css/custom-style.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/common/sweetalert/sweetalert2.min.css" rel="stylesheet" />
-    <link href="~/css/maincss.css" rel="stylesheet" />
+    <link href="~/css/maincss.css" rel="stylesheet"  asp-append-version="true"/>
     <link href="~/css/bootstrap5.3.0.css" rel="stylesheet" />
 
     @await RenderSectionAsync("style", false)
@@ -35,7 +35,7 @@
 
 
     <!-- فوتر -->
-    <partial name="_SiteFooter" />
+    @await Component.InvokeAsync("FooterComponent")
 
     <partial name="_footerlink" />
     <partial name="_Message" />
@@ -47,8 +47,8 @@
     <script src="~/Common/SweetAlert/sweetalert2.min.js"></script>
     <partial name="_Message" />
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="~/js/mainjs.js"></script>
-    <script src="/js/shop/shoporder.js"></script>
+    <script src="~/js/mainjs.js" asp-append-version="true"></script>
+    <script src="/js/shop/shoporder.js" asp-append-version="true"></script>
 
           <script>
         document.addEventListener("DOMContentLoaded", function () {

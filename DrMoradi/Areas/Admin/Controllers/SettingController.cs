@@ -1,17 +1,21 @@
-﻿using System.Drawing;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Dto.ViewModel.Admin;
+using Core.Dto.ViewModel.Admin.SettingDto;
 using Core.Extention;
+using Core.Interface.Admin;
+using Core.Interface.MainPage;
 using Core.Service.Interface.Admin;
+using Core.Service.Interface.Seo;
 using Core.Static;
-using Data;
-using Domain.PersonalData;
+using Core.Tools;
+using Domain.Main;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 using WebStore.Base;
 
-namespace PersonalSite.Areas.Admin.Controllers
+namespace Mandella.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class SettingController : BaseController
@@ -19,97 +23,102 @@ namespace PersonalSite.Areas.Admin.Controllers
         private readonly ISetting _setting;
         private readonly IMapper _mapper;
         private readonly IOptions<Setting> _Headersetting;
-        public SettingController(ISetting setting, IMapper mapper, IOptions<Setting> headersetting)
+        private readonly ISeoSetting _seoSetting;
+        public SettingController(ISetting setting, IMapper mapper, IOptions<Setting> headersetting, ISeoSetting seoSetting)
         {
             _setting = setting;
             _mapper = mapper;
             _Headersetting = headersetting;
+            _seoSetting = seoSetting;
         }
         public async Task<IActionResult> Index()
         {
-            var obj =await _setting.GetSettingAsync();
+            var obj = await _setting.GetSettingAsync();
 
-            return View(_mapper.Map<EditSettingViewModel>(obj));
+            return View(_mapper.Map<SettingVm>(obj));
 
 
 
         }
         [HttpPost]
-        public async Task<IActionResult> Index(EditSettingViewModel setting)
+        public async Task<IActionResult> Edit(SettingVm setting)
         {
             if (!ModelState.IsValid)
             {
                 return View(setting);
             }
-
-         
-            //setting.Birthday = "1991-08-20";
-            var old =await _setting.GetSettingAsync();
-            if (setting.Profile != null)
+            var old = await _setting.GetSettingAsync();
+            if(setting.LogoFile!=null)
             {
-                var filename = FileTools.GetFileName(setting.Profile);
-
-                var path = FileTools.UploadFile(setting.Profile, filename, PathTools.Profile);
-                if (!path.Success)
-                {
-                    TempData[Error] = "بارگذازی فایل با مشکل مواجه گردید";
-                    return View(setting);
-                    
-                }
-                FileTools.DeleteFile(old.ProfileImage);
-                old.ProfileImage = path.FilePath;
+                var Logoname = FileTools.GetFileName(setting.LogoFile);
+                var path = FileTools.UploadFile(setting.LogoFile, Logoname, PathTools.Logo);
+                old.Logo = path.FilePath;
             }
-            old.jobs = setting.jobs;
-            old.Birthday = setting.Birthday.ToMiladi();
-            old.Location=setting.Location;
-            old.Tweeter=setting.Tweeter;
-            old.Aboute=setting.Aboute;
-            old.Instagram=setting.Instagram;
-            old.Linkedin=setting.Linkedin;
-            old.Aboute= setting.Aboute;
-            old.Email=setting.Email;
-            old.Name=setting.Name;
-            old.Phone=setting.Phone;
-  
-            
-           
-            if (await _setting.UpdateSettingAsync(old))
+            if (setting.MainBannerFile != null)
             {
-                TempData[Success] = SuccessMessage;
-                return RedirectToAction("Index");
+                var Bannername = FileTools.GetFileName(setting.MainBannerFile);
+                var path = FileTools.UploadFile(setting.LogoFile, Bannername, "Banner");
+                old.MainBanner = path.FilePath;
             }
-            else
-            {
-                TempData[Error] = ErrorMessage;
-                return View(setting);
-            }
-        
+            old.Number1 = setting.Number1;
+            old.Number2 = setting.Number2;
+            old.Mobile = setting.Mobile;
+            old.Email = setting.Email;
+            old.MainBannerAddress = setting.MainBannerAddress;
+            old.MapAddress = setting.MapAddress;
+            old.SiteName = setting.SiteName;
+            old.Address = setting.Address;
+            old.WorkTime = setting.WorkTime;
+            old.FooterDescript = setting.FooterDescript;
+            await _setting.UpdateSettingAsync(old);
+            return RedirectToAction("Index");
         }
-        [HttpPost]
-        public IActionResult UploadImage(IFormFile upload)
-        {
-            if (upload.Length == 0)
-                return Json(new { uploaded = false, error = new { message = "No file was uploaded." } });
-            var filename = FileTools.GetFileName(upload);
-            var path = FileTools.UploadFile(upload, filename, "uploader");
-            return Json(new
-            {
-                uploaded = true,
-                url = path
-            });
-        }
-        [HttpPost]
-        public IActionResult SaveImageInfo(string imageSrc, string alt)
-        {
-            if (ModelState.IsValid)
-            {
-                // ذخیره اطلاعات در پایگاه داده
-              
-
-                return Json(new { success = true });
-            }
-            return Json(new { success = true });
-        }
+      
        
+        //[HttpGet]
+        //public async Task<IActionResult> SeoSetting()
+        //{
+        //    var obj = await _seoSetting.GetPublicData();
+        //    return View(_mapper.Map<SeoSettingAddVm>(obj));
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> SeoSetting(SeoSettingAddVm seoSetting)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(seoSetting);
+        //    }
+        //    var obj = await _seoSetting.GetPublicData();
+
+        //    if (seoSetting.OgImageFile != null)
+        //    {
+        //        string FIleName, FilePAth = null;
+        //        FIleName = FileTools.GetFileName(seoSetting.OgImageFile);
+        //        FilePAth = FileTools.UploadFile(seoSetting.OgImageFile, FIleName, "OgImage");
+        //        FileTools.DeleteFile(obj.OgImage);
+        //        obj.OgImage = seoSetting.CanonicalUrl + FilePAth;
+        //    }
+        //    obj.MetaTitle = seoSetting.MetaTitle;
+        //    obj.MetaDescription = seoSetting.MetaDescription;
+        //    obj.MetaKeywords = seoSetting.MetaKeywords;
+        //    obj.CanonicalUrl = seoSetting.CanonicalUrl;
+        //    obj.OgTitle = seoSetting.OgTitle;
+        //    obj.OgDescription = seoSetting.OgDescription;
+        //    var json = JsonLdBuilder.JsonLdSchemaBuilder.GenerateHomePageSchema(SiteURL, "سایت شخصی علی متقی", obj.MetaDescription);
+        //    obj.JsonLdSchema = json;
+        //    var result = await _seoSetting.update(obj);
+        //    if (result)
+        //    {
+        //        TempData[Success] = SuccessMessage;
+        //        return RedirectToAction("SeoSetting");
+        //    }
+        //    else
+        //    {
+        //        TempData[Error] = ErrorMessage;
+        //        return View(seoSetting);
+        //    }
+
+        //}
     }
 }
+

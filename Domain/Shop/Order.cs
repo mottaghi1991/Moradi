@@ -44,5 +44,6 @@ namespace Domain.Shop
         public DeliveryMethod DeliveryMethod { get; set; }
         public DateTime? SendDate { get; set; }
         public string PostIdentity { get; set; }
+        public ICollection<Discount> discounts { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace Core.Static
         public static readonly string Activity = "Activity";
         public static readonly string Profile = "Profile";
         public static readonly string CategoryIcon = "CategoryIcon";
+        public static readonly string Logo = "Logo";
     }
 }

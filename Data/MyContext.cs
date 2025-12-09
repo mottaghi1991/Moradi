@@ -2,7 +2,7 @@
 using Domain.Dr;
 
 using Domain.Main;
-using Domain.PersonalData;
+
 using Domain.Shop;
 using Domain.SMS;
 
@@ -54,7 +54,7 @@ namespace Data
         public virtual DbSet<PostPrice> PostPrices { get; set; }
         public virtual DbSet<ProductBatch> ProductBatches { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories{ get; set; }
-
+        public virtual DbSet<Discount> Discounts { get; set; }
         #endregion
         public virtual DbSet<Setting> Settings { get; set; }
         public virtual DbSet<Slider> Sliders { get; set; }

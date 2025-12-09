@@ -27,5 +27,20 @@ namespace Core.Extention
             return new string(result);
 
         }
+        public static string DiscountGenerate()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+            var random = new Random();
+            var result = new char[6];
+
+            for (int i = 0; i < result.Length; i++)
+            {
+                result[i] = chars[random.Next(chars.Length)];
+            }
+
+            string discountCode = new string(result);
+            return discountCode;
+
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Core.Interface.MainPage;
 using Core.Mapper;
-using Core.Service.Interface.Admin;
 using Data;
 using Domain;
 using Domain.Delivery;
@@ -21,6 +21,7 @@ using System.Xml.Linq;
 using Mapper = Core.Mapper.Mapper;
 
 var builder = WebApplication.CreateBuilder(args);
+RegisterServices(builder.Services);
 
 #region SeriLog
 var con = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
@@ -45,6 +46,9 @@ builder.Services.AddDbContext<MyContext>(options =>
 });
 
 #endregion
+
+
+
 builder.Services.AddHttpClient();
 
 builder.Services.AddDataProtection()
@@ -75,33 +79,41 @@ builder.Services.AddAuthentication(option =>
 .AddCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.IsEssential = true;
-    options.Cookie.Domain = ".drmoradi-diet.com";
+    //options.Cookie.Domain = ".drmoradi-diet.com";
     options.LoginPath = "/Smslogin";
     options.LogoutPath = "/Logout";
     options.ExpireTimeSpan = TimeSpan.FromDays(7);
     options.SlidingExpiration = true;
+    if(builder.Environment.IsDevelopment())
+    {
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+        options.Cookie.Domain = null;
+    }
+    else
+    {
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.Domain = ".drmoradi-diet.com";
+    }
 });
 
 builder.Services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All, }));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<AloPeykSettings>(
     builder.Configuration.GetSection("AloPeyk").Get<AloPeykSettings>());
-RegisterServices(builder.Services);
+#region Setting
+var tempProvider = builder.Services.BuildServiceProvider();
+var settingService = tempProvider.GetRequiredService<ISetting>();
+var settingData = await settingService.GetSettingAsync();
 
-// بارگذاری تنظیمات سایت از دیتابیس
-using (var tempProvider = builder.Services.BuildServiceProvider())
+builder.Services.AddSingleton(new SiteSettingCache
 {
-    var settingService = tempProvider.GetRequiredService<ISetting>();
-    var settingData = await settingService.GetSettingAsync();
+    Setting = settingData
+});
+#endregion
 
-    builder.Services.AddSingleton(new SiteSettingCache
-    {
-        Setting = settingData
-    });
-}
 
 var app = builder.Build();
 

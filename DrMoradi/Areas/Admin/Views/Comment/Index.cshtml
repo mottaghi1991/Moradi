@@ -74,8 +74,8 @@
                             </td>
                             <td>
                                 <a class="btn btn-primary" asp-action="ReplyComment" asp-route-commentId="@item.Id">پاسخ</a>
-@*                                 <a asp-action="Delete" asp-route-id="@item.Id" onclick="return confirm('ایا از تایید اطمینان دارید؟')" class="btn btn-danger"> تایید</a>
- *@                            </td>
+                                <a asp-action="Delete" asp-route-CommentId="@item.Id" onclick="return confirm('ایا از تایید اطمینان دارید؟')" class="btn btn-danger">حذف</a>
+                            </td>
                         </tr>
                     }
                 </tbody>

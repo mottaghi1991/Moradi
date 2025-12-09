@@ -51,6 +51,15 @@
                             رژیم آنلاین 
                         </a>
                         <ul class="dropdown-menu text-end" aria-labelledby="navbarDietDropdown">
+                            <li>
+                                <a class="dropdown-item text-start"
+                                   asp-area=""
+                                   asp-action="diets"
+                                   asp-controller="Home"
+                                  >
+                                   همه رژیم ها
+                                </a>
+                            </li>
                             @foreach (var item in Model)
                             {
                                 <li>

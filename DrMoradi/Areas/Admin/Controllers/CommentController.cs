@@ -44,22 +44,11 @@ namespace DrMoradi.Areas.Admin.Controllers
         {
             if (commentId <= 0)
                 return BadRequest("شناسه نظر نامعتبر است.");
-            var obj=await _comment.GetCommentbyid(commentId);
+            var obj=await _comment.ReplyComment(commentId);
             if (obj == null)
                 return NotFound("نظر یافت نشد.");
-            var replay =await _comment.GetRepolaybyid(commentId);
       
-            return View(new ShowCommentVm()
-            {
-                Id= commentId,
-                IsApproved=obj.IsApproved,
-                CreateDate = obj.CreateDate.ToPersian(),
-                EntityType=obj.EntityType,
-                Mobile= obj.myUser?.UserName ?? obj.Mobile,
-                UserComment=obj.Text,
-                AdminComment=replay!=null?replay.Text:"",
-                DietId = obj.EntityId ?? 0
-            });
+            return View(obj);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -93,6 +82,17 @@ namespace DrMoradi.Areas.Admin.Controllers
 
 
 
+        }
+        public async Task<IActionResult> Delete(int CommentId)
+        {
+            var result=await _comment.Delete(CommentId);
+            if (result)
+            {
+                TempData[Success] = SuccessMessage;
+                return RedirectToAction("Index");
+            }
+            TempData[Error]=ErrorMessage;
+            return RedirectToAction("Index");
         }
             
 

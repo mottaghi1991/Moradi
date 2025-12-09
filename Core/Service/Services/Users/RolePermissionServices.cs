@@ -9,6 +9,7 @@ using Data.MasterInterface;
 using Domain.User.Permission;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Core.Enums;
 
 namespace Core.Service.Services.Users
 {
@@ -23,29 +24,16 @@ namespace Core.Service.Services.Users
         }
         public async Task<IEnumerable<RolePermission>> GetMenuOfRoleAsync(int RoleId)
         {
-            DynamicParameters p = new DynamicParameters();
-            p.Add("RoleId", RoleId, System.Data.DbType.Int32);
+            return _master.GetAllAsQueryable(a => a.RoleId == RoleId && a.PermissionList.Status == (int)MenuStatus.menu)
+                .Include(a => a.Role)
+                .Include(a => a.PermissionList).ToList();
 
-            return await _master.GetAllAsync("GetMenuOfRole", p);
         }
 
         public async Task<IEnumerable<RolePermission>> GetPermissionOfRoleAsync(int RoleId)
         {
 
             return await _master.GetAllAsQueryable().Include(a => a.PermissionList).Where(a => a.RoleId == RoleId).ToListAsync();
-
-
-            //.Select(a => new PermissionList
-            //{
-            //    Area = a.PermissionList.Area,
-            //    ActionName = a.PermissionList.ActionName,
-            //    ControllerName = a.PermissionList.ControllerName,
-            //    PermissionListId = a.PermissionList.PermissionListId,
-            //    ParentId = a.PermissionList.ParentId,
-            //    Descript = a.PermissionList.Descript,
-            //    Radif = a.PermissionList.Radif,
-            //    Status = a.PermissionList.Status,
-            //}).ToList();
         }
 
         public async Task<bool> BulkInsertAsync(List<RolePermission> list)

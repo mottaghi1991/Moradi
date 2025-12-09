@@ -31,6 +31,7 @@ namespace Core.Service.Interface.Users
         Task<MyUser> GetUserByUserId(int userId);
         Task<MyUser> GetOrCreateUser(string phoneNumber);
         Task SignIn(HttpContext context, MyUser user);
+        Task<IEnumerable<ShowUserBrifViewModel>> GetAllUser();
 
     }
 }

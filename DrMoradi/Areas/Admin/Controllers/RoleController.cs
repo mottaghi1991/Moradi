@@ -141,7 +141,7 @@ namespace PersonalSite.Areas.Admin.Controllers
             var deletedata =await _role.GetAllUSerOfRoleAsync(RoleId);
             if (deletedata.Any())
             {
-                if (await _role.BulkDeleteAsync(deletedata) != null)
+                if (!await _role.BulkDeleteAsync(deletedata))
                 {
                     TempData["Error"] = "خطایی رخ داده است";
                     return RedirectToAction("UserRole", new { RoleId = RoleId });
@@ -158,7 +158,7 @@ namespace PersonalSite.Areas.Admin.Controllers
                     UserId = i
                 });
             }
-            list.AddRange(list);
+    
 
             var obj =await _role.BulkInsertAsync(list);
             if (obj)
@@ -267,7 +267,7 @@ namespace PersonalSite.Areas.Admin.Controllers
                     PermissionListId = i
                 });
             }
-            list.AddRange(list);
+          
 
             var obj =await _permission.BulkInsertAsync(list);
             if (obj)

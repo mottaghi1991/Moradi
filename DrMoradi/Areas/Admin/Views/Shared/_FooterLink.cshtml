@@ -11,3 +11,13 @@
 <script src="~/Common/SweetAlert/sweetalert2.min.js"></script>
 <script src="~/myfile/plugins/waitme/waitme.min.js"></script>
 <script src="/common/kamadatepicker/kamadatepicker.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // انتخاب تمام المنت‌ها با کلاس myselect
+        $('.myselect').select2({
+            width: '100%',               // تنظیم عرض به اندازه‌ی کامل والد
+            placeholder: 'یک گزینه انتخاب کنید', // متن راهنما
+            allowClear: true              // اجازه‌ی پاک کردن انتخاب
+        });
+    });
+</script>

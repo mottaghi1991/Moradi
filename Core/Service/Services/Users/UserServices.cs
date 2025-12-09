@@ -8,6 +8,7 @@ using Domain.Users;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -110,17 +111,21 @@ namespace Core.Service.Services.Users
         public async Task<IEnumerable<ShowUserBrifViewModel>> GetPaggingUserAsync(int Page, int pagesize)
         {
             var obj =await _User.GetPagingAsync(Page, pagesize);
-            return obj.Select(a => new ShowUserBrifViewModel() { Email = a.Email, UserName = a.UserName, UserId = a.ItUserId });
+            return obj.Select(a => new ShowUserBrifViewModel() { Email = a.Email, UserName = a.UserName, UserId = a.ItUserId,FullName=a.FullName });
         }
 
         public async Task<IEnumerable<ShowUserBrifViewModel>> GetAllAdminAsync()
         {
             var obj = await _User.GetAllEfAsync(a => a.IsAdmin == true);
-            return obj.Select(a => new ShowUserBrifViewModel() { Email = a.Email, UserName = a.UserName, UserId = a.ItUserId });
+            return obj.Select(a => new ShowUserBrifViewModel() { Email = a.Email, UserName = a.UserName, UserId = a.ItUserId , FullName = a.FullName });
         }
         public async Task<MyUser> GetUserByUserId(int userId)
         {
-            var obj = await _User.GetAllEfAsync(a => a.ItUserId == userId);
+            var obj =  _User.GetAllAsQueryable(a => a.ItUserId == userId)
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .ThenInclude(r => r.RolePermissions)
+                .ThenInclude(rp => rp.PermissionList);
             return obj.FirstOrDefault();
         }
 
@@ -166,6 +171,18 @@ namespace Core.Service.Services.Users
 
             var properties = new AuthenticationProperties { IsPersistent = true };
           await  context.SignInAsync(principal, properties);
+        }
+
+        public async Task<IEnumerable<ShowUserBrifViewModel>> GetAllUser()
+        {
+            var obj= await _User.GetAllEfAsync(a=>a.IsAdmin==false);
+            return obj.Select(x => new ShowUserBrifViewModel()
+            {
+                UserName = x.UserName,
+                Email = x.Email,
+                UserId = x.ItUserId,
+                FullName=x.FullName
+            });
         }
     }
 }

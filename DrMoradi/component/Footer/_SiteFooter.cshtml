@@ -1,0 +1,55 @@
+﻿@model Core.Dto.ViewModel.SettingDto.ShowFooterVM
+<footer class="footer-simple pt-4 pb-4">
+    <div class="container footer-inner">
+
+        <!-- ردیف ۱ -->
+        <div class="row align-items-start flex-wrap">
+            <!-- سمت راست: دکمه‌ها -->
+            <div class="col-lg-8 col-md-12 footer-links text-lg-start text-center">
+                <h6 class="footer-title">دسترسی سریع</h6>
+                <div>
+                    @foreach (var item in Model.Diet)
+                    {
+                        <a asp-area="" asp-controller="Home" asp-action="DietDetail" asp-route-DietId="@item.Id">
+                            @item.Name
+                            <i class="bi bi-arrow-left"></i>
+                        </a>
+                    }
+
+
+                </div>
+            </div>
+            <!-- سمت چپ: آدرس و نماد -->
+            <div class="col-lg-4 col-md-12 footer-contact">
+                <h6 class="footer-title">راه‌های ارتباطی</h6>
+                <p class="small mb-1" style="color:white">آدرس:@Model.setting.Address</p>
+
+                <p class="small mb-1" style="color:white">ساعت کاری:@Model.setting.WorkTime</p>
+                <p class="small mb-2" style="color:white">@Model.setting.Number2 - @Model.setting.Number1</p>
+
+
+
+                <img src="/FileUpload/Doctor/enamad.png" alt="نماد اعتماد" class="footer-enamad mb-2">
+                <div class="footer-social">
+                    <a href="#"><i class="bi bi-instagram"></i></a>
+                    <a href="#"><i class="bi bi-telegram"></i></a>
+                    <a href="#"><i class="bi bi-controller"></i></a>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- ردیف ۲ -->
+        <div class="row align-items-center">
+            <!-- سمت راست: لوگو -->
+            <div class="col-lg-1 col-md-12 text-lg-start text-center">
+                <img src="@Model.setting.Logo" alt="لوگو" class="footer-logo">
+            </div>
+            <!-- سمت چپ: توضیح و کپی‌رایت -->
+            <div class="col-lg-11 col-md-12 footer-desc text-white small">@Model.setting.FooterDescript</div>
+        </div>
+
+    </div>
+
+</footer>

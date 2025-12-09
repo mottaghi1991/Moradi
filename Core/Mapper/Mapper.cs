@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Dto.Shop.Batch;
 using Core.Dto.ViewModel.Admin;
+using Core.Dto.ViewModel.Admin.SettingDto;
 using Core.Dto.ViewModel.Dr.DietVm;
 using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Dto.ViewModel.main;
@@ -8,7 +9,6 @@ using Core.Dto.ViewModel.Shop.Category;
 using Core.Dto.ViewModel.Store.ProductDto;
 using Domain.Dr;
 using Domain.Main;
-using Domain.PersonalData;
 using Domain.Shop;
 
 
@@ -34,6 +34,8 @@ namespace Core.Mapper
 
             CreateMap<ProductBatch, BatchAddVM>().ReverseMap();
 
+
+            CreateMap<Setting, SettingVm>().ReverseMap();
         }
     }
 }

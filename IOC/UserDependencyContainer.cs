@@ -1,6 +1,8 @@
 ﻿using Core.Dto.ViewModel.Dr;
 using Core.Dto.ViewModel.Dr.DietVM;
+using Core.Dto.ViewModel.main;
 using Core.Interface.Admin;
+using Core.Interface.MainPage;
 using Core.Interface.Sms;
 using Core.Interface.Store;
 using Core.Service.Interface.Admin;
@@ -8,16 +10,18 @@ using Core.Service.Interface.Deliverd;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
 using Core.Service.Interface.Payment;
+using Core.Service.Interface.Seo;
 using Core.Service.Interface.Shop;
 using Core.Service.Interface.Users;
-using Core.Service.Services.Admin;
 using Core.Service.Services.Delivery;
 using Core.Service.Services.Dr;
 using Core.Service.Services.MainPage;
 using Core.Service.Services.Payment;
+using Core.Service.Services.Seo;
 using Core.Service.Services.Shop;
 using Core.Service.Services.Sms;
 using Core.Service.Services.Users;
+using Core.Services.MainPage;
 using Core.Services.Sms;
 using Core.Services.Store;
 using Core.Services.Users;
@@ -25,7 +29,7 @@ using Data.MasterInterface;
 using Data.MasterServices;
 using Domain.Dr;
 using Domain.Main;
-using Domain.PersonalData;
+using Domain.Seo;
 using Domain.Shop;
 using Domain.SMS;
 using Domain.User;
@@ -113,7 +117,7 @@ namespace IOC
             Services.AddScoped<IMaster<OrderItem>, MasterServices<OrderItem>>();
             Services.AddScoped<IMaster<ProductBatch>, MasterServices<ProductBatch>>();
             Services.AddScoped<IMaster<ProductCategory>, MasterServices<ProductCategory>>();
-
+            Services.AddScoped<IMaster<Discount>, MasterServices<Discount>>();
 
 
             Services.AddScoped<ICategory, CategoriesServices>();
@@ -124,7 +128,7 @@ namespace IOC
             Services.AddScoped<IProvince, ProvinceServices>();
             Services.AddScoped<IOrder, OrderServices>();
             Services.AddScoped<IOrderItem, OrderItemServices>();
-
+            Services.AddScoped<IDiscount, DiscountServices>();
             #endregion
             #region Sms
             //Services.AddScoped<ISms, SmsIRServices>();
@@ -140,11 +144,18 @@ namespace IOC
             Services.AddScoped<IMaster<Slider>, MasterServices<Slider>>();
             Services.AddScoped<IMaster<Comment>, MasterServices<Comment>>();
             Services.AddScoped<IMaster<PopUp>, MasterServices<PopUp>>();
+            Services.AddScoped<IMaster<SeoData>, MasterServices<SeoData>>();
+
+
 
             Services.AddScoped<ISetting, SettingServices>();
             Services.AddScoped<ISlider, SliderServices>();
             Services.AddScoped<IComment, CommentServices>();
             Services.AddScoped<IPopUp, PopUpServices>();
+            Services.AddScoped<ISeoSetting, SeoSettingServices>();
+
+            Services.AddScoped<IMaster<ShowCommentVm>, MasterServices<ShowCommentVm>>();
+
             #endregion
 
 

@@ -14,6 +14,7 @@ namespace Core.Dto.ViewModel.main
         public int DietId { get; set; }
         public bool IsApproved { get; set; }
         public EntityType EntityType { get; set; }
+        public string EntityName { get; set; }
         public string Mobile { get; set; }
         [DisplayName("پیام کاربر")]
         public string UserComment { get; set; }

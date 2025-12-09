@@ -483,7 +483,7 @@ namespace Data.Migrations
                     b.ToTable("PopUps", "dbo");
                 });
 
-            modelBuilder.Entity("Domain.PersonalData.Setting", b =>
+            modelBuilder.Entity("Domain.Main.Setting", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -491,27 +491,16 @@ namespace Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Aboute")
-                        .IsRequired()
+                    b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BackgroundImage")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("Birthday")
-                        .HasMaxLength(50)
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeleteTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Instagram")
+                    b.Property<string>("FooterDescript")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -519,35 +508,32 @@ namespace Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("Linkedin")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ProfileImage")
+                    b.Property<string>("Logo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Tweeter")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("MainBanner")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("jobs")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("MainBannerAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MapAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Mobile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Number2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SiteName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WorkTime")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -726,6 +712,51 @@ namespace Data.Migrations
                     b.HasIndex("ProvinceId");
 
                     b.ToTable("Cities", "dbo");
+                });
+
+            modelBuilder.Entity("Domain.Shop.Discount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(6)
+                        .HasColumnType("nvarchar(6)");
+
+                    b.Property<DateTime?>("DeleteTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Percent")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UsedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Discounts", "dbo");
                 });
 
             modelBuilder.Entity("Domain.Shop.Order", b =>
@@ -1426,6 +1457,23 @@ namespace Data.Migrations
                     b.Navigation("province");
                 });
 
+            modelBuilder.Entity("Domain.Shop.Discount", b =>
+                {
+                    b.HasOne("Domain.Shop.Order", "Order")
+                        .WithMany("discounts")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Domain.User.MyUser", "User")
+                        .WithMany("discounts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Shop.Order", b =>
                 {
                     b.HasOne("Domain.Shop.ShippingAddres", "ShippingAddress")
@@ -1623,6 +1671,8 @@ namespace Data.Migrations
             modelBuilder.Entity("Domain.Shop.Order", b =>
                 {
                     b.Navigation("OrderItems");
+
+                    b.Navigation("discounts");
                 });
 
             modelBuilder.Entity("Domain.Shop.Product", b =>
@@ -1659,6 +1709,8 @@ namespace Data.Migrations
                     b.Navigation("UserRoles");
 
                     b.Navigation("carts");
+
+                    b.Navigation("discounts");
 
                     b.Navigation("orders");
 

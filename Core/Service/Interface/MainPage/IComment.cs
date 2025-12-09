@@ -13,6 +13,8 @@ namespace Core.Service.Interface.MainPage
     {
         Task<bool> Insert(Comment comment);
         Task<bool> update(Comment comment);
+        Task<bool> Delete(int CommentId);
+
         Task<IEnumerable<Comment>> GEtAllComments();
         Task<IEnumerable<Comment>> GEtAllUserComments();
         Task<Comment> GetCommentbyid(int CommentId);
@@ -27,5 +29,6 @@ namespace Core.Service.Interface.MainPage
         Task<IEnumerable<Comment>> GetAllCommentPaging(int pageid, int number,int UserId);
         Task<IEnumerable<Comment>> GetTopComment(int number);
         Task<int> PostCount();
+        Task<ShowCommentVm> ReplyComment(int CommentId);
     }
 }

@@ -10,6 +10,7 @@ using Core.Enums;
 using Core.Extention;
 using Core.Interface.Admin;
 using Core.Service.Interface.Admin;
+using Core.Service.Interface.Users;
 using Dapper;
 using Data;
 using Data.MasterInterface;
@@ -28,13 +29,15 @@ namespace Core.Services.Users
         IMaster<PermissionList> _master;
         private readonly IRolePermission _rolePermission;
         private readonly IRole _Role;
+        private readonly IUser _User;
 
-        public PermissionListServices(IMaster<PermissionList> master, IRolePermission rolePermission, IRole role)
+        public PermissionListServices(IMaster<PermissionList> master, IRolePermission rolePermission, IRole role, IUser user)
         {
             _master = master;
 
             _rolePermission = rolePermission;
             _Role = role;
+            _User = user;
         }
         #region Area,Controller,Action
         public async Task<IEnumerable<PermissionList>> GetAllAsync()
@@ -442,7 +445,14 @@ namespace Core.Services.Users
         }
         public async Task<IEnumerable<PermissionList>> UserMenuAsync(int UserId)
         {
-            return await _master.GetAllEfAsync(a => a.Status == (int)MenuStatus.menu);
+            var user =await _User.GetUserByUserId(UserId);
+            var permissions = user.UserRoles
+    .SelectMany(ur => ur.Role.RolePermissions.DefaultIfEmpty())
+    .Where(rp => rp?.PermissionList?.Status == (int)MenuStatus.menu)
+    .Select(rp => rp.PermissionList)
+    .Distinct()
+    .ToList();
+            return permissions;
             //DynamicParameters p = new DynamicParameters();
             //p.Add("UserId", UserId, DbType.Int32);
             //return _master.GetAll("UserMenu", p).ToList();

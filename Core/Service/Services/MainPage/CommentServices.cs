@@ -2,6 +2,7 @@
 using Core.Dto.ViewModel.main;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
+using Dapper;
 using Data.MasterInterface;
 using Domain;
 using Domain.Main;
@@ -21,10 +22,12 @@ namespace Core.Service.Services.MainPage
     public class CommentServices : IComment
     {
         private readonly IMaster<Comment> _master;
+        private readonly IMaster<ShowCommentVm> _MasterVm;
 
-        public CommentServices(IMaster<Comment> master)
+        public CommentServices(IMaster<Comment> master, IMaster<ShowCommentVm> masterVm)
         {
             _master = master;
+            _MasterVm = masterVm;
         }
 
         public async Task<IEnumerable<Comment>> GEtAllComments()
@@ -52,35 +55,35 @@ namespace Core.Service.Services.MainPage
             var obj = await _master
      .GetAllAsQueryable()
      .Include(a => a.myUser)
-     .Where(a => a.UserId!=UserId) // فقط سؤال‌ها
+     .Where(a => a.UserId != UserId) // فقط سؤال‌ها
      .OrderByDescending(a => a.Id)
      .Select(a => new Comment
      {
-        Id= a.Id,
-        EntityId= a.EntityId,
-        Text= a.Text, // فرضی
+         Id = a.Id,
+         EntityId = a.EntityId,
+         Text = a.Text, // فرضی
          Name = string.IsNullOrEmpty(a.Name) ? a.myUser.FullName : a.Name,
-    CreateDate=a.CreateDate,
-    IsApproved=a.IsApproved,
-    EntityType=a.EntityType
+         CreateDate = a.CreateDate,
+         IsApproved = a.IsApproved,
+         EntityType = a.EntityType
      })
      .Skip((pageid - 1) * number)
      .Take(number)
      .ToListAsync();
             return obj;
-            
+
         }
 
         public async Task<IEnumerable<Comment>> GEtAllUserComments()
         {
             var obj = await _master.GetAllEfAsync(a => a.ParentId == null);
-           
-            return obj.OrderByDescending(a=>a.CreateDate);
+
+            return obj.OrderByDescending(a => a.CreateDate);
         }
 
         public async Task<Comment> GetCommentbyid(int CommentId)
         {
-            var obj = await _master.GetAllAsQueryable(a => a.Id == CommentId).Include(a=>a.myUser).ToListAsync();
+            var obj = await _master.GetAllAsQueryable(a => a.Id == CommentId).Include(a => a.myUser).ToListAsync();
             return obj.FirstOrDefault();
         }
 
@@ -110,25 +113,25 @@ namespace Core.Service.Services.MainPage
 
         public async Task<int> PostCount()
         {
-            var obj = await _master.GetAllEfAsync(a=>a.ParentId==null);
+            var obj = await _master.GetAllEfAsync(a => a.ParentId == null);
             return obj.Count();
         }
 
         public async Task<bool> ReplyToCommentAsync(ShowCommentVm vm, int AdminUserId)
         {
             bool fiResult = true;
-            var comment =await GetCommentbyid(vm.Id);
+            var comment = await GetCommentbyid(vm.Id);
             if (comment == null)
                 return false;
-            if(comment.IsApproved!=vm.IsApproved)
+            if (comment.IsApproved != vm.IsApproved)
             {
                 comment.IsApproved = vm.IsApproved;
                 var UpResult = await update(comment);
                 if (!UpResult)
                     return false;
             }
-           
-            if(!string.IsNullOrEmpty(vm.AdminComment))
+
+            if (!string.IsNullOrEmpty(vm.AdminComment))
             {
                 var reply = await GetRepolaybyid(vm.Id);
                 if (reply == null)
@@ -141,9 +144,9 @@ namespace Core.Service.Services.MainPage
                         CreateDate = DateTime.Now,
                         IsApproved = true,
                         UserId = AdminUserId,
-                        EntityId=vm.DietId,
-                        EntityType=vm.EntityType
-                        
+                        EntityId = vm.DietId,
+                        EntityType = vm.EntityType
+
                     };
 
                     fiResult = await Insert(reply);
@@ -164,7 +167,7 @@ namespace Core.Service.Services.MainPage
             return obj != null;
         }
 
-        public async Task<IEnumerable<Comment>> GetCommentsByEntityId(int entitytId,Domain.EntityType type)
+        public async Task<IEnumerable<Comment>> GetCommentsByEntityId(int entitytId, Domain.EntityType type)
         {
 
             var obj = await _master.GetAllAsQueryable().Include(a => a.myUser).Where(c => c.EntityId == entitytId
@@ -179,7 +182,7 @@ namespace Core.Service.Services.MainPage
                 CreateDate = a.CreateDate,
                 IsApproved = a.IsApproved,
                 EntityType = a.EntityType,
-                ParentId=a.ParentId
+                ParentId = a.ParentId
             }).ToListAsync();
 
 
@@ -197,12 +200,28 @@ namespace Core.Service.Services.MainPage
          Id = a.Id,
          EntityId = a.EntityId,
          Text = a.Text, // فرضی
-         Name =  a.myUser.FullName ,
+         Name = a.myUser.FullName,
          CreateDate = a.CreateDate,
          IsApproved = a.IsApproved,
          EntityType = a.EntityType
      }).ToListAsync();
-  
+
+        }
+
+        public async Task<bool> Delete(int CommentId)
+        {
+            var obj = await GetCommentbyid(CommentId);
+            if (obj == null)
+                return false;
+            return await _master.DeleteAsync(obj);
+        }
+
+        public async Task<ShowCommentVm> ReplyComment(int CommentId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("commentId", CommentId, System.Data.DbType.Int32);
+            var obj = await _MasterVm.GetAllAsync("ReplyComment", parameters);
+            return obj.FirstOrDefault();
         }
     }
 }

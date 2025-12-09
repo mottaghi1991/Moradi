@@ -1,12 +1,14 @@
-﻿using Domain.PersonalData;
+﻿
+using Domain.Main;
 using System.Threading.Tasks;
 
-namespace Core.Service.Interface.Admin
+namespace Core.Interface.MainPage
 {
     public interface ISetting
     {
+
         public Task<Setting> GetSettingAsync();
-   
+
         public Task<bool> UpdateSettingAsync(Setting setting);
     }
 }
