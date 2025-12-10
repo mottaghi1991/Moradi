@@ -14,17 +14,7 @@
                 <form asp-action="Create" method="post">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                    <div class="col-lg-12 col-md-4">
-
-                        <div class="form-group">
-                            <label asp-for="UserId" class="control-label"></label>
-                            <select asp-for="UserId" class="form-control myselect" asp-items="ViewBag.UserId">
-                                <option value="0">لطفا شخص مورد نظر را انتخاب نمائید .</option>
-                            </select>
-                            <span asp-validation-for="UserId" class="text-danger"></span>
-
-                        </div>
-                    </div>
+                   
                     <div class="col-lg-12 col-md-4">
                     <div class="form-group">
                         <label asp-for="Percent" class="control-label"></label>

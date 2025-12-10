@@ -52,9 +52,9 @@ namespace Core.Service.Services.Shop
         public async Task<IEnumerable<Discount>> GetDiscountsByStatus(bool? status)
         {
             if (status == null)
-                return _master.GetAllAsQueryable().Include(a => a.User);
+                return _master.GetAllAsQueryable();
             else
-                return _master.GetAllAsQueryable(a => a.IsUsed == status).Include(a => a.User);
+                return _master.GetAllAsQueryable(a => a.IsUsed == status);
         }
 
         public async Task<Discount> Insert(Discount discount)
@@ -74,7 +74,7 @@ namespace Core.Service.Services.Shop
                 };
             }
             oldDiscount.Percent = discount.Percent;
-            oldDiscount.UserId = discount.UserId;
+            oldDiscount.IsDeleted = discount.IsDeleted;
             var result = await _master.UpdateAsync(oldDiscount);
             if(result!=null)
             {

@@ -25,20 +25,14 @@ namespace DrMoradi.Areas.Admin.Controllers
         {
             return View(await _discount.GetDiscountsByStatus(null));
         }
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            ViewBag.UserId = new SelectList(await _user.GetAllUser(), "UserId", "DisplayName");
-            return View();
-        }
+     
         [HttpPost]
         public async Task<IActionResult> Create(Discount discount)
         {
-            if (discount.Percent == 0|| discount.UserId==0)
+            if (discount.Percent == 0)
             {
-                ViewBag.UserId = new SelectList(await _user.GetAllUser(), "UserId", "DisplayName", discount.UserId);
-                ModelState.AddModelError("UserId", "وارد کردن هر دو مورد اجباری می باشد .");
-                return View(discount);
+                ModelState.AddModelError("Percent", "وارد کردن هر دو مورد اجباری می باشد .");
+                return RedirectToAction("Index");
 
             }
             var result = await _discount.Insert(discount);
@@ -47,9 +41,8 @@ namespace DrMoradi.Areas.Admin.Controllers
                 TempData[Success] = SuccessMessage;
                 return RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(await _user.GetAllUser(), "UserId", "DisplayName", discount.UserId);
             TempData[Error]=ErrorMessage;
-            return View(discount);
+            return RedirectToAction("Index");
 
 
         }
@@ -61,7 +54,6 @@ namespace DrMoradi.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewBag.UserId = new SelectList(await _user.GetAllUser(), "UserId", "DisplayName", discount.UserId);
             return View(discount);
         }
         [HttpPost]
@@ -70,7 +62,6 @@ namespace DrMoradi.Areas.Admin.Controllers
             var result=await _discount.update(discount);
             if(result.ErrorId!=0)
             {
-                ViewBag.UserId = new SelectList(await _user.GetAllUser(), "UserId", "DisplayName", discount.UserId);
                 ModelState.AddModelError("", result.ErrorTitle);
                 return View(discount);
             }

@@ -44,7 +44,6 @@ namespace Domain.User
         public ICollection<Cart> carts{ get; set; }
         public ICollection<Order> orders{ get; set; }
         public ICollection<ShippingAddres> shippingAddres{ get; set; }
-        public ICollection<Discount> discounts{ get; set; }
 
     }
 

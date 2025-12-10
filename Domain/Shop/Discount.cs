@@ -21,15 +21,11 @@ namespace Domain.Shop
         public int Percent { get; set; }
         [DisplayName("شماره سفارش")]
         public int? OrderId { get; set; }
-        [DisplayName("کاربر")]
-        [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
-        public int UserId { get; set; }
         [DisplayName("استفاده شده")]
         public bool IsUsed{ get; set; }
         [DisplayName("تاریخ مصرف")]
         public DateTime UsedTime { get; set; }
-        [ForeignKey("UserId")]
-        public MyUser User{ get; set; }
+
         [ForeignKey("OrderId")]
         public Order Order{ get; set; }
     }

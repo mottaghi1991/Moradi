@@ -9,9 +9,21 @@
             <h3 class="card-title"> لیست گروه ها</h3>
         </div>
         <div class="card-body">
-            <p>
-                <a class="btn btn-success" asp-action="Create">جدید</a>
-            </p>
+      
+                <form asp-controller="Discount" asp-action="Create" method="post">
+                    <div class="row g-2 align-items-center">
+
+                        <div class="col-auto">
+                            <input name="Percent" class="form-control" placeholder="درصد">
+                        </div>
+
+                        <div class="col-auto">
+                            <input type="submit" value="ایجاد" class="btn btn-success">
+                        </div>
+
+                    </div>
+                </form>
+      
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <table class="table table-responsive table-hover">
                 <thead>
@@ -22,9 +34,7 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Percent)
                         </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.User.FullName)
-                        </th>
+                      
                         <th>
                             @Html.DisplayNameFor(model => model.OrderId)
                         </th>
@@ -52,9 +62,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Percent)
                             </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.User.FullName)
-                            </td>
+                           
                             <td>
                                 @Html.DisplayFor(modelItem => item.OrderId)
                             </td>
