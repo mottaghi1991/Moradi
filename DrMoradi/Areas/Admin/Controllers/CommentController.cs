@@ -28,7 +28,7 @@ namespace DrMoradi.Areas.Admin.Controllers
 
             int pagesize = 10;
             var total = await _comment.PostCount();
-            var Comments = await _comment.GetAllCommentPaging(page, pagesize,User.GetUserId());
+            var Comments = await _comment.GetAllCommentPaging(page, pagesize, User.GetUserId());
 
             return View(new CommentPageVm()
             {
@@ -44,10 +44,10 @@ namespace DrMoradi.Areas.Admin.Controllers
         {
             if (commentId <= 0)
                 return BadRequest("شناسه نظر نامعتبر است.");
-            var obj=await _comment.ReplyComment(commentId);
+            var obj = await _comment.ReplyComment(commentId);
             if (obj == null)
                 return NotFound("نظر یافت نشد.");
-      
+
             return View(obj);
         }
         [HttpPost]
@@ -85,18 +85,76 @@ namespace DrMoradi.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Delete(int CommentId)
         {
-            var result=await _comment.Delete(CommentId);
+            var result = await _comment.Delete(CommentId);
             if (result)
             {
                 TempData[Success] = SuccessMessage;
                 return RedirectToAction("Index");
             }
-            TempData[Error]=ErrorMessage;
+            TempData[Error] = ErrorMessage;
             return RedirectToAction("Index");
         }
-            
 
-
-        
+        public async Task<IActionResult> ListQuestion()
+        {
+            return View(await _comment.GetQuestion());
+        }
+        [HttpGet]
+        public IActionResult InsertQuestion()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> InsertQuestion(InsertQuestionVM Model)
+        {
+            if (!ModelState.IsValid) return View(Model);
+            var result = await _comment.InsertQuestion(Model, User.GetUserId());
+            if (result.ErrorId != 0)
+            {
+                TempData[Error] = result.ErrorTitle;
+                return View(Model);
+            }
+            TempData[Success] = result.ErrorTitle;
+            return RedirectToAction("ListQuestion");
+        }
+        [HttpGet]
+        public async Task<IActionResult> UpdateQuestion(int CommentId)
+        {
+            var obj = await _comment.ReplyComment(CommentId);
+            var model = await _comment.GetCommentbyid(CommentId);
+            if (model == null) return NotFound();
+            return View(new InsertQuestionVM()
+            {
+                CommentId = CommentId,
+                Question = obj.UserComment,
+                Answer = obj.AdminComment
+            });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateQuestion(InsertQuestionVM Model)
+        {
+            if (!ModelState.IsValid) return View(Model);
+            var result = await _comment.UpdateQuestion(Model, User.GetUserId());
+            if (result.ErrorId != 0)
+            {
+                TempData[Error] = result.ErrorTitle;
+                return View(Model);
+            }
+            TempData[Success] = result.ErrorTitle;
+            return RedirectToAction("ListQuestion");
+        }
+        public async Task<IActionResult> DeleteQuestion(int CommentId)
+        {
+            var model = await _comment.GetCommentbyid(CommentId);
+            if (model == null) return NotFound();
+            var result = await _comment.DeleteQuestion(CommentId);
+            if (result.ErrorId != 0)
+            {
+                TempData[Error] = result.ErrorTitle;
+                return RedirectToAction("ListQuestion");
+            }
+            TempData[Success] = result.ErrorTitle;
+            return RedirectToAction("ListQuestion");
+        }
     }
 }

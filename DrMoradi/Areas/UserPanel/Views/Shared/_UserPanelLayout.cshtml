@@ -94,7 +94,7 @@
     <script src="~/js/swipper.js"></script>
     <script src="~/Common/SweetAlert/sweetalert2.min.js"></script>
     <partial name="_Message" />
-    <partial name="_SiteFooter" />
+    @await Component.InvokeAsync("FooterComponent")
 
 
 

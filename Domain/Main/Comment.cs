@@ -17,6 +17,7 @@ namespace Domain.Main
     
         public string Mobile { get; set; }
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
+        [DisplayName("متن پیام")]
         public string Text { get; set; }
         [DisplayName("بخش")]
         public EntityType EntityType { get; set; }

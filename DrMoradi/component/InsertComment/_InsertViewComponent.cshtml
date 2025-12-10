@@ -1,7 +1,14 @@
 ﻿@using Core.Dto.ViewModel.main
 @using Domain.Main
+@using Core.Extention
 @model CommentsViewModel
+@section Style{
+    <style>
+   
 
+
+    </style>
+}
 <div class="comment-thread">
     @{
         RenderComments(Model.Comments, null, 0);
@@ -11,49 +18,58 @@
 @functions {
     void RenderComments(IEnumerable<Comment> comments, int? parentId, int level)
     {
-        var children = comments.Where(c => c.ParentId == parentId).ToList();
-        if (!children.Any()) return;
+        var replies = comments.Where(c => c.ParentId == parentId).ToList();
+        if (!replies.Any()) return;
 
-        <div class="ps-@(level * 3) border-start border-2" style="border-color:#dce1e6 !important;">
-            @foreach (var comment in children)
+        foreach (var comment in replies)
+        {
+            var bg = level switch
             {
-                var levelClass = $"level-{level}";
+                0 => "bg-white",
+                1 => "bg-light",
+                2 => "bg-light-subtle",
+                _ => "bg-light-subtle"
+            };
 
-                <div class="@levelClass p-3 mb-3 rounded shadow-sm">
+            <div class="comment-card @bg border rounded-3 p-3 mb-3">
 
-                    <!-- هدر -->
-                    <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                        <strong>👤 @comment.Name</strong>
-                        <small class="text-muted">
-                            @comment.CreateDate.ToString("yyyy/MM/dd HH:mm")
-                        </small>
-                    </div>
-
-                    <!-- متن -->
-                    <p class="mb-2">@comment.Text</p>
-
-                    <!-- دکمه باز کردن مودال -->
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <div>
-                            <button type="button"
-                                    class="btn btn-sm btn-link p-0 text-primary fw-bold"
-                                    onclick="openReplyModal(@comment.Id)">
-                                🗨️ پاسخ
-                            </button>
+                <!-- نام و تاریخ -->
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="comment-avatar rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                             style="background-color:#f4d28a;width:36px;height:36px;">
+                            @comment.Name.Substring(0,1)
                         </div>
-                    }
-               
+                        <strong>@comment.Name</strong>
+                    </div>
+                    <small class="text-muted">@comment.CreateDate.ToPersian()</small>
+                </div>
 
-                    <!-- پاسخ‌ها -->
+                <!-- متن -->
+                <div class="comment-text mb-2">@comment.Text</div>
+
+                <!-- دکمه پاسخ -->
+                @* 
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <button type="button"
+                            class="btn btn-sm btn-link text-primary p-0"
+                            onclick="openReplyModal(@comment.Id)">
+                        🗨️ پاسخ
+                    </button>
+                }
+                *@
+                <!-- پاسخ‌ها -->
+                <div class="comment-replies mt-3">
                     @{
                         RenderComments(comments, comment.Id, level + 1);
                     }
                 </div>
-            }
-        </div>
+            </div>
+        }
     }
 }
+
 
 <!-- مودال بوت‌استرپ -->
 <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">

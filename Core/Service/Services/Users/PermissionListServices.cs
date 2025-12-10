@@ -407,7 +407,9 @@ namespace Core.Services.Users
                 httpContext.Session.SetData("UserPermission", permissions);
             }
             if (permissions == null)
-            { return false; }
+            { 
+                return false;
+            }
             var obj = permissions.Any(p =>
                 (p.Area == area && p.ControllerName == null && p.ActionName == null) ||
                 (p.Area == area && p.ControllerName == controller && p.ActionName == null) ||

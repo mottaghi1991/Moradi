@@ -1,0 +1,55 @@
+﻿@using Core.Extention
+@model IEnumerable<Domain.Main.Comment>
+@{
+    ViewData["Title"] = "سوالات متداول";
+}
+
+
+<div class="col-md-12">
+    <div class="card card-primary">
+        <div class="card-header">
+            <h3 class="card-title"> لیست سوالات متداول</h3>
+        </div>
+        <div class="card-body">
+            <p>
+                <a class="btn btn-success" asp-action="InsertQuestion">جدید</a>
+            </p>
+            <table class="table table-responsive table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Text)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CreateDate)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Text)
+                            </td>
+
+                            <td>
+                                @item.CreateDate.ToPersian()
+                            </td>
+                            <td>
+                                <a class="btn btn-info" asp-action="UpdateQuestion" asp-route-CommentId="@item.Id">ویرایش</a>
+                                <a class="btn btn-danger" asp-action="delete" asp-route-CategoryId="@item.Id" onclick="return confirm('ایا از حذف اطمینان دارید؟')">حذف</a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+

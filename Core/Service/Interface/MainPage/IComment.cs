@@ -1,4 +1,5 @@
-﻿using Core.Dto.ViewModel.main;
+﻿using Core.Dto;
+using Core.Dto.ViewModel.main;
 using Domain;
 using Domain.Main;
 using System;
@@ -30,5 +31,11 @@ namespace Core.Service.Interface.MainPage
         Task<IEnumerable<Comment>> GetTopComment(int number);
         Task<int> PostCount();
         Task<ShowCommentVm> ReplyComment(int CommentId);
+        Task<IEnumerable<Comment>> GetHomeComment();
+        Task<IEnumerable<Comment>> GetQuestion();
+        Task<IEnumerable<Comment>> GetAllQuestion();
+        Task<ServiceResponse> InsertQuestion(InsertQuestionVM vM,int UserId);
+        Task<ServiceResponse> UpdateQuestion(InsertQuestionVM vM, int UserId);
+        Task<ServiceResponse> DeleteQuestion(int CommentId);
     }
 }

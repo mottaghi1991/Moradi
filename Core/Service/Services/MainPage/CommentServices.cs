@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Core.Dto;
 using Core.Dto.ViewModel.main;
 using Core.Service.Interface.Dr;
 using Core.Service.Interface.MainPage;
@@ -53,7 +54,7 @@ namespace Core.Service.Services.MainPage
         {
 
             var obj = await _master
-     .GetAllAsQueryable()
+     .GetAllAsQueryable(a=>a.ParentId==null)
      .Include(a => a.myUser)
      .Where(a => a.UserId != UserId) // فقط سؤال‌ها
      .OrderByDescending(a => a.Id)
@@ -222,6 +223,126 @@ namespace Core.Service.Services.MainPage
             parameters.Add("commentId", CommentId, System.Data.DbType.Int32);
             var obj = await _MasterVm.GetAllAsync("ReplyComment", parameters);
             return obj.FirstOrDefault();
+        }
+
+        public Task<IEnumerable<Comment>> GetHomeComment()
+        {
+            return _master.GetAllEfAsync(a => a.EntityType == Domain.EntityType.Home&&a.IsApproved);
+        }
+
+        public async Task<IEnumerable<Comment>> GetQuestion()
+        {
+            return  _master.GetAllAsQueryable(a => a.EntityType == Domain.EntityType.Question && a.ParentId == null).Include(a=>a.myUser);
+        }
+
+        public async Task<ServiceResponse> InsertQuestion(InsertQuestionVM vM,int UserId)
+        {
+            var question = await _master.InsertAsync(new Comment()
+            {
+                UserId = UserId,
+                ParentId=null,
+                Text = vM.Question,
+                EntityType = Domain.EntityType.Question,
+                CreateDate = DateTime.Now,
+                IsApproved = true,
+
+            });
+            if(question==null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ثبت سوال با مشکل مشواجه گردید"
+                };
+
+            }
+            var answer = await _master.InsertAsync(new Comment()
+            {
+                UserId = UserId,
+                ParentId = question.Id,
+                Text = vM.Answer,
+                EntityType = Domain.EntityType.Question,
+                CreateDate = DateTime.Now,
+                IsApproved = true
+
+            });
+            if (answer == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ثبت پاسخ با مشکل مواجه گردید"
+                };
+
+            }
+            return new ServiceResponse()
+            {
+                ErrorId = 0,
+                ErrorTitle = "عملیات با موفقیت انجام شد ."
+            };
+        }
+
+        public async Task<ServiceResponse> UpdateQuestion(InsertQuestionVM vM, int UserId)
+        {
+           var question=await GetCommentbyid(vM.CommentId);
+            question.Text=vM.Question;
+            var QuestionResult=await _master.UpdateAsync(question);
+            if (QuestionResult == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ویرایش سوال با مشکل مواجه گردید"
+                };
+
+            }
+            var Answer = await GetRepolaybyid(vM.CommentId);
+            Answer.Text=vM.Answer;
+            var AnswerResult=await _master.UpdateAsync(Answer);
+            if (AnswerResult == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ویرایش پاسخ با مشکل مواجه گردید"
+                };
+
+            }
+            return new ServiceResponse()
+            {
+                ErrorId = 0,
+                ErrorTitle = "عملیات با موفقیت انجام شد ."
+            };
+        }
+
+        public async Task<ServiceResponse> DeleteQuestion(int CommentId)
+        {
+            var question = await GetCommentbyid(CommentId);
+            var QuestionResult = await _master.DeleteAsync(question);
+            if (!QuestionResult)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "حذف سوال با مشکل مواجه گردید"
+                };
+
+            }
+            var Answer = await GetRepolaybyid(CommentId);
+            var AnswerResult = await _master.DeleteAsync(Answer);
+            if (!AnswerResult)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "حذف پاسخ با مشکل مواجه گردید"
+                };
+
+            }
+            return new ServiceResponse()
+            {
+                ErrorId = 0,
+                ErrorTitle = "عملیات با موفقیت انجام شد ."
+            };
+        }
+
+        public async Task<IEnumerable<Comment>> GetAllQuestion()
+        {
+            return await _master.GetAllEfAsync(a => a.EntityType == Domain.EntityType.Question);
         }
     }
 }

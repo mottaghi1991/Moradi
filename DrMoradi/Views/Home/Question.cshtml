@@ -1,7 +1,6 @@
-﻿@using Core.Dto.ViewModel.main
-@model ShowContactUsVM
+﻿@model IEnumerable<Domain.Main.Comment>
 @{
-    ViewData["Title"] = "Contact";
+    ViewData["Title"] = "Question";
 }
 @section style {
     <style>
@@ -141,104 +140,20 @@
 
 
 }
-<section class="position-relative py-5 " style="background-color: #f8f9fa;">
-    <div class="container">
-        <div class="row my-4 justify-content-center">
-            <div class="col-12">
-                <div class="section-title text-center">
-                    <h3 class="sub-title mb-4">
-                        ارتباط با ما
-
-                    </h3>
-                    <ul class="list-unstyled mt-4">
-                        <li class="list-inline-item user text-muted ms-3">
-                            <i class="mdi mdi-eye"></i>
-                            <span>صفحه اصلی</span>
-                        </li>
-                        <li class="list-inline-item date text-muted">
-                            <i class="mdi mdi-calendar-check"></i>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<section class="pt-5">
-    <!-- اگر کل صفحه RTL است، می‌توانید این را بردارید -->
-
-    <div class="container py-5">
-        <div class="row g-4 align-items-stretch">
-            <div class="col-lg-6 d-flex" id="commentComponentWrapper">
-                <!-- ستون راست: فرم و اسلایدر -->
-                @await Component.InvokeAsync("CommentComponent")
-                <!-- باکس BMI -->
-
-
-            </div>
-            <div class="col-lg-6">
-                <!-- آدرس مطب -->
-                <div class="card mb-3 shadow-sm border-0 contact-card-tall">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="ms-3 text-primary fs-3">
-                            <i class="bi bi-geo-alt-fill"></i>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold mb-1">آدرس مطب</h6>
-                            <p class="mb-0 text-muted">
-                                @Model.Setting.Address
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- شماره تماس -->
-                <div class="card mb-3 shadow-sm border-0 contact-card-tall">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="ms-3 text-primary fs-3">
-                            <i class="bi bi-telephone-fill"></i>
-                        </div>
-                        <div>
-                            <h6 class="fw-bold mb-1">شماره تماس</h6>
-                            <p class="mb-0">
-                                <a href="tel:@Model.Setting.Number1" class="text-decoration-none text-dark">@Model.Setting.Number1</a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- نقشه گوگل -->
-                <div class="card shadow-sm border-0">
-                    <div class="ratio ratio-16x9">
-
-
-                        <iframe src="@Model.Setting.MapAddress" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
-
-
-</section>
-
 <div class="faq-section">
     <div class="faq-title">
-        <h2>سؤالاتی که کاربران پرسیده اند</h2>
+        <h2>پرسش و پاسخ متداول</h2>
+        <p class="text-muted">سؤالاتی که کاربران بیشتر می‌پرسند و پاسخ‌های تیم متخصص ما</p>
     </div>
 
     <!-- Accordion -->
 
     <div class="accordion" id="faqAccordion">
-        @foreach (var item in Model.comments.Where(c => c.ParentId == null))
+        @foreach (var item in Model.Where(c => c.ParentId == null))
         {
             var headerId = $"q{item.Id}";
             var collapseId = $"a{item.Id}";
-            var replies = Model.comments.Where(a => a.ParentId == item.Id).ToList();
+            var replies = Model.Where(a => a.ParentId == item.Id).ToList();
 
             <div class="accordion-item">
                 <h2 class="accordion-header" id="@headerId">
@@ -247,7 +162,7 @@
                             data-bs-target="#@collapseId"
                             aria-expanded="false"
                             aria-controls="@collapseId">
-                        <strong>@item.Name:</strong>&nbsp; @item.Text
+                       @item.Text
                     </button>
                 </h2>
 
@@ -259,7 +174,7 @@
                             {
                                 <p>
                                     <strong>پاسخ:</strong> @reply.Text
-                                    <span class="text-muted">— @reply.Name</span>
+                                   
                                 </p>
                             }
                         }
@@ -276,40 +191,3 @@
 
 </div>
 
-
-@section Scripts {
-    <script>
-        $(document).on("submit", "#mobileForm", function(e) {
-
-            e.preventDefault(); // جلوگیری از سابمیت عادی
-            var $form = $(this);
-            $.ajax({
-                url: $form.attr("action"),
-                method: "POST",
-                data: $form.serialize(),
-                success: function (result) {
-
-                      $("#commentComponentWrapper").html(result);
-        if ($.validator && $.validator.unobtrusive)
-            $.validator.unobtrusive.parse("#mobileForm");
-
-        if ($("#successMessage").length) {
-            setTimeout(function () {
-                $("#successMessage").fadeOut(600);
-            }, 4000);
-        }
-        if ($("#errorMessage").length) {
-            setTimeout(function () {
-                $("#errorMessage").fadeOut(600);
-            }, 4000);
-        }
-        if ($('#testimonialsCarousel').length)
-            $('#testimonialsCarousel').carousel();
-                },
-                error: function () {
-                    alert("مشکل در ارتباط با سرور. لطفا بعدا تلاش کنید.");
-                }
-            });
-        });
-    </script>
-}

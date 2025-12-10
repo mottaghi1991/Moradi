@@ -93,7 +93,12 @@ namespace DrMoradi.Controllers
         [Route("/Contact")]
         public async Task<IActionResult> Contact()
         {
-            return View();
+            var vm = new ShowContactUsVM()
+            {
+                Setting = await _setting.GetSettingAsync(),
+                comments = await _comment.GetHomeComment()
+            };
+            return View(vm);
         }
 
 
@@ -289,6 +294,10 @@ namespace DrMoradi.Controllers
                 TempData[BaseController.Error] = "متأسفیم! هنگام ثبت نظر مشکلی پیش آمد. لطفاً بعداً دوباره امتحان کنید. ";
 
             return RedirectToAction("DietDetail", new { DietId = EntityId });
+        }
+        public async Task<IActionResult> Question()
+        {
+            return View(await _comment.GetAllQuestion());
         }
 
     }

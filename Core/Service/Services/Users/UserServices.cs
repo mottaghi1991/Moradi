@@ -148,7 +148,7 @@ namespace Core.Service.Services.Users
             };
 
             var result =await AddUserAsync(newUser);
-          await  _Role.UserRoleInsertAsync(new UserRole { RoleId = 2, UserId = result.ItUserId });
+          await  _Role.UserRoleInsertAsync(new UserRole { RoleId = 4, UserId = result.ItUserId });
 
             return result;
         }

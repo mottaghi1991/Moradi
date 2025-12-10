@@ -41,7 +41,8 @@ namespace Domain
     {
         Home=1,
         Diet=2,
-        Product=3
+        Product=3,
+        Question=4
     }
     public enum Gender
     {
