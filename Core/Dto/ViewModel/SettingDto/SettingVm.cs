@@ -42,5 +42,21 @@ namespace Core.Dto.ViewModel.Admin.SettingDto
         public IFormFile MainBannerFile { get; set; }
         [DisplayName("آدرس بنر")]
         public string MainBannerAddress { get; set; }
+        [DisplayName("آیکون اول")]
+        public string IconFirst { get; set; }
+        public IFormFile IconFirstFile { get; set; }
+        [DisplayName("لینک آیکون اول")]
+        public string IconFirstLink { get; set; }
+        [DisplayName("آیکون دوم")]
+        public string IconSecond { get; set; }
+        public IFormFile IconSecondFile { get; set; }
+        [DisplayName("لینک آیکون دوم")]
+        public string IconSecondLink { get; set; }
+        [DisplayName("آیکون سوم")]
+        public string IconThird { get; set; }
+        public IFormFile IconThirdFile { get; set; }
+        [DisplayName("لینک آیکون سوم")]
+        public string IconThirdLink { get; set; }
+
     }
 }

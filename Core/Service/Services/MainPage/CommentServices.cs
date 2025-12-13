@@ -54,7 +54,7 @@ namespace Core.Service.Services.MainPage
         {
 
             var obj = await _master
-     .GetAllAsQueryable(a=>a.ParentId==null)
+     .GetAllAsQueryable(a=>a.ParentId==null&&a.EntityType!=Domain.EntityType.Question)
      .Include(a => a.myUser)
      .Where(a => a.UserId != UserId) // فقط سؤال‌ها
      .OrderByDescending(a => a.Id)
@@ -343,6 +343,123 @@ namespace Core.Service.Services.MainPage
         public async Task<IEnumerable<Comment>> GetAllQuestion()
         {
             return await _master.GetAllEfAsync(a => a.EntityType == Domain.EntityType.Question);
+        }
+
+      
+
+        public async Task<ServiceResponse> InsertRule(InsertQuestionVM vM, int UserId)
+        {
+            var question = await _master.InsertAsync(new Comment()
+            {
+                UserId = UserId,
+                ParentId = null,
+                Text = vM.Question,
+                EntityType = Domain.EntityType.Rule,
+                CreateDate = DateTime.Now,
+                IsApproved = true,
+
+            });
+            if (question == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ثبت سوال با مشکل مشواجه گردید"
+                };
+
+            }
+            var answer = await _master.InsertAsync(new Comment()
+            {
+                UserId = UserId,
+                ParentId = question.Id,
+                Text = vM.Answer,
+                EntityType = Domain.EntityType.Rule,
+                CreateDate = DateTime.Now,
+                IsApproved = true
+
+            });
+            if (answer == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ثبت پاسخ با مشکل مواجه گردید"
+                };
+
+            }
+            return new ServiceResponse()
+            {
+                ErrorId = 0,
+                ErrorTitle = "عملیات با موفقیت انجام شد ."
+            };
+        }
+
+        public async Task<ServiceResponse> UpdateRule(InsertQuestionVM vM, int UserId)
+        {
+            var question = await GetCommentbyid(vM.CommentId);
+            question.Text = vM.Question;
+            var QuestionResult = await _master.UpdateAsync(question);
+            if (QuestionResult == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ویرایش سوال با مشکل مواجه گردید"
+                };
+
+            }
+            var Answer = await GetRepolaybyid(vM.CommentId);
+            Answer.Text = vM.Answer;
+            var AnswerResult = await _master.UpdateAsync(Answer);
+            if (AnswerResult == null)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "ویرایش پاسخ با مشکل مواجه گردید"
+                };
+
+            }
+            return new ServiceResponse()
+            {
+                ErrorId = 0,
+                ErrorTitle = "عملیات با موفقیت انجام شد ."
+            };
+        }
+
+        public async Task<ServiceResponse> DeleteRule(int CommentId)
+        {
+            var question = await GetCommentbyid(CommentId);
+            var QuestionResult = await _master.DeleteAsync(question);
+            if (!QuestionResult)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "حذف سوال با مشکل مواجه گردید"
+                };
+
+            }
+            var Answer = await GetRepolaybyid(CommentId);
+            var AnswerResult = await _master.DeleteAsync(Answer);
+            if (!AnswerResult)
+            {
+                return new ServiceResponse()
+                {
+                    ErrorTitle = "حذف پاسخ با مشکل مواجه گردید"
+                };
+
+            }
+            return new ServiceResponse()
+            {
+                ErrorId = 0,
+                ErrorTitle = "عملیات با موفقیت انجام شد ."
+            };
+        }
+
+        public async Task<IEnumerable<Comment>> GetAllRule()
+        {
+            return await _master.GetAllEfAsync(a => a.EntityType == Domain.EntityType.Rule&&a.ParentId==null);
+        }
+
+        public async Task<IEnumerable<Comment>> Getrule()
+        {
+            return await _master.GetAllEfAsync(a => a.EntityType == Domain.EntityType.Rule);
         }
     }
 }

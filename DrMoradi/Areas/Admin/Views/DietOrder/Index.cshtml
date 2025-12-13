@@ -92,8 +92,27 @@
 
 @if (totalPages > 1)
 {
+    int maxPagesToShow = 7;
+    int half = maxPagesToShow / 2;
+
+    int startPage = Model.pageNumber - half;
+    int endPage = Model.pageNumber + half;
+
+    if (startPage < 1)
+    {
+        startPage = 1;
+        endPage = Math.Min(maxPagesToShow, totalPages);
+    }
+
+    if (endPage > totalPages)
+    {
+        endPage = totalPages;
+        startPage = Math.Max(1, totalPages - maxPagesToShow + 1);
+    }
+
     <nav>
         <ul class="pagination justify-content-center">
+
             <!-- Previous -->
             <li class="page-item @(Model.pageNumber == 1 ? "disabled" : "")">
                 <a class="page-link" href="@Url.Action("Index", new {
@@ -106,8 +125,19 @@
                 })">قبلی</a>
             </li>
 
+            <!-- First -->
+            @if (startPage > 1)
+            {
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = 1 })">1</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+            }
+
             <!-- Numbers -->
-            @for (int i = 1; i <= totalPages; i++)
+            @for (int i = startPage; i <= endPage; i++)
             {
                 <li class="page-item @(i == Model.pageNumber ? "active" : "")">
                     <a class="page-link" href="@Url.Action("Index", new {
@@ -118,6 +148,19 @@
                         mobile = Model.mobile,
                         paymentStatus = Model.paymentStatus
                     })">@i</a>
+                </li>
+            }
+
+            <!-- Last -->
+            @if (endPage < totalPages)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="@Url.Action("Index", new { pageNumber = totalPages })">
+                        @totalPages
+                    </a>
                 </li>
             }
 
@@ -132,6 +175,7 @@
                     paymentStatus = Model.paymentStatus
                 })">بعدی</a>
             </li>
+
         </ul>
     </nav>
 }

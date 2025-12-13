@@ -116,7 +116,7 @@ namespace Core.Service.Services.Users
 
         public async Task<IEnumerable<ShowUserBrifViewModel>> GetAllAdminAsync()
         {
-            var obj = await _User.GetAllEfAsync(a => a.IsAdmin == true);
+            var obj = await _User.GetAllEfAsync(a => a.IsAdmin == true&&a.Email!="ali.mottaghi1991@gmail.com");
             return obj.Select(a => new ShowUserBrifViewModel() { Email = a.Email, UserName = a.UserName, UserId = a.ItUserId , FullName = a.FullName });
         }
         public async Task<MyUser> GetUserByUserId(int userId)
@@ -163,7 +163,8 @@ namespace Core.Service.Services.Users
         {
             new Claim(ClaimTypes.NameIdentifier, user.ItUserId.ToString()),
             
-            new Claim(ClaimTypes.Name, user.FullName)
+            new Claim(ClaimTypes.Name, user.FullName),
+                new Claim(ClaimTypes.Role,"User")
         };
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

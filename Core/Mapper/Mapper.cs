@@ -7,9 +7,11 @@ using Core.Dto.ViewModel.Dr.DietVM;
 using Core.Dto.ViewModel.main;
 using Core.Dto.ViewModel.Shop.Category;
 using Core.Dto.ViewModel.Store.ProductDto;
+using Core.Dto.ViewModel.User;
 using Domain.Dr;
 using Domain.Main;
 using Domain.Shop;
+using Domain.User;
 
 
 namespace Core.Mapper
@@ -18,6 +20,8 @@ namespace Core.Mapper
     {
         public Mapper()
         {
+            CreateMap<MyUser, RegisterViewModel>().ReverseMap();
+
             CreateMap<Setting, EditSettingViewModel>().ReverseMap();
             CreateMap<Diet, AddDietVm>().ReverseMap();
             CreateMap<Diet, EditDietVm>().ReverseMap();
@@ -36,6 +40,7 @@ namespace Core.Mapper
 
 
             CreateMap<Setting, SettingVm>().ReverseMap();
+            CreateMap<Slider, SliderEditVm>().ReverseMap();
         }
     }
 }

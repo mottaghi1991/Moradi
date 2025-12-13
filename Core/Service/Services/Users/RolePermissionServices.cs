@@ -33,7 +33,7 @@ namespace Core.Service.Services.Users
         public async Task<IEnumerable<RolePermission>> GetPermissionOfRoleAsync(int RoleId)
         {
 
-            return await _master.GetAllAsQueryable().Include(a => a.PermissionList).Where(a => a.RoleId == RoleId).ToListAsync();
+            return await _master.GetAllAsQueryable().Include(a => a.PermissionList).Where(a => a.RoleId == RoleId&&a.PermissionList.Status==(int)MenuStatus.permission).ToListAsync();
         }
 
         public async Task<bool> BulkInsertAsync(List<RolePermission> list)

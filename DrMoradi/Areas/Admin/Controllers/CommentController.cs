@@ -156,5 +156,66 @@ namespace DrMoradi.Areas.Admin.Controllers
             TempData[Success] = result.ErrorTitle;
             return RedirectToAction("ListQuestion");
         }
+        public async Task<IActionResult> ListRule()
+        {
+            return View(await _comment.GetAllRule());
+        }
+        [HttpGet]
+        public IActionResult InsertRule()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> InsertRule(InsertQuestionVM Model)
+        {
+            if (!ModelState.IsValid) return View(Model);
+            var result = await _comment.InsertRule(Model, User.GetUserId());
+            if (result.ErrorId != 0)
+            {
+                TempData[Error] = result.ErrorTitle;
+                return View(Model);
+            }
+            TempData[Success] = result.ErrorTitle;
+            return RedirectToAction("ListRule");
+        }
+        [HttpGet]
+        public async Task<IActionResult> UpdateRule(int CommentId)
+        {
+            var obj = await _comment.ReplyComment(CommentId);
+            var model = await _comment.GetCommentbyid(CommentId);
+            if (model == null) return NotFound();
+            return View(new InsertQuestionVM()
+            {
+                CommentId = CommentId,
+                Question = obj.UserComment,
+                Answer = obj.AdminComment
+            });
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdateRule(InsertQuestionVM Model)
+        {
+            if (!ModelState.IsValid) return View(Model);
+            var result = await _comment.UpdateRule(Model, User.GetUserId());
+            if (result.ErrorId != 0)
+            {
+                TempData[Error] = result.ErrorTitle;
+                return View(Model);
+            }
+            TempData[Success] = result.ErrorTitle;
+            return RedirectToAction("ListRule");
+        }
+        public async Task<IActionResult> DeleteRule(int CommentId)
+        {
+            var model = await _comment.GetCommentbyid(CommentId);
+            if (model == null) return NotFound();
+            var result = await _comment.DeleteQuestion(CommentId);
+            if (result.ErrorId != 0)
+            {
+                TempData[Error] = result.ErrorTitle;
+                return RedirectToAction("ListRule");
+            }
+            TempData[Success] = result.ErrorTitle;
+            return RedirectToAction("ListRule");
+        }
     }
 }

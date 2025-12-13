@@ -93,7 +93,16 @@
 
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <a href="/UserPanel" class="btn btn-outline-success">پنل کاربری</a>
+                    @if(User.IsInRole("Admin"))
+                    {
+                        <a asp-area="Admin" asp-controller="AdminHome" asp-action="Index" class="btn btn-outline-success">پنل کاربری</a>
+
+                    }
+                    else if (User.IsInRole("User"))
+                    {
+                        <a href="/UserPanel" class="btn btn-outline-success">پنل کاربری</a>
+
+                    }
                 }
                 else
                 {

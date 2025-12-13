@@ -25,5 +25,12 @@ namespace Domain.Main
   
         public string MainBanner { get; set; }
         public string MainBannerAddress { get; set; }
+        public string IconFirst { get; set; }
+        public string IconFirstLink { get; set; }
+        public string IconSecond { get; set; }
+        public string IconSecondLink { get; set; }
+        public string IconThird { get; set; }
+        public string IconThirdLink { get; set; }
+
     }
 }

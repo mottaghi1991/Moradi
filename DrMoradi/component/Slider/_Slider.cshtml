@@ -23,10 +23,16 @@
             @foreach (var item in Model)
             {
                 <div class="carousel-item @(index == 0 ? "active" : "")">
-                    <picture>
-                     
-                        <a href="@item.Link">  <img src="@item.DesktopFile" class="d-block w-100" alt="@item.DesktopDescript"></a>
+                  <a href="@item.Link">  <picture>
+                        <source 
+                            srcset="@item.MobileFile"
+                            media="(max-width:767px)" />
+                     <img 
+                         src="@item.DesktopFile" media="" />
+                
+                        @* <a href="@item.Link">  <img src="@item.DesktopFile" class="d-block w-100" alt="@item.DesktopDescript"></a> *@
                     </picture>
+                    </a>
                     <div class="carousel-caption d-none d-md-block">
                         <!-- کاپشن دلخواه -->
                     </div>

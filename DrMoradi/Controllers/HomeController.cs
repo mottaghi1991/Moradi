@@ -259,9 +259,10 @@ namespace DrMoradi.Controllers
         }
         [HttpGet]
         [Route("Rules")]
-        public IActionResult Rules()
+        public async Task<IActionResult> Rules()
         {
-            return View();
+
+            return View(await _comment.Getrule());
         }
         [Route("About")]
         public IActionResult About()

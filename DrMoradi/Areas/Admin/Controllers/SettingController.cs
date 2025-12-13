@@ -60,6 +60,27 @@ namespace Mandella.Areas.Admin.Controllers
                 var path = FileTools.UploadFile(setting.LogoFile, Bannername, "Banner");
                 old.MainBanner = path.FilePath;
             }
+            if (setting.IconFirstFile != null)
+            {
+                var Bannername = FileTools.GetFileName(setting.IconFirstFile);
+                var path = FileTools.UploadFile(setting.IconFirstFile, Bannername, "Icon");
+                old.IconFirst = path.FilePath;
+            }
+            if (setting.IconSecondFile != null)
+            {
+                var Bannername = FileTools.GetFileName(setting.IconSecondFile);
+                var path = FileTools.UploadFile(setting.IconSecondFile, Bannername, "Icon");
+                old.IconSecond = path.FilePath;
+            }
+            if (setting.IconThirdFile != null)
+            {
+                var Bannername = FileTools.GetFileName(setting.IconThirdFile);
+                var path = FileTools.UploadFile(setting.IconThirdFile, Bannername, "Icon");
+                old.IconThird = path.FilePath;
+            }
+            old.IconFirstLink = setting.IconFirstLink;
+            old.IconSecondLink = setting.IconSecondLink;
+            old.IconThirdLink = setting.IconThirdLink;
             old.Number1 = setting.Number1;
             old.Number2 = setting.Number2;
             old.Mobile = setting.Mobile;
@@ -70,7 +91,11 @@ namespace Mandella.Areas.Admin.Controllers
             old.Address = setting.Address;
             old.WorkTime = setting.WorkTime;
             old.FooterDescript = setting.FooterDescript;
-            await _setting.UpdateSettingAsync(old);
+           var result= await _setting.UpdateSettingAsync(old);
+            if (result)
+                TempData[Success] = SuccessMessage;
+            else
+                TempData[Error] = ErrorMessage;
             return RedirectToAction("Index");
         }
       

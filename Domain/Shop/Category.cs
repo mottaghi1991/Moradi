@@ -14,6 +14,7 @@ namespace Domain.Shop
         [MaxLength(50, ErrorMessage = "طول رشته بیشتر از 50 کاراکتر می باشد")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public string CategoryName { get; set; }
+        [DisplayName("تصویر")]
         public string Image { get; set; }
         public bool IsActive { get; set; }
         public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();

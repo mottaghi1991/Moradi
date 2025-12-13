@@ -240,7 +240,8 @@ namespace DrMoradi.Controllers
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.NameIdentifier,user.ItUserId.ToString()),
-                    new Claim(ClaimTypes.Name,user.UserName)
+                    new Claim(ClaimTypes.Name,user.UserName),
+                    new Claim(ClaimTypes.Role,"Admin")
                 };
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(identity);

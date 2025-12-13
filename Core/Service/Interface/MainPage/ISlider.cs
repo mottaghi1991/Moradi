@@ -10,5 +10,7 @@ namespace Core.Service.Interface.MainPage
     public interface ISlider
     {
         public Task<IEnumerable<Slider>> GetSliders();
+        Task<Slider> GetSliderById(int SliderId);
+        Task<Slider> Update(Slider slider);
     }
 }

@@ -1,51 +1,192 @@
-﻿@{
+﻿@using Domain.Main
+@model IEnumerable<Domain.Main.Comment>
+@{
     ViewData["Title"] = "Rules";
 }
+@section style {
+    <style>
+        /* کارت‌های آدرس و شماره تماس ارتفاع بیشتری داشته باشن */
+        .contact-card-tall {
+            min-height: 120px; /* یا هر مقدار دلخواه */
+            display: flex;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-<section class="position-relative py-5 " style="background-color: #f8f9fa;">
-    <div class="container">
-        <div class="row my-4 justify-content-center">
-            <div class="col-12">
-                <div class="section-title text-center">
-                    <h3 class="sub-title mb-4">
-                        قوانین و مقررات
-                    </h3>
-                    <ul class="list-unstyled mt-4">
-                        <li class="list-inline-item user text-muted ms-3">
-                            <i class="mdi mdi-eye"></i>
-                            <span>صفحه اصلی</span>
-                        </li>
-                        <li class="list-inline-item date text-muted">
-                            <i class="mdi mdi-calendar-check"></i>
-                        </li>
-                    </ul>
+            /* تغییر رنگ در هاور */
+            .contact-card-tall:hover {
+                background-color: #0d6efd; /* آبی بوت‌استرپ */
+                color: #fff; /* متن سفید برای خوانایی */
+            }
+
+                /* مطمئن بشیم متن و لینک هم سفید میشه */
+                .contact-card-tall:hover h6,
+                .contact-card-tall:hover p,
+                .contact-card-tall:hover a,
+                .contact-card-tall:hover i {
+                    color: #fff !important;
+                }
+
+
+        .faq-section {
+            max-width: 800px;
+            margin: 4rem auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 2rem;
+        }
+
+        .faq-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+            .faq-title h2 {
+                font-weight: 700;
+                color: #444;
+            }
+
+        .accordion-button {
+            background-color: #fefcf9;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+            .accordion-button:not(.collapsed) {
+                color: #000;
+                background-color: #f4d28a40;
+                box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+            }
+
+            .accordion-button:focus {
+                box-shadow: 0 0 0 0.2rem rgba(244,210,138,0.4);
+            }
+
+            .accordion-button strong {
+                color: #a6772b; /* طلایی ملایم هم‌تم */
+                font-weight: 700; /* ضخیم‌تر از متن سؤال */
+                font-size: 1.05rem;
+                margin-left: 6px;
+            }
+
+        .accordion-item {
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        .accordion-body {
+            background: #fffdf5;
+            line-height: 1.8;
+            color: #555;
+        }
+
+            .accordion-body .text-muted {
+                font-style: italic; /* حالت ملایم‌تر و متفاوت */
+                color: #956c29; /* سایه طلایی تیره‌تر برای تم یک‌دست */
+                font-weight: 500;
+                margin-right: 4px;
+            }
+
+            .accordion-body p {
+                background: #fff8e4;
+                border-radius: 8px;
+                padding: 8px 12px;
+                margin-bottom: 10px;
+                transition: background-color 0.3s ease;
+            }
+
+                .accordion-body p:hover {
+                    background: #f4d28a50;
+                }
+        /* بخش افزودن سوال */
+        .ask-box {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: #fffbea;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+            .ask-box h5 {
+                font-weight: 600;
+                margin-bottom: 1rem;
+                color: #555;
+            }
+
+            .ask-box input, .ask-box textarea {
+                border-radius: 8px;
+                border: 1px solid #ddd;
+                transition: all .2s;
+            }
+
+                .ask-box input:focus, .ask-box textarea:focus {
+                    border-color: #f4d28a;
+                    box-shadow: 0 0 0 0.2rem rgba(244,210,138,0.25);
+                }
+
+        .btn-send {
+            background-color: #f4d28a;
+            border: none;
+            color: #333;
+            font-weight: 600;
+            transition: all .3s;
+        }
+
+            .btn-send:hover {
+                background-color: #f1c86c;
+                color: #000;
+            }
+
+    </style>
+
+
+}
+<div class="faq-section">
+    <div class="faq-title">
+        <h2>قوانین و مقررات سایت</h2>
+    </div>
+
+    <!-- Accordion -->
+
+    <div class="accordion" id="faqAccordion">
+        @foreach (var item in Model.Where(c => c.ParentId == null))
+        {
+            var headerId = $"q{item.Id}";
+            var collapseId = $"a{item.Id}";
+            var replies = Model.Where(a => a.ParentId == item.Id).ToList();
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="@headerId">
+                    <button class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#@collapseId"
+                            aria-expanded="false"
+                            aria-controls="@collapseId">
+                        <strong></strong>&nbsp; @item.Text
+                    </button>
+                </h2>
+
+                <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headerId">
+                    <div class="accordion-body">
+                        @if (replies.Any())
+                        {
+                            @foreach (var reply in replies)
+                            {
+                                <p>
+                                    <strong>پاسخ:</strong> @reply.Text
+                                    <span class="text-muted"> @reply.Name</span>
+                                </p>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">هنوز مقرراتی برای این سؤال ثبت نشده است.</p>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
-</section>
 
 
-<section class="pt-5">
-    <!-- اگر کل صفحه RTL است، می‌توانید این را بردارید -->
-
-    <div class="container py-5">
-        <div class="row g-4 align-items-center">
-            <div class="col-lg-12 d-flex justify-content-center" >
-
-                <div class="card mb-3 shadow-sm border-0  ">
-
-                    <p class="m-3">
-                        رژیم آنلاین دکتر معصومه مرادی به صورت 2 هفته یکبار و یا ماهانه و یا 3 ماهه با توجه به نوع رژیم انتخابی و با توجه به صلاحدید دکتر می باشد.
-
-                    </p>
-                    <p class="m-3">
-                        در صورت داشتن هر گونه مشکل در درخواست رژیم می توانید با شماره مطب 88231136-021 و یا شماره موبایل 09194820425 تماس بگیرید.
-
-
-                    </p>
-                    </div>
-            </div>
-        </div>
-    </div>
-</section>
+</div>

@@ -18,9 +18,21 @@ namespace Core.Service.Services.MainPage
             _master = master;
         }
 
+        public async Task<Slider> GetSliderById(int SliderId)
+        {
+            var obj = await _master.GetAllEfAsync(a => a.Id == SliderId);
+            return obj.FirstOrDefault();
+
+        }
+
         public async Task<IEnumerable<Slider>> GetSliders()
         {
             return await _master.GetAllEfAsync();
+        }
+
+        public async Task<Slider> Update(Slider slider)
+        {
+            return await _master.UpdateAsync(slider);
         }
     }
 }

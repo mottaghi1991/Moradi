@@ -37,5 +37,12 @@ namespace Core.Service.Interface.MainPage
         Task<ServiceResponse> InsertQuestion(InsertQuestionVM vM,int UserId);
         Task<ServiceResponse> UpdateQuestion(InsertQuestionVM vM, int UserId);
         Task<ServiceResponse> DeleteQuestion(int CommentId);
+
+
+        Task<IEnumerable<Comment>> GetAllRule();
+        Task<ServiceResponse> InsertRule(InsertQuestionVM vM, int UserId);
+        Task<ServiceResponse> UpdateRule(InsertQuestionVM vM, int UserId);
+        Task<ServiceResponse> DeleteRule(int CommentId);
+        Task<IEnumerable<Comment>> Getrule();
     }
 }
