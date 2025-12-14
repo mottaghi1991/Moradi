@@ -132,6 +132,7 @@ namespace Core.Service.Services.Shop
         {
             var query = _master.GetAllAsQueryable()
                 .Include(a => a.User)
+                .Include(a=>a.discounts)
                 .Include(a => a.ShippingAddress)
                     .ThenInclude(a => a.province)
                 .Include(a => a.OrderItems)
@@ -172,7 +173,7 @@ namespace Core.Service.Services.Shop
 
         public async Task<IEnumerable<Order>> GetAllOrderByUserId(int userId)
         {
-            return await _master.GetAllAsQueryable().Include(a=>a.User).Include(a => a.OrderItems).ThenInclude(i => i.Product)
+            return await _master.GetAllAsQueryable().Include(a=>a.discounts).Include(a=>a.User).Include(a => a.OrderItems).ThenInclude(i => i.Product)
                    .Where(c => c.UserId == userId).OrderByDescending(a=>a.PaymentDate).ToListAsync();
         }
 

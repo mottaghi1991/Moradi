@@ -21,6 +21,16 @@ namespace Core.Service.Services.Shop
             _master = master;
         }
 
+        public async Task<bool> DeactiveCode(int OrderId)
+        {
+           var obj=await _master.GetAllEfAsync(a=>a.OrderId == OrderId);
+            var item=obj.FirstOrDefault();
+            item.IsUsed = true;
+           return await update(item)!=null;
+
+
+        }
+
         public async Task<ServiceResponse> Delete(Discount discount)
         {
           
@@ -41,6 +51,12 @@ namespace Core.Service.Services.Shop
 
                 ErrorTitle = "عملیت با خطا مواجه گردید"
             };
+        }
+
+        public async Task<Discount> GetDiscountByCode(string code)
+        {
+            var obj = await _master.GetAllEfAsync(a => a.Code == code&&!a.IsDeleted&&!a.IsUsed&&a.OrderId==null);
+            return obj.FirstOrDefault();
         }
 
         public async Task<Discount> GetDiscountById(int Id)

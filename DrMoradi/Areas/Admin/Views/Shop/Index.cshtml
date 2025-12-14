@@ -49,6 +49,9 @@
                         <th>
                             @Html.DisplayNameFor(model => model.bjects.First().SendPrice)
                         </th>
+                     
+                            <th>@Html.DisplayNameFor(model => model.bjects.First().discounts.FirstOrDefault().Code)</th>
+                        
                         <th>
                             @Html.DisplayNameFor(model => model.bjects.First().TotalAmount)
                         </th>
@@ -83,6 +86,8 @@
                             <td>
                                 @((item.TotalAmount / 10).ToString("N0"))
                             </td>
+                     <td>  @item.discounts.FirstOrDefault()?.Code</td>
+
                             <td>
                                 @(item.PaymentDate.HasValue? item.PaymentDate.Value.ToPersian():"")
 

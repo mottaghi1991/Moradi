@@ -26,6 +26,7 @@
                             <th>شماره سفارش</th>
                         
                             <th>@Html.DisplayNameFor(model => model.TotalAmount)</th>
+                            <th>@Html.DisplayNameFor(model => model.discounts.FirstOrDefault().Code)</th>
                             <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
                             <th>@Html.DisplayNameFor(model => model.Status)</th>
                             <th>جزئیات سفارش</th>
@@ -48,6 +49,7 @@
                                 <td>@item.Id</td>
                              
                                 <td>@((item.TotalAmount/10).ToString("N0"))</td>
+                                <td>  @item.discounts.FirstOrDefault()?.Code</td>
                                 <td>@(item.PaymentDate?.ToPersian() ?? "")</td>
                                 <td>
                                     @if (item.Status == Domain.OrderStatus.Pending)

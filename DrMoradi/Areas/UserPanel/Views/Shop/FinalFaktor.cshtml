@@ -3,6 +3,9 @@
 
 @{
     ViewData["Title"] = "پیش‌فاکتور خرید";
+    var totalPrice =
+      Model.Items.Sum(i => i.Quantity * i.UnitPrice / 10)
+      + (Model.SendPrice / 10);
 }
 
 <div class="col-12">
@@ -57,14 +60,24 @@
                                 </td>
                                 <td>     @((Model.SendPrice / 10).ToString("N0")) </td>
                             </tr>
+                     
+                            <tr id="discountRow" class="d-none text-danger fw-bold">
+                                <td colspan="4">مبلغ تخفیف</td>
+                                <td>
+                                    <span id="discountValue">0</span>
+                                </td>
+                            </tr>
+
                             <tr class="table-info fw-bold">
                                 <td colspan="4">مجموع</td>
                                 <td>
-
-                                    @((Model.Items.Sum(i => i.Quantity * i.UnitPrice/10)+(Model.SendPrice/10)).ToString("N0"))
-
+                                    <span class="js-totalPrice text-primary"
+                                          data-original="@totalPrice">
+                                        @totalPrice.ToString("N0")
+                                    </span>
                                 </td>
                             </tr>
+
                         }
                     </tbody>
                 </table>
@@ -99,24 +112,149 @@
                             </span>
                         </div>
                     </div>
+                    <div id="discountRow" class="card p-3 bg-light d-none">
+                        <div class="d-flex justify-content-between fw-bold text-danger">
+                            <span>مبلغ تخفیف:</span>
+                            <span id="discountValue">0</span>
+                        </div>
+                    </div>
+
                     <div class="card p-3 bg-light">
                         <div class="d-flex justify-content-between fw-bold">
                             <span>مجموع پرداختی:</span>
-                            <span class="text-primary">
-                                @((Model.Items.Sum(i => i.Quantity * i.UnitPrice/10) + (Model.SendPrice / 10)).ToString("N0")) تومان
+
+
+                            <span class="js-totalPrice text-primary"
+                                  data-original="@totalPrice">
+                                @totalPrice.ToString("N0") تومان
                             </span>
                         </div>
                     </div>
                 }
             </div>
         </div>
+        <div class="p-3 border-top">
+
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-md-6">
+                    <input id="discountCode"
+                           class="form-control"
+                           placeholder="کد تخفیف" />
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <button id="btnApplyDiscount"
+                            type="button"
+                            class="btn btn-primary w-100">
+                        اعمال کد
+                    </button>
+                </div>
+
+                <div class="col-12 col-md-3">
+                    <small id="discountMessage"
+                           class="d-none"></small>
+                </div>
+            </div>
+
+        </div>
 
         <!-- دکمه ادامه -->
         <div class="card-footer text-center">
-            <a asp-action="AddtoOrder" asp-controller="shop" asp-area="UserPanel" asp-route-AddressId="@Model.Address.Id" asp-route-sendprice="0"
+            <a id="btnPay" asp-action="AddtoOrder" asp-controller="shop" asp-area="UserPanel" asp-route-AddressId="@Model.Address.Id" asp-route-sendprice="0"
                class="btn btn-success btn-lg px-4 fw-bold">
                 <i class="fa fa-credit-card"></i> پرداخت
             </a>
         </div>
     </div>
 </div>
+@section Scripts{
+    <script>
+
+                let appliedDiscountCode = null;
+
+       
+        document.getElementById("btnPay")
+            .addEventListener("click", function () {
+
+                if (!appliedDiscountCode)
+                    return;
+
+                const url = new URL(this.href);
+
+                url.searchParams.set("code", appliedDiscountCode);
+
+                this.href = url.toString();
+            });
+
+
+
+        document.getElementById("btnApplyDiscount")
+            .addEventListener("click", function () {
+
+                const code = document.getElementById("discountCode").value;
+                const msg = document.getElementById("discountMessage");
+
+                if (!code) {
+                    msg.className = "text-danger";
+                    msg.innerText = "کد تخفیف را وارد کنید";
+                    msg.classList.remove("d-none");
+                    return;
+                }
+
+                fetch('@Url.Action("CheckDiscountCode", "Shop")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ code })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    msg.classList.remove("d-none");
+
+                    if (!data.success) {
+                        msg.className = "text-danger";
+                        msg.innerText = data.message;
+                        return;
+                    }
+
+                    msg.className = "text-success";
+                    msg.innerText = `کد تخفیف اعمال شد (${data.percent}٪)`;
+                    appliedDiscountCode = code;
+                    applyDiscountToView(data.percent);
+                });
+            });
+
+               function applyDiscountToView(percent) {
+
+            let discountAmount = 0;
+
+            document.querySelectorAll(".js-totalPrice")
+                .forEach(totalEl => {
+
+                    const original = Number(totalEl.dataset.original);
+                    if (isNaN(original)) return;
+
+                    discountAmount = Math.floor(original * percent / 100);
+                    const final = original - discountAmount;
+
+                    totalEl.innerText =
+                        final.toLocaleString('fa-IR') +
+                        (totalEl.innerText.includes("تومان") ? " تومان" : "");
+                });
+
+            const discountRow = document.getElementById("discountRow");
+            if (discountRow)
+                discountRow.classList.remove("d-none");
+
+            const discountValue = document.getElementById("discountValue");
+            if (discountValue)
+                discountValue.innerText =
+                    discountAmount.toLocaleString('fa-IR');
+        }
+
+
+
+    </script>
+
+}

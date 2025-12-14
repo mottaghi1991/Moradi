@@ -12,7 +12,7 @@ namespace Domain.Shop
 {
     public class Discount:Base
     {
-        [DisplayName("کد")]
+        [DisplayName("کد تخفیف")]
         [MaxLength(6, ErrorMessage = "طول رشته بیشتر از 50 کاراکتر می باشد")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری می باشد")]
         public string Code { get; set; }

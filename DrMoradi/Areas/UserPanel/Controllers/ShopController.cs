@@ -36,8 +36,9 @@ namespace DrMoradi.Areas.UserPanel.Controllers
         private readonly IDelivery _Delivery;
         private readonly IProduct _product;
         private readonly ISms _sms;
+        private readonly IDiscount _discount;
 
-        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery, IProduct product, ISms sms)
+        public ShopController(ICart cart, IAddress address, IProvince province, IPayment payment, ILogger<ShopController> logger, IOrder order, IUser user, IDelivery delivery, IProduct product, ISms sms, IDiscount discount)
         {
             _cart = cart;
             _address = address;
@@ -49,6 +50,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             _Delivery = delivery;
             _product = product;
             _sms = sms;
+            _discount = discount;
         }
         public async Task<IActionResult> Index()
         {
@@ -103,7 +105,11 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             {
                 return View(addres);
             }
-
+            if(addres.Latitude==null)
+            {
+                TempData[Error] = "مشخصات را وارد نمائید .";
+                return View(addres);
+            }
             addres.provinceId = 8;
             addres.UserId = User.GetUserId();
             var result = await _address.Add(addres);
@@ -197,7 +203,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             return View(obj); 
         }
         [HttpGet]
-        public async Task<IActionResult> AddtoOrder(int AddressId,int sendprice)
+        public async Task<IActionResult> AddtoOrder(int AddressId,int sendprice,string? code)
         {
             DeliveryMethod method;
             decimal price = 0;
@@ -221,7 +227,23 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
             var Order = await _order.FillOrder(cart, User.GetUserId(), AddressId, (int)price,method);
             if (Order != null)
+            {
+                var discount =await _discount.GetDiscountByCode(code);
+                if(discount!=null)
+                {
+                    discount.OrderId = Order.Id;
+                    await _discount.update(discount);
+                    var discountAmount =
+                        Order.TotalAmount * discount.Percent / 100;
+
+                    Order.TotalAmount -= discountAmount; 
+                    await _order.Update(Order);
+
+
+                }
                 return RedirectToAction("StartPaymentShop", new { orderId = Order.Id });
+
+            }
             else
             {
                 TempData[warning] = "انتقال به فاکتور نهایی با مشکل مواجه شد";
@@ -292,7 +314,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
 
                     // علامت‌گذاری سفارش به‌عنوان پرداخت شده
                     await _product.deActiveBatch(Order.OrderItems.First().ProductBatchId);
-
+                    await _discount.DeactiveCode(Order.Id);
                     //if(Order.DeliveryMethod==DeliveryMethod.AloPeyk)
                     //{
                     //    await _Delivery.CreateAloPeykOrderAsync(Order, Order.ShippingAddress, Order.User);
@@ -396,5 +418,23 @@ namespace DrMoradi.Areas.UserPanel.Controllers
             }
 
         }
+        [HttpPost]
+        public async Task<IActionResult> CheckDiscountCode(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return Json(new { success = false, message = "کد تخفیف وارد نشده است" });
+
+            var discount = await _discount.GetDiscountByCode(code.Trim());
+
+            if (discount == null)
+                return Json(new { success = false, message = "کد تخفیف نامعتبر یا استفاده شده است" });
+
+            return Json(new
+            {
+                success = true,
+                percent = discount.Percent
+            });
+        }
+
     }
 }

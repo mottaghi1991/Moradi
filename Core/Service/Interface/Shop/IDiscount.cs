@@ -15,6 +15,8 @@ namespace Core.Service.Interface.Shop
         Task<ServiceResponse> Delete(Discount discount);
         Task<Discount> GetDiscountById(int Id);
         Task<IEnumerable<Discount>> GetDiscountsByStatus(bool? status);
+        Task<Discount> GetDiscountByCode(string code);
+        Task<bool> DeactiveCode(int OrderId);
 
     }
 }
