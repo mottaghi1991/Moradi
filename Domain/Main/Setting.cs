@@ -31,6 +31,7 @@ namespace Domain.Main
         public string IconSecondLink { get; set; }
         public string IconThird { get; set; }
         public string IconThirdLink { get; set; }
+        public bool ShowBlog { get; set; }
 
     }
 }

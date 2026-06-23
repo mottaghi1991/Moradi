@@ -57,6 +57,8 @@ namespace Core.Dto.ViewModel.Admin.SettingDto
         public IFormFile IconThirdFile { get; set; }
         [DisplayName("لینک آیکون سوم")]
         public string IconThirdLink { get; set; }
+        [DisplayName("نمایش مقاله")]
+        public bool ShowBlog { get; set; }
 
     }
 }

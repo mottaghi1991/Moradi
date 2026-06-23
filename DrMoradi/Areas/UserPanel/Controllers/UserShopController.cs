@@ -153,7 +153,7 @@ namespace DrMoradi.Areas.UserPanel.Controllers
                 {
                     productId = c.ProductId,
                     productName = c.Product.ProductName,
-                    price = c.Product.ProductBatches.FirstOrDefault(a=>a.IsActive==true).Price/10,
+                    price = c.Product.ProductBatches.FirstOrDefault(a=>a.IsActive==true)?.Price/10,
                     quantity = c.Quantity
                 });
 

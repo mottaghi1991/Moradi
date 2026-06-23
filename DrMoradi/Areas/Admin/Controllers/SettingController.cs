@@ -91,6 +91,7 @@ namespace Mandella.Areas.Admin.Controllers
             old.Address = setting.Address;
             old.WorkTime = setting.WorkTime;
             old.FooterDescript = setting.FooterDescript;
+            old.ShowBlog = setting.ShowBlog;
            var result= await _setting.UpdateSettingAsync(old);
             if (result)
                 TempData[Success] = SuccessMessage;

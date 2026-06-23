@@ -109,18 +109,21 @@
 
 
     <!-- مقالات -->
-
-
-    <section class="pt-5">
-        <div class="card" style="border:none;background-color:#F9F9F9">
-            <div class="card-header" style="border:none;background-color:#F9F9F9">
-                <h3 class="fw-bold text-start">
-                    جدیدترین مقالات
-                </h3>
+    @if(Model.ShowBlog)
+    {
+        <section class="pt-5">
+            <div class="card" style="border:none;background-color:#F9F9F9">
+                <div class="card-header" style="border:none;background-color:#F9F9F9">
+                    <h3 class="fw-bold text-start">
+                        جدیدترین مقالات
+                    </h3>
+                </div>
+                @await Component.InvokeAsync("PostComponent")
             </div>
-            @await Component.InvokeAsync("PostComponent")
-        </div>
-    </section>
+        </section>
 
+    }
+
+  
 </div>
 
