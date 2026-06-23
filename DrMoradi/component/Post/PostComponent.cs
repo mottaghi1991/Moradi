@@ -16,7 +16,7 @@ namespace DrMoradi.Views.Shared.component.Slider
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var result = await _post.GetTopWordPressPost(5);
+            var result = await _post.GetTopWordPressPost(8);
             return View("~/Component/Post/_Post.cshtml", result);
         }
     }
