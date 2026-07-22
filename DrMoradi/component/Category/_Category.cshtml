@@ -18,7 +18,7 @@
                             <div class="card-header p-0" style="border:none; overflow:hidden; background:none;">
                                 <a asp-controller="Shop" asp-route-categoryId="@item.Id" ><img src="@item.Image"
                                      style="width:300px;max-width:100%; display:block; height:auto; border-radius:0;"
-                                     alt="@item.CategoryName"></a>
+                                     alt="@item.CategoryName" loading="lazy"></a>
                             </div>
                             <div class="card-body">
                                 <a asp-controller="Shop" asp-route-categoryId="@item.Id" style="text-decoration:none" >

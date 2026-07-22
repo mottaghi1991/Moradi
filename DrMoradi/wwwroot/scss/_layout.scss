@@ -1,0 +1,46 @@
+﻿#mainNavbar {
+    background-color: #fff;
+
+    .nav-link {
+        color: #333;
+
+        &:hover {
+            color: #007bff;
+        }
+    }
+}
+
+.menu-btn {
+    cursor: pointer;
+    display: block;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-simple {
+    background: #f8f9fa;
+    padding: 40px 0;
+
+    .footer-title {
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .footer-links a {
+        color: #666;
+        text-decoration: none;
+    }
+}
+
+// اسلایدر صفحه اصلی
+.home-slider {
+    width: 100%;
+    height: auto;
+
+    @media (min-width: 992px) {
+        height: 500px;
+    }
+}

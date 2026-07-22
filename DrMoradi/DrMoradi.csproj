@@ -276,99 +276,99 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Black.eot">
+    <Content Update="wwwroot\fonts\Vazir-Black.eot">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Black.ttf">
+    <Content Update="wwwroot\fonts\Vazir-Black.ttf">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Black.woff">
+    <Content Update="wwwroot\fonts\Vazir-Black.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Black.woff2">
+    <Content Update="wwwroot\fonts\Vazir-Black.woff2">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Bold.eot">
+    <Content Update="wwwroot\fonts\Vazir-Bold.eot">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Bold.ttf">
+    <Content Update="wwwroot\fonts\Vazir-Bold.ttf">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Bold.woff">
+    <Content Update="wwwroot\fonts\Vazir-Bold.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Bold.woff2">
+    <Content Update="wwwroot\fonts\Vazir-Bold.woff2">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Light.eot">
+    <Content Update="wwwroot\fonts\Vazir-Light.eot">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Light.ttf">
+    <Content Update="wwwroot\fonts\Vazir-Light.ttf">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Light.woff">
+    <Content Update="wwwroot\fonts\Vazir-Light.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Light.woff2">
+    <Content Update="wwwroot\fonts\Vazir-Light.woff2">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Medium.eot">
+    <Content Update="wwwroot\fonts\Vazir-Medium.eot">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Medium.ttf">
+    <Content Update="wwwroot\fonts\Vazir-Medium.ttf">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Medium.woff">
+    <Content Update="wwwroot\fonts\Vazir-Medium.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Medium.woff2">
+    <Content Update="wwwroot\fonts\Vazir-Medium.woff2">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Thin.eot">
+    <Content Update="wwwroot\fonts\Vazir-Thin.eot">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Thin.ttf">
+    <Content Update="wwwroot\fonts\Vazir-Thin.ttf">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Thin.woff">
+    <Content Update="wwwroot\fonts\Vazir-Thin.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir-Thin.woff2">
+    <Content Update="wwwroot\fonts\Vazir-Thin.woff2">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir.eot">
+    <Content Update="wwwroot\fonts\Vazir.eot">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir.ttf">
+    <Content Update="wwwroot\fonts\Vazir.ttf">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir.woff">
+    <Content Update="wwwroot\fonts\Vazir.woff">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="wwwroot\MyFile\dist\fonts\Vazir.woff2">
+    <Content Update="wwwroot\fonts\Vazir.woff2">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -1337,6 +1337,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\FileUpload\Attachment\" />
     <Folder Include="wwwroot\FileUpload\DietImage\" />
+    <Folder Include="wwwroot\MyFile\dist\fonts\" />
   </ItemGroup>
 
   <ItemGroup>

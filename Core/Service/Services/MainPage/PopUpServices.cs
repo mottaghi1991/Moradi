@@ -1,6 +1,7 @@
 ﻿using Core.Service.Interface.MainPage;
 using Data.MasterInterface;
 using Domain.Main;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace Core.Service.Services.MainPage
 
         public async Task<PopUp> GetPopById(int popid)
         {
-            return _master.GetAllAsQueryable(a => a.Id == popid).FirstOrDefault();
+            return await _master.GetAllAsQueryable(a => a.Id == popid).FirstOrDefaultAsync();
         }
 
         public async Task<bool> InsertAsync(PopUp popUp)

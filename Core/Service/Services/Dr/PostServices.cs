@@ -45,73 +45,34 @@ namespace Core.Service.Services.Dr
 
         public async Task<List<WordPressPost>> GetTopWordPressPost(int count)
         {
-            var url = $"https://drmoradi-diet.com/blogs/wp-json/wp/v2/posts?per_page={count}";
-            var json = await _httpClient.GetStringAsync(url);
+            var url = $"https://drmoradi-diet.com/blogs/wp-json/wp/v2/posts?per_page={count}&_embed=1";
 
-            var posts = JsonSerializer.Deserialize<List<WordPressPost>>(json,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
-                ?? new List<WordPressPost>();
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+            request.Headers.Accept.ParseAdd("application/json");
 
-            // اضافه کردن Header برای اطمینان از پاسخ
-            _httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            using var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var posts = JsonSerializer.Deserialize<List<WordPressPost>>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                }) ?? new List<WordPressPost>();
 
             foreach (var post in posts)
             {
-                Console.WriteLine($"Post {post.Id} - FeaturedMedia: {post.FeaturedMedia}");
-
-                try
-                {
-                    if (post.FeaturedMedia > 0)
-                    {
-                        string[] possibleUrls =
-                        {
-                    $"https://drmoradi-diet.com/wp-json/wp/v2/media/{post.FeaturedMedia}",          // بدون blogs
-                    $"https://drmoradi-diet.com/blogs/wp-json/wp/v2/media/{post.FeaturedMedia}"     // با blogs
-                };
-
-                        string? image = null;
-
-                        foreach (var mediaUrl in possibleUrls)
-                        {
-                            try
-                            {
-                                var mediaJson = await _httpClient.GetStringAsync(mediaUrl);
-                                using var doc = JsonDocument.Parse(mediaJson);
-
-                                if (doc.RootElement.TryGetProperty("source_url", out var source))
-                                {
-                                    image = source.GetString();
-                                    if (!string.IsNullOrWhiteSpace(image)) break; // اگر جواب گرفتیم از حلقه خارج شو
-                                }
-                                else if (doc.RootElement.TryGetProperty("guid", out var guid) &&
-                                         guid.TryGetProperty("rendered", out var rendered))
-                                {
-                                    image = rendered.GetString();
-                                    if (!string.IsNullOrWhiteSpace(image)) break;
-                                }
-                            }
-                            catch
-                            {
-                                // رد شو، بعدی رو تست کن
-                            }
-                        }
-
-                        post.Image = image ?? "/img/no-image.jpg";
-                    }
-                    else
-                    {
-                        post.Image = "/img/no-image.jpg";
-                    }
-                }
-                catch
-                {
-                    post.Image = "/img/no-image.jpg";
-                }
+                post.Image = post.Embedded?.WpFeaturedMedia?.FirstOrDefault()?.SourceUrl
+                             ?? "/img/no-image.jpg";
             }
 
             return posts;
         }
+
+
 
         public async Task<int> PostCount()
         {

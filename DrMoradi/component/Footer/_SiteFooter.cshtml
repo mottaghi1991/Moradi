@@ -31,18 +31,18 @@
                 <div class="d-flex gap-2 mb-2">
                     @if(!string.IsNullOrEmpty(Model.setting.IconFirst))
                     {
-                        <a href="@Model.setting.IconFirstLink" target="_blank" rel="noopener"> <img src="@Model.setting.IconFirst" width="70" alt=""></a>
+                        <a href="@Model.setting.IconFirstLink" target="_blank" rel="noopener"> <img src="@Model.setting.IconFirst" width="70" alt="" loading="lazy"></a>
 
                     }
                     @if (!string.IsNullOrEmpty(Model.setting.IconSecond))
                     {
-                        <a href="@Model.setting.IconSecondLink" target="_blank" rel="noopener"> <img src="@Model.setting.IconSecond" width="70" alt=""></a>
+                        <a href="@Model.setting.IconSecondLink" target="_blank" rel="noopener"> <img src="@Model.setting.IconSecond" width="70" alt="" loading="lazy"></a>
 
 
                     }
                     @if (!string.IsNullOrEmpty(Model.setting.IconThird))
                     {
-                        <a href="@Model.setting.IconThirdLink" target="_blank" rel="noopener"> <img src="@Model.setting.IconThird" width="70" alt=""></a>
+                        <a href="@Model.setting.IconThirdLink" target="_blank" rel="noopener"> <img src="@Model.setting.IconThird" width="70" alt="" loading="lazy"></a>
 
                     }
                 </div>
@@ -60,7 +60,7 @@
         <div class="row align-items-center">
             <!-- سمت راست: لوگو -->
             <div class="col-lg-1 col-md-12 text-lg-start text-center">
-             <a href="\"   ><img src="@Model.setting.Logo" alt="لوگو" class="footer-logo"></a>
+                <a href="\"><img src="@Model.setting.Logo" alt="لوگو" class="footer-logo" loading="lazy"></a>
             </div>
             <!-- سمت چپ: توضیح و کپی‌رایت -->
             <div class="col-lg-11 col-md-12 footer-desc text-white small">@Model.setting.FooterDescript</div>
